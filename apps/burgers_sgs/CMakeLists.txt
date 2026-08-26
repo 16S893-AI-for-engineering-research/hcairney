@@ -7,7 +7,7 @@ include(CheckCXXCompilerFlag)
 
 option(BURGERS_ENABLE_SANITIZERS
   "Enable supported sanitizers for Debug builds"
-  ON)
+  OFF)
 
 set(BURGERS_GIT_REVISION "unknown")
 set(BURGERS_SOURCE_DIRTY "unknown")
