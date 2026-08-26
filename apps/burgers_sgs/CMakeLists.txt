@@ -94,6 +94,10 @@ endfunction()
 
 add_library(burgers_core STATIC
   src/Config.cpp
+  src/Diagnostics.cpp
+  src/Grid.cpp
+  src/InitialCondition.cpp
+  src/State.cpp
   src/RunMetadata.cpp)
 add_library(burgers::core ALIAS burgers_core)
 
@@ -114,4 +118,10 @@ if(BUILD_TESTING)
   burgers_configure_target(test_phase0_scaffolding)
 
   add_test(NAME burgers.phase0.scaffolding COMMAND test_phase0_scaffolding)
+
+  add_executable(test_phase1_grid_state tests/test_phase1_grid_state.cpp)
+  target_link_libraries(test_phase1_grid_state PRIVATE burgers::core)
+  burgers_configure_target(test_phase1_grid_state)
+
+  add_test(NAME burgers.phase1.grid_state COMMAND test_phase1_grid_state)
 endif()

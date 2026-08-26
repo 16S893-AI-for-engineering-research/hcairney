@@ -51,6 +51,12 @@ std::vector<std::string> validate(const RunConfig& config) {
     errors.emplace_back(
       "initial_condition.wavenumber must be nonzero for sinusoidal data");
   }
+  if(config.initial_condition.type == InitialConditionType::Random &&
+     isFinite(config.initial_condition.amplitude) &&
+     config.initial_condition.amplitude < 0.0) {
+    errors.emplace_back(
+      "initial_condition.amplitude must be nonnegative for random data");
+  }
 
   requireFinite(errors, config.viscosity.molecular,
                 "viscosity.molecular");
@@ -277,4 +283,3 @@ const char* toString(FaceViscosityAveraging value) {
 }
 
 }  // namespace burgers
-
