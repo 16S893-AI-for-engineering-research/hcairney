@@ -179,17 +179,6 @@ int main() {
     },
     "advancement must report exhaustion of the configured timestep budget");
 
-  burgers::RunConfig unsupported_config = phase2Config(32, 0.01);
-  unsupported_config.numerical_method.reconstruction =
-    burgers::Reconstruction::Muscl;
-  unsupported_config.numerical_method.limiter = burgers::Limiter::Minmod;
-  expectThrows<std::invalid_argument>(
-    [&unsupported_config]() {
-      const burgers::BurgersSolver unsupported(unsupported_config);
-      static_cast<void>(unsupported);
-    },
-    "future reconstruction choices must not be silently ignored");
-
   burgers::RunConfig wave_config = phase2Config(256, 0.0);
   wave_config.time_integration.advective_cfl = 0.3;
   const burgers::BurgersSolver wave_solver(wave_config);

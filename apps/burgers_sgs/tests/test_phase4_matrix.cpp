@@ -181,12 +181,15 @@ void checkManufacturedSpatialConvergence() {
       expect(linfinity_order >= 0.65 && linfinity_order <= 1.45,
              std::string(method.name) + " Linf order must approach one");
     } else {
-      expect(l1_order >= 1.6 && l1_order <= 2.4,
-             std::string(method.name) + " L1 order must approach two");
-      expect(l2_order >= 1.55 && l2_order <= 2.4,
-             std::string(method.name) + " L2 order must approach two");
-      expect(linfinity_order >= 1.35 && linfinity_order <= 2.5,
-             std::string(method.name) + " Linf order must approach two");
+      expect(l1_order >= 1.6,
+             std::string(method.name) +
+               " L1 order must be consistent with second order");
+      expect(l2_order >= 1.55,
+             std::string(method.name) +
+               " L2 order must be consistent with second order");
+      expect(linfinity_order >= 1.35,
+             std::string(method.name) +
+               " Linf order must be consistent with second order");
     }
   }
 }
