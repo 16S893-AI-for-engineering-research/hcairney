@@ -285,13 +285,57 @@ decay, and basic wave-propagation tests pass.
 
 ### Phase 3: formal verification
 
-Implement the full suite in Section 6, including independent spatial and
-temporal convergence studies. Make these tests automated rather than relying
-only on plots.
+Apply the verification plan in Section 6 incrementally to the capabilities of
+the Phase 2 solver: piecewise-constant reconstruction, Godunov flux, molecular
+viscosity, SSP-RK3, periodic boundaries, and no SGS model. Make the checks
+automated rather than relying only on plots.
+
+1. Complete the unit-level checks applicable to the Phase 2 numerical kernels,
+   including Fourier-mode checks of centered gradients and the resulting
+   viscous operator.
+2. Strengthen constant-preservation and periodic-mean-conservation tests with
+   multi-step smooth and random cases, reporting absolute and relative drift
+   against documented, scale-aware tolerances.
+3. Add the minimal time-dependent manufactured-source capability needed for
+   the analytic solution in Section 6.4. Evaluate the source as finite-volume
+   cell averages and at the correct physical time for every SSP-RK3 stage. This
+   is a narrow exception to the Phase 5 ordering: the general composable
+   forcing interface, production deterministic forcing, and stochastic forcing
+   remain Phase 5 work.
+4. Run an independent spatial refinement study for the manufactured solution,
+   comparing numerical and exact cell averages in the \(L_1\), \(L_2\), and
+   \(L_\infty\) norms. Verify that the piecewise-constant method approaches
+   first order while temporal error is kept negligible.
+5. Run an independent fixed-timestep refinement study on a fixed, sufficiently
+   fine grid. Compare against the manufactured solution or a much smaller-step
+   reference and verify third-order SSP-RK3 convergence before spatial error
+   dominates.
+6. Verify the unforced energy balance, including monotone energy decay,
+   molecular dissipation, and the numerical-dissipation residual of a
+   documented time-discrete balance on a smooth refinement sequence.
+7. Extend the nonlinear shock/rarefaction test into a refinement study of shock
+   speed, rarefaction extent, integral error, wave-location error, entropy
+   behavior, and mean conservation before the periodic waves interact.
+8. Complete the Phase 2 CFL and failure-handling matrix, including timesteps
+   below and near the configured limits, zero velocity, zero viscosity, large
+   viscosity, invalid sizes and parameters, and non-finite states.
+9. Version the configurations, observed convergence slopes, conservation
+   drift, and energy-budget residuals used as small regression references.
+
+Section 6 checks that require features not yet implemented are deferred to the
+phase that introduces those features. These include MUSCL and Rusanov variants,
+general deterministic and stochastic forcing (including stochastic restart),
+spatially varying and SGS viscosity, SGS coefficient arrays and timestep
+bounds, and forced/SGS energy-budget terms. Each applicable verification check
+must be added when its corresponding feature is introduced; deferral from
+Phase 3 does not remove it from the overall verification suite.
 
 **Completion criterion:** the first-order method achieves its expected spatial
 order, SSP-RK3 achieves its expected temporal order in an appropriately
-isolated study, and conservation/energy tests meet documented tolerances.
+isolated study, and the applicable conservation, energy, nonlinear-wave, CFL,
+and failure-handling tests meet documented tolerances. The manufactured-source
+path must exercise the production solver and its time integration rather than
+exist only in test-side integration code.
 
 ### Phase 4: higher-order and flux comparison
 
