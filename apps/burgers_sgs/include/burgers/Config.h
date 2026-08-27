@@ -103,9 +103,17 @@ struct DeterministicForcingConfig {
 };
 
 struct StochasticForcingConfig {
-  std::vector<int> wavenumbers;
-  double standard_deviation = 0.0;
-  double correlation_time = 1.0;
+  // Positive Fourier-mode indices. The default is the low-mode OU preset.
+  std::vector<int> wavenumbers{1, 2, 3};
+  // The stationary quadrature variances satisfy V_k proportional to
+  // k^(-spectral_exponent) and sum to stationary_rms^2.
+  double spectral_exponent = 0.0;
+  double stationary_rms = 0.1;
+  double correlation_time = 0.5;
+  // Exact OU updates occur at these physical-time intervals and the
+  // coefficient field is held fixed between updates.
+  double clock_interval = 0.05;
+  double clock_reference_time = 0.0;
 };
 
 struct ManufacturedForcingConfig {
@@ -138,8 +146,10 @@ struct OutputConfig {
   std::string metadata_filename = "burgers_run_metadata.json";
   std::string scalar_history_filename = "burgers_history.csv";
   std::string final_profile_filename = "burgers_final_profile.csv";
+  std::string spectrum_filename = "burgers_mean_spectrum.csv";
   double history_interval = 0.1;
   double profile_interval = 1.0;
+  double statistics_start_time = 0.0;
 };
 
 struct RandomConfig {
@@ -159,6 +169,9 @@ struct RunConfig {
 };
 
 RunConfig makeDefaultRunConfig();
+RunConfig makePhase5ValidationRunConfig();
+StochasticForcingConfig makeLowModeOuForcingConfig();
+StochasticForcingConfig makeChekhlovYakhotForcingConfig();
 std::vector<std::string> validate(const RunConfig& config);
 
 const char* toString(InitialConditionType value);

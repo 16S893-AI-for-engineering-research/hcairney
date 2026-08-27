@@ -291,6 +291,71 @@ shortened to reach a requested output or final time exactly. Later, define RL
 decision intervals in physical time rather than in a fixed number of adaptive
 PDE steps.
 
+### 4.5 Phase 5 forcing convention
+
+The production deterministic forcing is a configurable sum of periodic modes,
+
+\[
+  F_{\mathrm{mean}}(x)=\sum_m A_m
+  \sin\left(\frac{2\pi k_m(x-x_{\mathrm{begin}})}{L}+\phi_m\right),
+  \qquad L=x_{\mathrm{end}}-x_{\mathrm{begin}},
+\]
+
+with positive, unique, non-Nyquist integer mode indices. The initial validation
+case uses the single mode \(0.1\sin x\). Source values supplied to the solver are
+analytic finite-volume cell averages, followed by removal of their discrete
+mean.
+
+The stochastic forcing uses independent cosine and sine coefficients,
+
+\[
+  f'(x,t)=\sum_{k\in\mathcal K}
+  \left[a_k(t)\cos(kx)+b_k(t)\sin(kx)\right],
+\]
+
+with the corresponding domain-scaled basis on a general periodic interval.
+The stationary quadrature variances are
+
+\[
+  V_k=f_{\mathrm{rms}}^2
+  \frac{k^{-p}}{\sum_{j\in\mathcal K}j^{-p}}.
+\]
+
+Thus the continuum pointwise stationary RMS is independent of the number of
+forced modes. The low-mode OU preset uses \(p=0\) and modes \(1{:}3\). The
+finite-correlation Chekhlov--Yakhot-type preset uses \(p=1\) and modes
+\(1{:}8\). Both the exponent and explicit mode list remain configurable; the
+presets are validation defaults rather than claims of an inertial-range
+spectrum.
+
+The stochastic process is an exact OU transition on a fixed physical-time
+clock, held piecewise constant between clock times:
+
+\[
+  a_{k,j+1}=\rho a_{k,j}
+    +\sqrt{V_k(1-\rho^2)}\,\xi^a_{k,j},
+  \qquad
+  \rho=\exp(-\Delta t_f/\tau),
+\]
+
+with the same independent update for \(b_k\). Coefficients are initialized from
+their stationary distributions. The default clock interval is
+\(\Delta t_f=\tau/10\). PDE steps end at clock boundaries and all SSP-RK3
+stages in one PDE step use one immutable forcing snapshot. The clock advances
+only after a successful PDE step. This makes the realization a function of
+seed and physical time rather than grid-dependent adaptive timestep calls.
+
+Restart data contains the clock index and time, Fourier coefficients, random
+engine and distribution state, and the stochastic parameters needed to reject
+an incompatible restart. Initial-condition and forcing randomness use
+independent streams derived from the run seed.
+
+Deterministic and stochastic fields have their discrete means removed
+separately before composition. Their discrete power inputs are also retained
+separately. Per-step work and molecular dissipation use the SSP-RK3 weights
+\(1/6,1/6,2/3\), and numerical dissipation is the residual of the resulting
+time-discrete energy balance.
+
 ## 5. Phased implementation plan
 
 ### Phase 0: scaffolding

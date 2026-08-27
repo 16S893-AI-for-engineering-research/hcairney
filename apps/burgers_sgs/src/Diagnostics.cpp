@@ -67,6 +67,40 @@ double kineticEnergy(const Grid& grid, const State& state) {
   return 0.5 * grid.length() * norm * norm;
 }
 
+double spatialVariance(const Grid& grid, const State& state) {
+  const double state_mean = mean(grid, state);
+  return 2.0 * kineticEnergy(grid, state) / grid.length() -
+         state_mean * state_mean;
+}
+
+std::vector<double> energySpectrum(const Grid& grid, const State& state) {
+  requireCompatible(grid, state);
+  const std::size_t maximum_mode = grid.cellCount() / 2;
+  std::vector<double> spectrum(maximum_mode + 1, 0.0);
+  const double two_pi = 6.283185307179586476925286766559;
+  const double inverse_count = 1.0 / static_cast<double>(grid.cellCount());
+
+  for(std::size_t mode = 0; mode <= maximum_mode; ++mode) {
+    double real_part = 0.0;
+    double imaginary_part = 0.0;
+    for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+      const double angle = two_pi * static_cast<double>(mode) *
+                           static_cast<double>(cell) * inverse_count;
+      real_part += state[cell] * std::cos(angle);
+      imaginary_part -= state[cell] * std::sin(angle);
+    }
+    real_part *= inverse_count;
+    imaginary_part *= inverse_count;
+    const double coefficient_square =
+      real_part * real_part + imaginary_part * imaginary_part;
+    const bool self_conjugate = mode == 0 ||
+      (grid.cellCount() % 2 == 0 && mode == maximum_mode);
+    spectrum[mode] =
+      (self_conjugate ? 0.5 : 1.0) * grid.length() * coefficient_square;
+  }
+  return spectrum;
+}
+
 double molecularDissipation(const Grid& grid,
                             const State& state,
                             double molecular_viscosity) {
@@ -92,6 +126,51 @@ double molecularDissipation(const Grid& grid,
     gradient_square_sum = updated;
   }
   return molecular_viscosity * grid.cellWidth() * gradient_square_sum;
+}
+
+double powerInput(const Grid& grid,
+                  const State& state,
+                  const State& forcing) {
+  requireCompatible(grid, state);
+  requireCompatible(grid, forcing);
+  double sum = 0.0;
+  double correction = 0.0;
+  for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+    const double term = state[cell] * forcing[cell] - correction;
+    const double updated = sum + term;
+    correction = (updated - sum) - term;
+    sum = updated;
+  }
+  return grid.cellWidth() * sum;
+}
+
+ForcingPower forcingPower(const Grid& grid,
+                          const State& state,
+                          const ForcingFields& forcing) {
+  ForcingPower power;
+  power.manufactured = powerInput(grid, state, forcing.manufactured);
+  power.deterministic = powerInput(grid, state, forcing.deterministic);
+  power.stochastic = powerInput(grid, state, forcing.stochastic);
+  power.total = powerInput(grid, state, forcing.total);
+  return power;
+}
+
+ForcedEnergyBudgetRate forcedEnergyBudgetRate(
+  const Grid& grid,
+  const State& state,
+  const State& derivative,
+  const ForcingFields& forcing,
+  double molecular_viscosity) {
+  requireCompatible(grid, state);
+  requireCompatible(grid, derivative);
+  ForcedEnergyBudgetRate budget;
+  budget.energy_rate = powerInput(grid, state, derivative);
+  budget.power = forcingPower(grid, state, forcing);
+  budget.molecular_dissipation =
+    molecularDissipation(grid, state, molecular_viscosity);
+  budget.numerical_dissipation =
+    budget.power.total - budget.molecular_dissipation - budget.energy_rate;
+  return budget;
 }
 
 ErrorNorms errorNorms(const Grid& grid,

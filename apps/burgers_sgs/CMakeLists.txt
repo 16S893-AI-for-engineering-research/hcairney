@@ -97,6 +97,7 @@ add_library(burgers_core STATIC
   src/Config.cpp
   src/ConvectiveFlux.cpp
   src/Diagnostics.cpp
+  src/Forcing.cpp
   src/Grid.cpp
   src/InitialCondition.cpp
   src/ManufacturedSolution.cpp
@@ -193,4 +194,20 @@ if(BUILD_TESTING)
     COMMAND test_phase4_waves_dissipation)
   set_tests_properties(burgers.phase4.waves_dissipation PROPERTIES
     LABELS "phase4;verification")
+
+  add_executable(test_phase5_forcing tests/test_phase5_forcing.cpp)
+  target_link_libraries(test_phase5_forcing PRIVATE burgers::core)
+  burgers_configure_target(test_phase5_forcing)
+
+  add_test(NAME burgers.phase5.forcing COMMAND test_phase5_forcing)
+  set_tests_properties(burgers.phase5.forcing PROPERTIES
+    LABELS "phase5;verification")
+
+  add_executable(test_phase5_solver tests/test_phase5_solver.cpp)
+  target_link_libraries(test_phase5_solver PRIVATE burgers::core)
+  burgers_configure_target(test_phase5_solver)
+
+  add_test(NAME burgers.phase5.solver COMMAND test_phase5_solver)
+  set_tests_properties(burgers.phase5.solver PROPERTIES
+    LABELS "phase5;verification")
 endif()

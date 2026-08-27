@@ -139,7 +139,7 @@ std::string serializeRunMetadata(const RunConfig& config,
   output << std::setprecision(std::numeric_limits<double>::max_digits10);
 
   output << "{\n"
-         << "  \"schema_version\": 1,\n"
+         << "  \"schema_version\": 2,\n"
          << "  \"created_utc\": " << jsonString(utcTimestamp()) << ",\n"
          << "  \"phase\": " << result.phase << ",\n"
          << "  \"build\": {\n"
@@ -213,10 +213,16 @@ std::string serializeRunMetadata(const RunConfig& config,
          << config.forcing.manufactured.phase
          << ",\"manufactured_decay_rate\":"
          << config.forcing.manufactured.decay_rate
-         << ",\"stochastic_standard_deviation\":"
-         << config.forcing.stochastic.standard_deviation
+         << ",\"stochastic_spectral_exponent\":"
+         << config.forcing.stochastic.spectral_exponent
+         << ",\"stochastic_stationary_rms\":"
+         << config.forcing.stochastic.stationary_rms
          << ",\"stochastic_correlation_time\":"
-         << config.forcing.stochastic.correlation_time << "},\n"
+         << config.forcing.stochastic.correlation_time
+         << ",\"stochastic_clock_interval\":"
+         << config.forcing.stochastic.clock_interval
+         << ",\"stochastic_clock_reference_time\":"
+         << config.forcing.stochastic.clock_reference_time << "},\n"
          << "    \"closure\": {\"type\":"
          << jsonString(toString(config.closure.type))
          << ",\"static_coefficient\":"
@@ -239,8 +245,12 @@ std::string serializeRunMetadata(const RunConfig& config,
          << jsonString(config.output.scalar_history_filename)
          << ",\"final_profile_filename\":"
          << jsonString(config.output.final_profile_filename)
+         << ",\"spectrum_filename\":"
+         << jsonString(config.output.spectrum_filename)
          << ",\"history_interval\":" << config.output.history_interval
          << ",\"profile_interval\":" << config.output.profile_interval
+         << ",\"statistics_start_time\":"
+         << config.output.statistics_start_time
          << "},\n"
          << "    \"random\": {\"seed\":" << config.random.seed << "}\n"
          << "  },\n"
@@ -255,7 +265,23 @@ std::string serializeRunMetadata(const RunConfig& config,
          << "    \"rejected_step_count\": "
          << result.rejected_step_count << ",\n"
          << "    \"shortened_final_step_count\": "
-         << result.shortened_final_step_count << "\n"
+         << result.shortened_final_step_count << ",\n"
+         << "    \"forcing_clock_step_count\": "
+         << result.forcing_clock_step_count << ",\n"
+         << "    \"statistics_sample_count\": "
+         << result.statistics_sample_count << ",\n"
+         << "    \"deterministic_work\": "
+         << result.deterministic_work << ",\n"
+         << "    \"stochastic_work\": "
+         << result.stochastic_work << ",\n"
+         << "    \"manufactured_work\": "
+         << result.manufactured_work << ",\n"
+         << "    \"molecular_dissipation\": "
+         << result.molecular_dissipation << ",\n"
+         << "    \"numerical_dissipation\": "
+         << result.numerical_dissipation << ",\n"
+         << "    \"energy_change\": "
+         << result.energy_change << "\n"
          << "  }\n"
          << "}\n";
   return output.str();

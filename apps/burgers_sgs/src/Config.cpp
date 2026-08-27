@@ -1,6 +1,7 @@
 #include "burgers/Config.h"
 
 #include <cmath>
+#include <set>
 
 namespace burgers {
 namespace {
@@ -21,6 +22,35 @@ void requireFinite(std::vector<std::string>& errors,
 
 RunConfig makeDefaultRunConfig() {
   return RunConfig{};
+}
+
+RunConfig makePhase5ValidationRunConfig() {
+  RunConfig config;
+  config.grid.cell_count = 256;
+  config.initial_condition.mean = 0.0;
+  config.initial_condition.amplitude = 0.1;
+  config.viscosity.molecular = 0.01;
+  config.numerical_method.reconstruction = Reconstruction::Muscl;
+  config.numerical_method.convective_flux = ConvectiveFlux::Godunov;
+  config.numerical_method.limiter = Limiter::MonotonizedCentral;
+  config.time_integration.final_time = 50.0;
+  config.forcing.type = ForcingType::Composite;
+  config.forcing.deterministic.modes = {{1, 0.1, 0.0}};
+  config.forcing.stochastic = makeLowModeOuForcingConfig();
+  config.output.history_interval = 0.05;
+  config.output.statistics_start_time = 10.0;
+  return config;
+}
+
+StochasticForcingConfig makeLowModeOuForcingConfig() {
+  return StochasticForcingConfig{};
+}
+
+StochasticForcingConfig makeChekhlovYakhotForcingConfig() {
+  StochasticForcingConfig config;
+  config.wavenumbers = {1, 2, 3, 4, 5, 6, 7, 8};
+  config.spectral_exponent = 1.0;
+  return config;
 }
 
 std::vector<std::string> validate(const RunConfig& config) {
@@ -136,39 +166,120 @@ std::vector<std::string> validate(const RunConfig& config) {
     }
   }
 
+  const bool deterministic_forcing_enabled =
+    config.forcing.type == ForcingType::DeterministicFourier ||
+    config.forcing.type == ForcingType::Composite;
+  const bool stochastic_forcing_enabled =
+    config.forcing.type == ForcingType::StochasticFourierOu ||
+    config.forcing.type == ForcingType::Composite;
+
   for(std::size_t index = 0;
       index < config.forcing.deterministic.modes.size(); ++index) {
     const FourierModeConfig& mode =
       config.forcing.deterministic.modes[index];
     const std::string prefix =
       "forcing.deterministic.modes[" + std::to_string(index) + "]";
-    if(mode.wavenumber == 0) {
-      errors.emplace_back(prefix + ".wavenumber must be nonzero");
+    if(mode.wavenumber <= 0) {
+      errors.emplace_back(prefix + ".wavenumber must be positive");
+    } else if(deterministic_forcing_enabled &&
+              static_cast<std::size_t>(mode.wavenumber) >=
+                config.grid.cell_count / 2 + config.grid.cell_count % 2) {
+      errors.emplace_back(prefix + ".wavenumber must be below grid Nyquist");
     }
     requireFinite(errors, mode.amplitude, (prefix + ".amplitude").c_str());
     requireFinite(errors, mode.phase, (prefix + ".phase").c_str());
   }
-  for(std::size_t index = 0;
-      index < config.forcing.stochastic.wavenumbers.size(); ++index) {
-    if(config.forcing.stochastic.wavenumbers[index] == 0) {
+  if(deterministic_forcing_enabled &&
+     config.forcing.deterministic.modes.empty()) {
+    errors.emplace_back(
+      "forcing.deterministic.modes must not be empty when deterministic "
+      "forcing is enabled");
+  }
+  std::set<int> deterministic_wavenumbers;
+  for(const FourierModeConfig& mode : config.forcing.deterministic.modes) {
+    if(mode.wavenumber > 0 &&
+       !deterministic_wavenumbers.insert(mode.wavenumber).second) {
       errors.emplace_back(
-        "forcing.stochastic.wavenumbers[" + std::to_string(index) +
-        "] must be nonzero");
+        "forcing.deterministic.modes must have unique wavenumbers");
+      break;
     }
   }
-  requireFinite(errors, config.forcing.stochastic.standard_deviation,
-                "forcing.stochastic.standard_deviation");
+
+  std::set<int> stochastic_wavenumbers;
+  for(std::size_t index = 0;
+      index < config.forcing.stochastic.wavenumbers.size(); ++index) {
+    const int wavenumber = config.forcing.stochastic.wavenumbers[index];
+    if(wavenumber <= 0) {
+      errors.emplace_back(
+        "forcing.stochastic.wavenumbers[" + std::to_string(index) +
+        "] must be positive");
+    } else if(stochastic_forcing_enabled &&
+              static_cast<std::size_t>(wavenumber) >=
+                config.grid.cell_count / 2 + config.grid.cell_count % 2) {
+      errors.emplace_back(
+        "forcing.stochastic.wavenumbers[" + std::to_string(index) +
+        "] must be below grid Nyquist");
+    } else if(!stochastic_wavenumbers.insert(wavenumber).second) {
+      errors.emplace_back(
+        "forcing.stochastic.wavenumbers must be unique");
+    }
+  }
+  if(stochastic_forcing_enabled &&
+     config.forcing.stochastic.wavenumbers.empty()) {
+    errors.emplace_back(
+      "forcing.stochastic.wavenumbers must not be empty when stochastic "
+      "forcing is enabled");
+  }
+  requireFinite(errors, config.forcing.stochastic.spectral_exponent,
+                "forcing.stochastic.spectral_exponent");
+  requireFinite(errors, config.forcing.stochastic.stationary_rms,
+                "forcing.stochastic.stationary_rms");
   requireFinite(errors, config.forcing.stochastic.correlation_time,
                 "forcing.stochastic.correlation_time");
-  if(isFinite(config.forcing.stochastic.standard_deviation) &&
-     config.forcing.stochastic.standard_deviation < 0.0) {
+  requireFinite(errors, config.forcing.stochastic.clock_interval,
+                "forcing.stochastic.clock_interval");
+  requireFinite(errors, config.forcing.stochastic.clock_reference_time,
+                "forcing.stochastic.clock_reference_time");
+  if(isFinite(config.forcing.stochastic.spectral_exponent) &&
+     config.forcing.stochastic.spectral_exponent < 0.0) {
     errors.emplace_back(
-      "forcing.stochastic.standard_deviation must be nonnegative");
+      "forcing.stochastic.spectral_exponent must be nonnegative");
+  }
+  if(isFinite(config.forcing.stochastic.stationary_rms) &&
+     config.forcing.stochastic.stationary_rms < 0.0) {
+    errors.emplace_back(
+      "forcing.stochastic.stationary_rms must be nonnegative");
+  }
+  if(stochastic_forcing_enabled &&
+     isFinite(config.forcing.stochastic.stationary_rms) &&
+     config.forcing.stochastic.stationary_rms == 0.0) {
+    errors.emplace_back(
+      "forcing.stochastic.stationary_rms must be positive when stochastic "
+      "forcing is enabled");
   }
   if(isFinite(config.forcing.stochastic.correlation_time) &&
      config.forcing.stochastic.correlation_time <= 0.0) {
     errors.emplace_back(
       "forcing.stochastic.correlation_time must be positive");
+  }
+  if(isFinite(config.forcing.stochastic.clock_interval) &&
+     config.forcing.stochastic.clock_interval <= 0.0) {
+    errors.emplace_back(
+      "forcing.stochastic.clock_interval must be positive");
+  }
+  if(stochastic_forcing_enabled &&
+     isFinite(config.forcing.stochastic.clock_reference_time) &&
+     isFinite(config.time_integration.initial_time) &&
+     config.forcing.stochastic.clock_reference_time >
+       config.time_integration.initial_time) {
+    errors.emplace_back(
+      "forcing.stochastic.clock_reference_time must not follow the initial "
+      "simulation time");
+  }
+  if((deterministic_forcing_enabled || stochastic_forcing_enabled) &&
+     !config.forcing.remove_discrete_mean) {
+    errors.emplace_back(
+      "forcing.remove_discrete_mean must be true for production forcing");
   }
 
   requireFinite(errors, config.closure.static_coefficient,
@@ -224,10 +335,15 @@ std::vector<std::string> validate(const RunConfig& config) {
   if(config.output.final_profile_filename.empty()) {
     errors.emplace_back("output.final_profile_filename must not be empty");
   }
+  if(config.output.spectrum_filename.empty()) {
+    errors.emplace_back("output.spectrum_filename must not be empty");
+  }
   requireFinite(errors, config.output.history_interval,
                 "output.history_interval");
   requireFinite(errors, config.output.profile_interval,
                 "output.profile_interval");
+  requireFinite(errors, config.output.statistics_start_time,
+                "output.statistics_start_time");
   if(isFinite(config.output.history_interval) &&
      config.output.history_interval <= 0.0) {
     errors.emplace_back("output.history_interval must be positive");
@@ -235,6 +351,17 @@ std::vector<std::string> validate(const RunConfig& config) {
   if(isFinite(config.output.profile_interval) &&
      config.output.profile_interval <= 0.0) {
     errors.emplace_back("output.profile_interval must be positive");
+  }
+  if(isFinite(config.output.statistics_start_time) &&
+     isFinite(config.time_integration.initial_time) &&
+     isFinite(config.time_integration.final_time) &&
+     (config.output.statistics_start_time <
+        config.time_integration.initial_time ||
+      config.output.statistics_start_time >
+        config.time_integration.final_time)) {
+    errors.emplace_back(
+      "output.statistics_start_time must lie within the simulation time "
+      "interval");
   }
 
   return errors;

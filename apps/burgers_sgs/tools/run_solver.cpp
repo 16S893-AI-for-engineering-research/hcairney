@@ -47,18 +47,46 @@ struct HistoryRow {
   double time;
   double mean;
   double kinetic_energy;
+  double spatial_variance;
   double molecular_dissipation;
+  double deterministic_power;
+  double stochastic_power;
+  double manufactured_power;
+  double interval_numerical_dissipation_rate;
 };
 
 HistoryRow makeHistoryRow(double time,
                           const burgers::BurgersSolver& solver,
-                          const burgers::State& state) {
+                          const burgers::State& state,
+                          const burgers::AdvanceResult* interval = nullptr) {
+  burgers::ForcingFields forcing(solver.grid());
+  solver.forcingFields(time, forcing);
+  const burgers::ForcingPower power =
+    burgers::forcingPower(solver.grid(), state, forcing);
+  double molecular_dissipation = burgers::molecularDissipation(
+    solver.grid(), state, solver.molecularViscosity());
+  double deterministic_power = power.deterministic;
+  double stochastic_power = power.stochastic;
+  double manufactured_power = power.manufactured;
+  double numerical_dissipation = 0.0;
+  if(interval != nullptr && interval->final_time > interval->initial_time) {
+    const double duration = interval->final_time - interval->initial_time;
+    molecular_dissipation = interval->molecular_dissipation / duration;
+    deterministic_power = interval->deterministic_work / duration;
+    stochastic_power = interval->stochastic_work / duration;
+    manufactured_power = interval->manufactured_work / duration;
+    numerical_dissipation = interval->numerical_dissipation / duration;
+  }
   return HistoryRow{
     time,
     burgers::mean(solver.grid(), state),
     burgers::kineticEnergy(solver.grid(), state),
-    burgers::molecularDissipation(
-      solver.grid(), state, solver.molecularViscosity())};
+    burgers::spatialVariance(solver.grid(), state),
+    molecular_dissipation,
+    deterministic_power,
+    stochastic_power,
+    manufactured_power,
+    numerical_dissipation};
 }
 
 void writeHistory(const std::string& path,
@@ -69,13 +97,59 @@ void writeHistory(const std::string& path,
   }
   output.imbue(std::locale::classic());
   output << std::setprecision(std::numeric_limits<double>::max_digits10)
-         << "time,mean,kinetic_energy,molecular_dissipation\n";
+         << "time,mean,kinetic_energy,spatial_variance,molecular_dissipation,"
+            "deterministic_power,stochastic_power,manufactured_power,"
+            "interval_numerical_dissipation_rate\n";
   for(const HistoryRow& row : history) {
     output << row.time << ',' << row.mean << ',' << row.kinetic_energy << ','
-           << row.molecular_dissipation << '\n';
+           << row.spatial_variance << ',' << row.molecular_dissipation << ','
+           << row.deterministic_power << ',' << row.stochastic_power << ','
+           << row.manufactured_power << ','
+           << row.interval_numerical_dissipation_rate << '\n';
   }
   if(!output) {
     throw std::runtime_error("unable to write scalar history file: " + path);
+  }
+}
+
+void accumulateSpectrum(const burgers::Grid& grid,
+                        const burgers::State& state,
+                        std::vector<double>& sum) {
+  const std::vector<double> sample = burgers::energySpectrum(grid, state);
+  if(sum.size() != sample.size()) {
+    throw std::invalid_argument(
+      "spectrum accumulator size does not match sampled spectrum");
+  }
+  for(std::size_t mode = 0; mode < sample.size(); ++mode) {
+    sum[mode] += sample[mode];
+  }
+}
+
+void writeMeanSpectrum(const std::string& path,
+                       const std::vector<double>& spectrum_sum,
+                       std::size_t sample_count) {
+  if(sample_count == 0) {
+    throw std::runtime_error(
+      "cannot write a mean spectrum without post-spin-up samples");
+  }
+  std::ofstream output(path);
+  if(!output) {
+    throw std::runtime_error("unable to open spectrum file: " + path);
+  }
+  output.imbue(std::locale::classic());
+  output << std::setprecision(std::numeric_limits<double>::max_digits10)
+         << "wavenumber,mean_energy,k_five_thirds_mean_energy,sample_count\n";
+  for(std::size_t mode = 0; mode < spectrum_sum.size(); ++mode) {
+    const double mean_energy =
+      spectrum_sum[mode] / static_cast<double>(sample_count);
+    const double compensated = mode == 0
+      ? 0.0
+      : std::pow(static_cast<double>(mode), 5.0 / 3.0) * mean_energy;
+    output << mode << ',' << mean_energy << ',' << compensated << ','
+           << sample_count << '\n';
+  }
+  if(!output) {
+    throw std::runtime_error("unable to write spectrum file: " + path);
   }
 }
 
@@ -102,9 +176,10 @@ void writeFinalProfile(const std::string& path,
 }  // namespace
 
 int main() {
-  const burgers::RunConfig config = burgers::makeDefaultRunConfig();
+  const burgers::RunConfig config =
+    burgers::makePhase5ValidationRunConfig();
   burgers::RunResultMetadata result;
-  result.phase = 4;
+  result.phase = 5;
   result.final_time = config.time_integration.initial_time;
   const std::vector<std::string> errors = burgers::validate(config);
 
@@ -134,12 +209,19 @@ int main() {
                              state,
                              config.initial_condition,
                              config.random.seed);
-    static_cast<void>(solver.stableTimeStep(state));
+    static_cast<void>(solver.stableTimeStep(
+      state, config.time_integration.initial_time));
 
     std::vector<HistoryRow> history;
+    std::vector<double> spectrum_sum(solver.grid().cellCount() / 2 + 1,
+                                     0.0);
     double time = config.time_integration.initial_time;
     const double final_time = config.time_integration.final_time;
     history.push_back(makeHistoryRow(time, solver, state));
+    if(time >= config.output.statistics_start_time) {
+      accumulateSpectrum(solver.grid(), state, spectrum_sum);
+      ++result.statistics_sample_count;
+    }
 
     std::size_t output_index = 1;
     while(time < final_time) {
@@ -165,16 +247,27 @@ int main() {
       result.timestep_count += advance.timestep_count;
       result.shortened_final_step_count +=
         advance.shortened_final_step_count;
+      result.forcing_clock_step_count += advance.forcing_clock_step_count;
+      result.deterministic_work += advance.deterministic_work;
+      result.stochastic_work += advance.stochastic_work;
+      result.manufactured_work += advance.manufactured_work;
+      result.molecular_dissipation += advance.molecular_dissipation;
+      result.numerical_dissipation += advance.numerical_dissipation;
+      result.energy_change += advance.energy_change;
       time = advance.final_time;
       result.final_time = time;
       result.numerical_advancement_performed =
         result.timestep_count != 0;
-      history.push_back(makeHistoryRow(time, solver, state));
+      history.push_back(makeHistoryRow(time, solver, state, &advance));
+      if(time >= config.output.statistics_start_time) {
+        accumulateSpectrum(solver.grid(), state, spectrum_sum);
+        ++result.statistics_sample_count;
+      }
       ++output_index;
     }
 
     result.status = burgers::RunStatus::Completed;
-    result.message = "Phase 4 configurable unclosed solve completed.";
+    result.message = "Phase 5 configurable forced solve completed.";
     result.numerical_advancement_performed = result.timestep_count != 0;
     result.final_time = time;
 
@@ -182,8 +275,13 @@ int main() {
       config.output, config.output.scalar_history_filename);
     const std::string profile_path = outputFilePath(
       config.output, config.output.final_profile_filename);
+    const std::string spectrum_path = outputFilePath(
+      config.output, config.output.spectrum_filename);
     writeHistory(history_path, history);
     writeFinalProfile(profile_path, time, solver.grid(), state);
+    writeMeanSpectrum(spectrum_path,
+                      spectrum_sum,
+                      result.statistics_sample_count);
   } catch(const std::exception& error) {
     result.status = burgers::RunStatus::Failed;
     result.message = error.what();

@@ -36,7 +36,7 @@ int main() {
 
   const burgers::RunResultMetadata result;
   const std::string metadata = burgers::serializeRunMetadata(config, result);
-  expect(metadata.find("\"schema_version\": 1") != std::string::npos,
+  expect(metadata.find("\"schema_version\": 2") != std::string::npos,
          "metadata must contain its schema version");
   expect(metadata.find("\"smarties_linked\": false") != std::string::npos,
          "metadata must document SMARTIES independence");
@@ -57,4 +57,3 @@ int main() {
   std::cout << "Phase 0 scaffolding checks passed\n";
   return 0;
 }
-
