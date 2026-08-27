@@ -104,7 +104,7 @@ void writeFinalProfile(const std::string& path,
 int main() {
   const burgers::RunConfig config = burgers::makeDefaultRunConfig();
   burgers::RunResultMetadata result;
-  result.phase = 2;
+  result.phase = 4;
   result.final_time = config.time_integration.initial_time;
   const std::vector<std::string> errors = burgers::validate(config);
 
@@ -174,7 +174,7 @@ int main() {
     }
 
     result.status = burgers::RunStatus::Completed;
-    result.message = "Phase 2 first-order unclosed solve completed.";
+    result.message = "Phase 4 configurable unclosed solve completed.";
     result.numerical_advancement_performed = result.timestep_count != 0;
     result.final_time = time;
 

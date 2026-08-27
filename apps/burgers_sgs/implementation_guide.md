@@ -174,6 +174,54 @@ When adding MUSCL:
 4. Make the limiter selectable so its dissipation can be measured rather than
    hidden in the implementation.
 
+The Phase 4 MUSCL implementation uses the backward and forward cell-average
+differences
+
+\[
+  \delta^-_i=u_i-u_{i-1}, \qquad \delta^+_i=u_{i+1}-u_i,
+\]
+
+and supports three selectable limited slopes:
+
+\[
+\begin{aligned}
+  \sigma_i^{\mathrm{minmod}}
+    &=\mathrm{minmod}(\delta^-_i,\delta^+_i),\\
+  \sigma_i^{\mathrm{MC}}
+    &=\mathrm{minmod}\left(2\delta^-_i,
+       \frac{\delta^-_i+\delta^+_i}{2},2\delta^+_i\right),\\
+  \sigma_i^{\mathrm{VL}}
+    &=\begin{cases}
+       \dfrac{2\delta^-_i\delta^+_i}{\delta^-_i+\delta^+_i},
+         & \delta^-_i\delta^+_i>0,\\
+       0, & \text{otherwise}.
+      \end{cases}
+\end{aligned}
+\]
+
+At face \(i+1/2\), reconstruct
+
+\[
+  u^L_{i+1/2}=u_i+\frac{\sigma_i}{2}, \qquad
+  u^R_{i+1/2}=u_{i+1}-\frac{\sigma_{i+1}}{2}.
+\]
+
+This is a method-of-lines reconstruction; no separate MUSCL-Hancock predictor
+is applied because SSP-RK3 supplies the temporal integration. The Rusanov
+comparison uses the local scalar Burgers speed
+
+\[
+  F^{\mathrm{Rus}}(u_L,u_R)=\frac{f(u_L)+f(u_R)}{2}
+  -\frac{\max(|u_L|,|u_R|)}{2}(u_R-u_L).
+\]
+
+The distinct Phase 4 comparison matrix consists of piecewise-constant Godunov
+and Rusanov, plus each of Minmod, MC, and Van Leer MUSCL reconstruction paired
+with both fluxes. A limiter is not applied to piecewise-constant data, so this
+is an eight-configuration matrix rather than twelve distinct methods. Forced
+Phase 4 verification remains restricted to the manufactured source; general
+deterministic and stochastic forcing remains Phase 5 work.
+
 ### 4.3 Molecular and SGS viscosity
 
 The closure coefficient and eddy viscosity are cell-centered. For a

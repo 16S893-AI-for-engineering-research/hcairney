@@ -167,4 +167,30 @@ if(BUILD_TESTING)
   add_test(NAME burgers.phase3.waves COMMAND test_phase3_waves)
   set_tests_properties(burgers.phase3.waves PROPERTIES
     LABELS "phase3;verification")
+
+  add_executable(test_phase4_kernels tests/test_phase4_kernels.cpp)
+  target_link_libraries(test_phase4_kernels PRIVATE burgers::core)
+  burgers_configure_target(test_phase4_kernels)
+
+  add_test(NAME burgers.phase4.kernels COMMAND test_phase4_kernels)
+  set_tests_properties(burgers.phase4.kernels PROPERTIES
+    LABELS "phase4;verification")
+
+  add_executable(test_phase4_matrix tests/test_phase4_matrix.cpp)
+  target_link_libraries(test_phase4_matrix PRIVATE burgers::core)
+  burgers_configure_target(test_phase4_matrix)
+
+  add_test(NAME burgers.phase4.matrix COMMAND test_phase4_matrix)
+  set_tests_properties(burgers.phase4.matrix PROPERTIES
+    LABELS "phase4;verification")
+
+  add_executable(test_phase4_waves_dissipation
+    tests/test_phase4_waves_dissipation.cpp)
+  target_link_libraries(test_phase4_waves_dissipation PRIVATE burgers::core)
+  burgers_configure_target(test_phase4_waves_dissipation)
+
+  add_test(NAME burgers.phase4.waves_dissipation
+    COMMAND test_phase4_waves_dissipation)
+  set_tests_properties(burgers.phase4.waves_dissipation PROPERTIES
+    LABELS "phase4;verification")
 endif()

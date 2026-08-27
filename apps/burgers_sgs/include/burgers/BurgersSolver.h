@@ -48,6 +48,9 @@ public:
 private:
   Grid grid_;
   double molecular_viscosity_;
+  Reconstruction reconstruction_;
+  ConvectiveFlux convective_flux_;
+  Limiter limiter_;
   ForcingType forcing_type_;
   ManufacturedForcingConfig manufactured_forcing_;
   double advective_cfl_;

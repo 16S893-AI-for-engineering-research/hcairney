@@ -27,32 +27,23 @@ std::string joinErrors(const std::vector<std::string>& errors) {
   return message.str();
 }
 
-Grid makePhase3Grid(const RunConfig& config) {
+Grid makeSolverGrid(const RunConfig& config) {
   const std::vector<std::string> errors = validate(config);
   if(!errors.empty()) {
     throw std::invalid_argument("invalid solver configuration: " +
                                 joinErrors(errors));
   }
-  if(config.numerical_method.reconstruction !=
-       Reconstruction::PiecewiseConstant) {
-    throw std::invalid_argument(
-      "Phase 3 solver supports only piecewise-constant reconstruction");
-  }
-  if(config.numerical_method.convective_flux != ConvectiveFlux::Godunov) {
-    throw std::invalid_argument(
-      "Phase 3 solver supports only the Godunov convective flux");
-  }
   if(config.time_integration.integrator != TimeIntegrator::SspRk3) {
     throw std::invalid_argument(
-      "Phase 3 solver supports only SSP-RK3 time integration");
+      "solver supports only SSP-RK3 time integration");
   }
   if(config.forcing.type != ForcingType::None &&
      config.forcing.type != ForcingType::Manufactured) {
     throw std::invalid_argument(
-      "Phase 3 solver supports only zero or manufactured forcing");
+      "Phase 4 solver supports only zero or manufactured forcing");
   }
   if(config.closure.type != ClosureType::NoClosure) {
-    throw std::invalid_argument("Phase 3 solver does not support SGS closure");
+    throw std::invalid_argument("Phase 4 solver does not support SGS closure");
   }
   return Grid(config.grid);
 }
@@ -82,8 +73,11 @@ void requireFiniteTime(double value, const char* name) {
 }  // namespace
 
 BurgersSolver::BurgersSolver(const RunConfig& config)
-  : grid_(makePhase3Grid(config)),
+  : grid_(makeSolverGrid(config)),
     molecular_viscosity_(config.viscosity.molecular),
+    reconstruction_(config.numerical_method.reconstruction),
+    convective_flux_(config.numerical_method.convective_flux),
+    limiter_(config.numerical_method.limiter),
     forcing_type_(config.forcing.type),
     manufactured_forcing_(config.forcing.manufactured),
     advective_cfl_(config.time_integration.advective_cfl),
@@ -118,11 +112,13 @@ void BurgersSolver::rightHandSide(const State& state,
   }
 
   FaceStates face_states(grid_.cellCount());
-  reconstructPiecewiseConstant(grid_, state, face_states);
+  reconstruct(grid_, state, reconstruction_, limiter_, face_states);
 
   std::vector<double> advective_fluxes(grid_.cellCount(), 0.0);
   std::vector<double> viscous_fluxes(grid_.cellCount(), 0.0);
-  computeGodunovFluxes(face_states, advective_fluxes);
+  computeConvectiveFluxes(face_states,
+                          convective_flux_,
+                          advective_fluxes);
   computeMolecularViscousFluxes(
     grid_, state, molecular_viscosity_, viscous_fluxes);
 
