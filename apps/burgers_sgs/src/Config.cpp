@@ -105,6 +105,37 @@ std::vector<std::string> validate(const RunConfig& config) {
     errors.emplace_back("time_integration.maximum_steps must be positive");
   }
 
+  requireFinite(errors, config.forcing.manufactured.amplitude,
+                "forcing.manufactured.amplitude");
+  requireFinite(errors, config.forcing.manufactured.phase,
+                "forcing.manufactured.phase");
+  requireFinite(errors, config.forcing.manufactured.decay_rate,
+                "forcing.manufactured.decay_rate");
+  if(config.forcing.manufactured.wavenumber == 0) {
+    errors.emplace_back(
+      "forcing.manufactured.wavenumber must be nonzero");
+  }
+  if(isFinite(config.forcing.manufactured.decay_rate) &&
+     config.forcing.manufactured.decay_rate <= 0.0) {
+    errors.emplace_back(
+      "forcing.manufactured.decay_rate must be positive");
+  }
+  if(config.forcing.type == ForcingType::Manufactured &&
+     isFinite(config.grid.x_begin) && isFinite(config.grid.x_end) &&
+     config.grid.x_end > config.grid.x_begin &&
+     config.forcing.manufactured.wavenumber != 0) {
+    const double pi = 3.1415926535897932384626433832795;
+    const double cycles =
+      static_cast<double>(config.forcing.manufactured.wavenumber) *
+      (config.grid.x_end - config.grid.x_begin) / (2.0 * pi);
+    const double nearest_integer = std::round(cycles);
+    const double tolerance = 1.0e-12 * std::fmax(1.0, std::abs(cycles));
+    if(std::abs(cycles - nearest_integer) > tolerance) {
+      errors.emplace_back(
+        "manufactured forcing wavenumber must be periodic on the grid domain");
+    }
+  }
+
   for(std::size_t index = 0;
       index < config.forcing.deterministic.modes.size(); ++index) {
     const FourierModeConfig& mode =

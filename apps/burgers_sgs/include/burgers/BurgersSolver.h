@@ -22,9 +22,20 @@ public:
   const Grid& grid() const noexcept;
   double molecularViscosity() const noexcept;
 
+  // Autonomous convenience overload. Manufactured forcing requires the
+  // explicit-time overload below.
   void rightHandSide(const State& state, State& derivative) const;
+  void rightHandSide(const State& state,
+                     double time,
+                     State& derivative) const;
   double stableTimeStep(const State& state) const;
+
+  // Autonomous convenience overload. Manufactured forcing requires the
+  // explicit-time overload below.
   void advanceSspRk3(State& state, double time_step) const;
+  void advanceSspRk3(State& state,
+                     double time,
+                     double time_step) const;
 
   AdvanceResult advanceTo(State& state,
                           double initial_time,
@@ -37,6 +48,8 @@ public:
 private:
   Grid grid_;
   double molecular_viscosity_;
+  ForcingType forcing_type_;
+  ManufacturedForcingConfig manufactured_forcing_;
   double advective_cfl_;
   double diffusive_cfl_;
   std::size_t maximum_steps_;

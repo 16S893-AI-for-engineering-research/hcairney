@@ -94,4 +94,65 @@ double molecularDissipation(const Grid& grid,
   return molecular_viscosity * grid.cellWidth() * gradient_square_sum;
 }
 
+ErrorNorms errorNorms(const Grid& grid,
+                      const State& numerical,
+                      const State& reference) {
+  requireCompatible(grid, numerical);
+  requireCompatible(grid, reference);
+
+  double absolute_sum = 0.0;
+  double absolute_correction = 0.0;
+  double square_sum = 0.0;
+  double square_correction = 0.0;
+  double maximum = 0.0;
+  for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+    const double difference = numerical[cell] - reference[cell];
+    const double absolute_term = std::abs(difference) - absolute_correction;
+    const double updated_absolute = absolute_sum + absolute_term;
+    absolute_correction =
+      (updated_absolute - absolute_sum) - absolute_term;
+    absolute_sum = updated_absolute;
+
+    const double square_term =
+      difference * difference - square_correction;
+    const double updated_square = square_sum + square_term;
+    square_correction = (updated_square - square_sum) - square_term;
+    square_sum = updated_square;
+    maximum = std::max(maximum, std::abs(difference));
+  }
+
+  ErrorNorms errors;
+  errors.l1 = grid.cellWidth() * absolute_sum / grid.length();
+  errors.l2 =
+    std::sqrt(grid.cellWidth() * square_sum / grid.length());
+  errors.l_infinity = maximum;
+  return errors;
+}
+
+UnforcedEnergyBudgetRate unforcedEnergyBudgetRate(
+  const Grid& grid,
+  const State& state,
+  const State& derivative,
+  double molecular_viscosity) {
+  requireCompatible(grid, state);
+  requireCompatible(grid, derivative);
+
+  double product_sum = 0.0;
+  double correction = 0.0;
+  for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+    const double term = state[cell] * derivative[cell] - correction;
+    const double updated = product_sum + term;
+    correction = (updated - product_sum) - term;
+    product_sum = updated;
+  }
+
+  UnforcedEnergyBudgetRate budget;
+  budget.energy_rate = grid.cellWidth() * product_sum;
+  budget.molecular_dissipation =
+    molecularDissipation(grid, state, molecular_viscosity);
+  budget.numerical_dissipation =
+    -budget.energy_rate - budget.molecular_dissipation;
+  return budget;
+}
+
 }  // namespace burgers

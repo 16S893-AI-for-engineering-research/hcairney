@@ -108,8 +108,16 @@ struct StochasticForcingConfig {
   double correlation_time = 1.0;
 };
 
+struct ManufacturedForcingConfig {
+  double amplitude = 1.0;
+  int wavenumber = 1;
+  double phase = 0.0;
+  double decay_rate = 1.0;
+};
+
 struct ForcingConfig {
   ForcingType type = ForcingType::None;
+  ManufacturedForcingConfig manufactured;
   DeterministicForcingConfig deterministic;
   StochasticForcingConfig stochastic;
   bool remove_discrete_mean = true;
@@ -163,4 +171,3 @@ const char* toString(ClosureType value);
 const char* toString(FaceViscosityAveraging value);
 
 }  // namespace burgers
-

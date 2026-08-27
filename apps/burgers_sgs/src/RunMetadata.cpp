@@ -205,7 +205,15 @@ std::string serializeRunMetadata(const RunConfig& config,
   writeFourierModes(output, config.forcing.deterministic.modes);
   output << ",\"stochastic_wavenumbers\":";
   writeWavenumbers(output, config.forcing.stochastic.wavenumbers);
-  output << ",\"stochastic_standard_deviation\":"
+  output << ",\"manufactured_amplitude\":"
+         << config.forcing.manufactured.amplitude
+         << ",\"manufactured_wavenumber\":"
+         << config.forcing.manufactured.wavenumber
+         << ",\"manufactured_phase\":"
+         << config.forcing.manufactured.phase
+         << ",\"manufactured_decay_rate\":"
+         << config.forcing.manufactured.decay_rate
+         << ",\"stochastic_standard_deviation\":"
          << config.forcing.stochastic.standard_deviation
          << ",\"stochastic_correlation_time\":"
          << config.forcing.stochastic.correlation_time << "},\n"

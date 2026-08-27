@@ -99,6 +99,7 @@ add_library(burgers_core STATIC
   src/Diagnostics.cpp
   src/Grid.cpp
   src/InitialCondition.cpp
+  src/ManufacturedSolution.cpp
   src/Reconstruction.cpp
   src/State.cpp
   src/RunMetadata.cpp
@@ -140,4 +141,30 @@ if(BUILD_TESTING)
   burgers_configure_target(test_phase2_solver)
 
   add_test(NAME burgers.phase2.solver COMMAND test_phase2_solver)
+
+  add_executable(test_phase3_manufactured
+    tests/test_phase3_manufactured.cpp)
+  target_link_libraries(test_phase3_manufactured PRIVATE burgers::core)
+  burgers_configure_target(test_phase3_manufactured)
+
+  add_test(NAME burgers.phase3.manufactured
+    COMMAND test_phase3_manufactured)
+  set_tests_properties(burgers.phase3.manufactured PROPERTIES
+    LABELS "phase3;verification")
+
+  add_executable(test_phase3_invariants tests/test_phase3_invariants.cpp)
+  target_link_libraries(test_phase3_invariants PRIVATE burgers::core)
+  burgers_configure_target(test_phase3_invariants)
+
+  add_test(NAME burgers.phase3.invariants COMMAND test_phase3_invariants)
+  set_tests_properties(burgers.phase3.invariants PROPERTIES
+    LABELS "phase3;verification")
+
+  add_executable(test_phase3_waves tests/test_phase3_waves.cpp)
+  target_link_libraries(test_phase3_waves PRIVATE burgers::core)
+  burgers_configure_target(test_phase3_waves)
+
+  add_test(NAME burgers.phase3.waves COMMAND test_phase3_waves)
+  set_tests_properties(burgers.phase3.waves PROPERTIES
+    LABELS "phase3;verification")
 endif()
