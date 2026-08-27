@@ -93,12 +93,16 @@ function(burgers_configure_target target_name)
 endfunction()
 
 add_library(burgers_core STATIC
+  src/BurgersSolver.cpp
   src/Config.cpp
+  src/ConvectiveFlux.cpp
   src/Diagnostics.cpp
   src/Grid.cpp
   src/InitialCondition.cpp
+  src/Reconstruction.cpp
   src/State.cpp
-  src/RunMetadata.cpp)
+  src/RunMetadata.cpp
+  src/ViscousFlux.cpp)
 add_library(burgers::core ALIAS burgers_core)
 
 target_include_directories(burgers_core
@@ -124,4 +128,16 @@ if(BUILD_TESTING)
   burgers_configure_target(test_phase1_grid_state)
 
   add_test(NAME burgers.phase1.grid_state COMMAND test_phase1_grid_state)
+
+  add_executable(test_phase2_fluxes tests/test_phase2_fluxes.cpp)
+  target_link_libraries(test_phase2_fluxes PRIVATE burgers::core)
+  burgers_configure_target(test_phase2_fluxes)
+
+  add_test(NAME burgers.phase2.fluxes COMMAND test_phase2_fluxes)
+
+  add_executable(test_phase2_solver tests/test_phase2_solver.cpp)
+  target_link_libraries(test_phase2_solver PRIVATE burgers::core)
+  burgers_configure_target(test_phase2_solver)
+
+  add_test(NAME burgers.phase2.solver COMMAND test_phase2_solver)
 endif()

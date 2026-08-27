@@ -113,6 +113,7 @@ BuildMetadata currentBuildMetadata() {
 const char* toString(RunStatus value) {
   switch(value) {
     case RunStatus::ScaffoldComplete: return "scaffold_complete";
+    case RunStatus::Completed: return "completed";
     case RunStatus::InvalidConfiguration: return "invalid_configuration";
     case RunStatus::Failed: return "failed";
   }
@@ -140,7 +141,7 @@ std::string serializeRunMetadata(const RunConfig& config,
   output << "{\n"
          << "  \"schema_version\": 1,\n"
          << "  \"created_utc\": " << jsonString(utcTimestamp()) << ",\n"
-         << "  \"phase\": 0,\n"
+         << "  \"phase\": " << result.phase << ",\n"
          << "  \"build\": {\n"
          << "    \"project_version\": "
          << jsonString(build.project_version) << ",\n"
@@ -239,7 +240,9 @@ std::string serializeRunMetadata(const RunConfig& config,
          << "    \"status\": " << jsonString(toString(result.status))
          << ",\n"
          << "    \"message\": " << jsonString(result.message) << ",\n"
-         << "    \"numerical_advancement_performed\": false,\n"
+         << "    \"numerical_advancement_performed\": "
+         << jsonBool(result.numerical_advancement_performed) << ",\n"
+         << "    \"final_time\": " << result.final_time << ",\n"
          << "    \"timestep_count\": " << result.timestep_count << ",\n"
          << "    \"rejected_step_count\": "
          << result.rejected_step_count << ",\n"
@@ -265,4 +268,3 @@ void writeRunMetadata(const std::string& path,
 }
 
 }  // namespace burgers
-

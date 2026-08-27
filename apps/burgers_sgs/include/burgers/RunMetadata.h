@@ -9,6 +9,7 @@ namespace burgers {
 
 enum class RunStatus {
   ScaffoldComplete,
+  Completed,
   InvalidConfiguration,
   Failed
 };
@@ -29,6 +30,9 @@ struct BuildMetadata {
 struct RunResultMetadata {
   RunStatus status = RunStatus::ScaffoldComplete;
   std::string message = "Phase 0 scaffold completed; no PDE was advanced.";
+  unsigned int phase = 0;
+  bool numerical_advancement_performed = false;
+  double final_time = 0.0;
   std::size_t timestep_count = 0;
   std::size_t rejected_step_count = 0;
   std::size_t shortened_final_step_count = 0;
@@ -44,4 +48,3 @@ void writeRunMetadata(const std::string& path,
                       const RunResultMetadata& result);
 
 }  // namespace burgers
-

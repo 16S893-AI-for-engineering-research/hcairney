@@ -10,5 +10,9 @@ double mean(const Grid& grid, const State& state);
 double l1Norm(const Grid& grid, const State& state);
 double l2Norm(const Grid& grid, const State& state);
 double lInfinityNorm(const Grid& grid, const State& state);
+double kineticEnergy(const Grid& grid, const State& state);
+double molecularDissipation(const Grid& grid,
+                            const State& state,
+                            double molecular_viscosity);
 
 }  // namespace burgers
