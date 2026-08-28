@@ -47,32 +47,10 @@ void printUsage(std::ostream& output, const char* executable) {
   output
     << "Usage: " << executable << " [options]\n"
     << "Options:\n"
-    << "  --profile-step-interval N  Save a profile every N accepted steps\n"
-    << "                             (default: 100)\n"
     << "  --profiles FILE            Profile-history CSV filename\n"
     << "                             (default: burgers_profiles.csv)\n"
     << "  --no-initial-profile       Do not save the initial condition\n"
-    << "  --no-final-profile         Do not save an off-interval final state\n"
     << "  -h, --help                 Show this help message\n";
-}
-
-std::size_t parsePositiveSize(const std::string& value,
-                              const std::string& option) {
-  if(value.empty() || value.front() == '-') {
-    throw std::invalid_argument(option + " requires a positive integer");
-  }
-  std::size_t parsed_characters = 0;
-  unsigned long long parsed = 0;
-  try {
-    parsed = std::stoull(value, &parsed_characters);
-  } catch(const std::exception&) {
-    throw std::invalid_argument(option + " requires a positive integer");
-  }
-  if(parsed_characters != value.size() || parsed == 0 ||
-     parsed > std::numeric_limits<std::size_t>::max()) {
-    throw std::invalid_argument(option + " requires a positive integer");
-  }
-  return static_cast<std::size_t>(parsed);
 }
 
 bool parseCommandLine(int argc,
@@ -87,24 +65,15 @@ bool parseCommandLine(int argc,
       config.output.write_initial_profile = false;
       continue;
     }
-    if(argument == "--no-final-profile") {
-      config.output.write_final_profile = false;
-      continue;
-    }
-    if(argument == "--profile-step-interval" || argument == "--profiles") {
+    if(argument == "--profiles") {
       if(index + 1 >= argc) {
         throw std::invalid_argument(argument + " requires a value");
       }
       const std::string value(argv[++index]);
-      if(argument == "--profile-step-interval") {
-        config.output.profile_step_interval =
-          parsePositiveSize(value, argument);
-      } else {
-        if(value.empty()) {
-          throw std::invalid_argument(argument + " requires a filename");
-        }
-        config.output.profile_history_filename = value;
+      if(value.empty()) {
+        throw std::invalid_argument(argument + " requires a filename");
       }
+      config.output.profile_history_filename = value;
       continue;
     }
     throw std::invalid_argument("unknown option: " + argument);
@@ -321,12 +290,9 @@ int main(int argc, char* argv[]) {
     profile_history
       << std::setprecision(std::numeric_limits<double>::max_digits10)
       << "step,time,x,cell_average\n";
-    bool wrote_profile = false;
-    std::size_t last_profile_step = 0;
     if(config.output.write_initial_profile) {
       writeProfileSnapshot(
         profile_history, 0, time, solver.grid(), state);
-      wrote_profile = true;
     }
 
     history.push_back(makeHistoryRow(time, solver, state));
@@ -354,26 +320,8 @@ int main(int argc, char* argv[]) {
       }
       const std::size_t remaining_steps =
         config.time_integration.maximum_steps - result.timestep_count;
-      const std::size_t initial_step_count = result.timestep_count;
-      const burgers::BurgersSolver::StepObserver profile_observer =
-        [&](std::size_t interval_step,
-            double step_time,
-            const burgers::State& step_state) {
-          const std::size_t completed_step =
-            initial_step_count + interval_step;
-          if(completed_step % config.output.profile_step_interval == 0) {
-            writeProfileSnapshot(profile_history,
-                                 completed_step,
-                                 step_time,
-                                 solver.grid(),
-                                 step_state);
-            wrote_profile = true;
-            last_profile_step = completed_step;
-          }
-        };
       const burgers::AdvanceResult advance =
-        solver.advanceTo(
-          state, time, target_time, remaining_steps, profile_observer);
+        solver.advanceTo(state, time, target_time, remaining_steps);
       result.timestep_count += advance.timestep_count;
       result.shortened_final_step_count +=
         advance.shortened_final_step_count;
@@ -389,6 +337,11 @@ int main(int argc, char* argv[]) {
       result.numerical_advancement_performed =
         result.timestep_count != 0;
       history.push_back(makeHistoryRow(time, solver, state, &advance));
+      writeProfileSnapshot(profile_history,
+                           result.timestep_count,
+                           time,
+                           solver.grid(),
+                           state);
       if(time >= config.output.statistics_start_time) {
         accumulateSpectrum(solver.grid(), state, spectrum_sum);
         ++result.statistics_sample_count;
@@ -401,14 +354,6 @@ int main(int argc, char* argv[]) {
     result.numerical_advancement_performed = result.timestep_count != 0;
     result.final_time = time;
 
-    if(config.output.write_final_profile &&
-       (!wrote_profile || last_profile_step != result.timestep_count)) {
-      writeProfileSnapshot(profile_history,
-                           result.timestep_count,
-                           time,
-                           solver.grid(),
-                           state);
-    }
     profile_history.close();
     if(!profile_history) {
       throw std::runtime_error(

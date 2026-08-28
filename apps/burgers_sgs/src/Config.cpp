@@ -349,9 +349,6 @@ std::vector<std::string> validate(const RunConfig& config) {
      config.output.history_interval <= 0.0) {
     errors.emplace_back("output.history_interval must be positive");
   }
-  if(config.output.profile_step_interval == 0) {
-    errors.emplace_back("output.profile_step_interval must be positive");
-  }
   if(isFinite(config.output.statistics_start_time) &&
      isFinite(config.time_integration.initial_time) &&
      isFinite(config.time_integration.final_time) &&

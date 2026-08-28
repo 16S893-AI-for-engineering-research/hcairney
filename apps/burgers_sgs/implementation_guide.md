@@ -760,8 +760,10 @@ Every standalone run should record:
 
 CSV is sufficient for initial scalar histories and profiles. Keep file output
 outside the numerical kernels, and ensure verification tests can run without
-creating output files. Add a more scalable format only if DNS data volume makes
-CSV demonstrably inadequate.
+creating output files. Profile-history snapshots use the same prescribed
+physical times as scalar-history samples; the final adaptive PDE step is
+shortened to reach each shared output time. Add a more scalable format only if
+DNS data volume makes CSV demonstrably inadequate.
 
 ## 10. Overall definition of readiness for RL
 

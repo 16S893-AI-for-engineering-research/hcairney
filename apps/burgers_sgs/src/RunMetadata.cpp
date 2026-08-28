@@ -139,7 +139,7 @@ std::string serializeRunMetadata(const RunConfig& config,
   output << std::setprecision(std::numeric_limits<double>::max_digits10);
 
   output << "{\n"
-         << "  \"schema_version\": 3,\n"
+         << "  \"schema_version\": 4,\n"
          << "  \"created_utc\": " << jsonString(utcTimestamp()) << ",\n"
          << "  \"phase\": " << result.phase << ",\n"
          << "  \"build\": {\n"
@@ -250,12 +250,8 @@ std::string serializeRunMetadata(const RunConfig& config,
          << ",\"spectrum_filename\":"
          << jsonString(config.output.spectrum_filename)
          << ",\"history_interval\":" << config.output.history_interval
-         << ",\"profile_step_interval\":"
-         << config.output.profile_step_interval
          << ",\"write_initial_profile\":"
          << jsonBool(config.output.write_initial_profile)
-         << ",\"write_final_profile\":"
-         << jsonBool(config.output.write_final_profile)
          << ",\"statistics_start_time\":"
          << config.output.statistics_start_time
          << "},\n"
