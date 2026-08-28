@@ -36,18 +36,31 @@ int main() {
 
   const burgers::RunResultMetadata result;
   const std::string metadata = burgers::serializeRunMetadata(config, result);
-  expect(metadata.find("\"schema_version\": 2") != std::string::npos,
+  expect(metadata.find("\"schema_version\": 3") != std::string::npos,
          "metadata must contain its schema version");
   expect(metadata.find("\"smarties_linked\": false") != std::string::npos,
          "metadata must document SMARTIES independence");
   expect(metadata.find("\"seed\":5489") != std::string::npos,
          "metadata must contain the random seed");
+  expect(metadata.find("\"profile_step_interval\":100") !=
+           std::string::npos,
+         "metadata must contain the profile step interval");
+  expect(metadata.find("\"write_initial_profile\":true") !=
+           std::string::npos,
+         "metadata must record initial-profile output");
   expect(metadata.find("\"numerical_advancement_performed\": false") !=
            std::string::npos,
          "metadata must identify the Phase 0 no-op run");
   expect(burgers::metadataFilePath(config.output) ==
            "./burgers_run_metadata.json",
          "default metadata path must be reproducible");
+
+  burgers::RunConfig invalid_profile_config = config;
+  invalid_profile_config.output.profile_step_interval = 0;
+  const std::vector<std::string> profile_errors =
+    burgers::validate(invalid_profile_config);
+  expect(!profile_errors.empty(),
+         "a zero profile step interval must be rejected");
 
   if(failures != 0) {
     std::cerr << failures << " Phase 0 scaffolding check(s) failed\n";

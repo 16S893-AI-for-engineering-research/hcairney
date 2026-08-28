@@ -6,6 +6,7 @@
 #include "burgers/State.h"
 
 #include <cstddef>
+#include <functional>
 #include <string>
 
 namespace burgers {
@@ -37,6 +38,11 @@ struct SspRk3StepBudget {
 
 class BurgersSolver {
 public:
+  // Called after each accepted step. The index is relative to the current
+  // advanceTo call, and the time and state are those at the end of the step.
+  using StepObserver =
+    std::function<void(std::size_t, double, const State&)>;
+
   explicit BurgersSolver(const RunConfig& config);
 
   const Grid& grid() const noexcept;
@@ -69,6 +75,11 @@ public:
                           double initial_time,
                           double target_time,
                           std::size_t maximum_steps) const;
+  AdvanceResult advanceTo(State& state,
+                          double initial_time,
+                          double target_time,
+                          std::size_t maximum_steps,
+                          const StepObserver& observer) const;
 
 private:
   Grid grid_;

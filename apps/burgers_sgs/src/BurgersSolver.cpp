@@ -303,6 +303,15 @@ AdvanceResult BurgersSolver::advanceTo(State& state,
                                        double initial_time,
                                        double target_time,
                                        std::size_t maximum_steps) const {
+  return advanceTo(
+    state, initial_time, target_time, maximum_steps, StepObserver{});
+}
+
+AdvanceResult BurgersSolver::advanceTo(State& state,
+                                       double initial_time,
+                                       double target_time,
+                                       std::size_t maximum_steps,
+                                       const StepObserver& observer) const {
   requireCompatibleFiniteState(grid_, state, "advance input");
   requireFiniteTime(initial_time, "initial time");
   requireFiniteTime(target_time, "target time");
@@ -362,6 +371,9 @@ AdvanceResult BurgersSolver::advanceTo(State& state,
       time = target_time;
     } else {
       time += time_step;
+    }
+    if(observer) {
+      observer(result.timestep_count, time, state);
     }
   }
 

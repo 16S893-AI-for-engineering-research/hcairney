@@ -10,6 +10,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -158,6 +159,34 @@ int main() {
          "adaptive advancement must report a shortened final step");
   expectNear(shortened_advance.final_time, 1.1, 0.0,
              "a shortened final step must reach the requested time exactly");
+
+  burgers::State observed_state(shortened_solver.grid(), 1.0);
+  std::vector<std::size_t> observed_steps;
+  std::vector<double> observed_times;
+  const burgers::AdvanceResult observed_advance =
+    shortened_solver.advanceTo(
+      observed_state,
+      0.0,
+      1.1,
+      10,
+      [&observed_steps, &observed_times](
+        std::size_t step, double time, const burgers::State&) {
+        observed_steps.push_back(step);
+        observed_times.push_back(time);
+      });
+  expect(observed_steps == std::vector<std::size_t>({1, 2, 3}),
+         "the step observer must run after every accepted step");
+  expect(observed_times.size() == observed_steps.size(),
+         "the step observer must report a time for every accepted step");
+  if(observed_times.size() == 3) {
+    expect(observed_times[0] < observed_times[1] &&
+             observed_times[1] < observed_times[2],
+           "step-observer times must be strictly increasing");
+    expectNear(observed_times[2], 1.1, 0.0,
+               "the final observation must use the exact target time");
+  }
+  expect(observed_advance.timestep_count == observed_steps.size(),
+         "observations must agree with the reported timestep count");
 
   burgers::State nonfinite_state(static_solver.grid(), 0.0);
   nonfinite_state[2] = std::numeric_limits<double>::quiet_NaN();

@@ -335,22 +335,22 @@ std::vector<std::string> validate(const RunConfig& config) {
   if(config.output.final_profile_filename.empty()) {
     errors.emplace_back("output.final_profile_filename must not be empty");
   }
+  if(config.output.profile_history_filename.empty()) {
+    errors.emplace_back("output.profile_history_filename must not be empty");
+  }
   if(config.output.spectrum_filename.empty()) {
     errors.emplace_back("output.spectrum_filename must not be empty");
   }
   requireFinite(errors, config.output.history_interval,
                 "output.history_interval");
-  requireFinite(errors, config.output.profile_interval,
-                "output.profile_interval");
   requireFinite(errors, config.output.statistics_start_time,
                 "output.statistics_start_time");
   if(isFinite(config.output.history_interval) &&
      config.output.history_interval <= 0.0) {
     errors.emplace_back("output.history_interval must be positive");
   }
-  if(isFinite(config.output.profile_interval) &&
-     config.output.profile_interval <= 0.0) {
-    errors.emplace_back("output.profile_interval must be positive");
+  if(config.output.profile_step_interval == 0) {
+    errors.emplace_back("output.profile_step_interval must be positive");
   }
   if(isFinite(config.output.statistics_start_time) &&
      isFinite(config.time_integration.initial_time) &&

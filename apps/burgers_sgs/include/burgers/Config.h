@@ -146,9 +146,12 @@ struct OutputConfig {
   std::string metadata_filename = "burgers_run_metadata.json";
   std::string scalar_history_filename = "burgers_history.csv";
   std::string final_profile_filename = "burgers_final_profile.csv";
+  std::string profile_history_filename = "burgers_profiles.csv";
   std::string spectrum_filename = "burgers_mean_spectrum.csv";
   double history_interval = 0.1;
-  double profile_interval = 1.0;
+  std::size_t profile_step_interval = 100;
+  bool write_initial_profile = true;
+  bool write_final_profile = true;
   double statistics_start_time = 0.0;
 };
 
