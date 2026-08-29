@@ -27,7 +27,7 @@
     "time_integration": {
       "integrator": "ssp_rk3",
       "initial_time": 0.0,
-      "final_time": 200.0,
+      "final_time": 50.0,
       "advective_cfl": 0.4,
       "diffusive_cfl": 0.2,
       "maximum_steps": 1000000
@@ -49,9 +49,9 @@
       "stochastic": {
         "wavenumbers": [1, 2, 3],
         "spectral_exponent": 0.0,
-        "stationary_rms": 0.1,
+        "stationary_rms": 0.5,
         "correlation_time": 0.5,
-        "clock_interval": 0.1,
+        "clock_interval": 0.05,
         "clock_reference_time": 0.0
       }
     },
