@@ -7,6 +7,27 @@ import math
 from pathlib import Path
 
 
+TITLE_TIME_DECIMAL_PLACES = 3
+
+
+def make_title_formatter(frames):
+    """Return a formatter whose numeric fields keep a constant width."""
+    step_width = max(len(str(step)) for step, _, _, _ in frames)
+    formatted_times = [
+        f"{time:.{TITLE_TIME_DECIMAL_PLACES}f}"
+        for _, time, _, _ in frames
+    ]
+    time_width = max(len(value) for value in formatted_times)
+
+    def format_title(step, time):
+        return (
+            f"Step {step:0{step_width}d}, "
+            f"t = {time:0{time_width}.{TITLE_TIME_DECIMAL_PLACES}f}"
+        )
+
+    return format_title
+
+
 def read_profiles(path):
     """Return ``(step, time, x, u)`` tuples for all frames in *path*."""
     with path.open(newline="") as input_file:
@@ -113,12 +134,13 @@ def make_animation(path, interval_ms):
     axes.set_xlabel(r"$x$")
     axes.set_ylabel(r"Cell-average velocity $u$")
     axes.grid(alpha=0.3)
-    title = axes.set_title("")
+    title = axes.set_title("", fontfamily="monospace")
+    format_title = make_title_formatter(frames)
 
     def update(frame_index):
         step, time, grid, values = frames[frame_index]
         line.set_data(grid, values)
-        title.set_text(f"Step {step}, t = {time:g}")
+        title.set_text(format_title(step, time))
         return line, title
 
     animation = FuncAnimation(
@@ -129,6 +151,9 @@ def make_animation(path, interval_ms):
         blit=False,
         repeat=True,
     )
+    # Populate the title before laying out the figure so that saved animations
+    # reserve enough space above the axes for it.
+    update(0)
     figure.tight_layout()
     return figure, animation
 

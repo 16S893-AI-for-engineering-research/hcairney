@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot raw and compensated spectra written by the Burgers run_solver."""
+"""Plot raw and compensated Burgers spectra from CSV or analysis NPZ files."""
 
 import argparse
 import csv
@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 
 
-def read_spectrum(path):
+def read_csv_spectrum(path):
     """Return the wavenumbers and both energy columns in a spectrum CSV."""
     with path.open(newline="") as input_file:
         reader = csv.DictReader(input_file)
@@ -45,6 +45,50 @@ def read_spectrum(path):
     if not wavenumbers:
         raise ValueError("spectrum contains no data rows")
     return wavenumbers, mean_energies, compensated_energies
+
+
+def read_npz_spectrum(path):
+    """Return the wavenumbers and energy arrays in an analysis NPZ file."""
+    try:
+        import numpy as np
+    except ModuleNotFoundError as error:
+        raise RuntimeError(
+            "NumPy is required to read an analysis NPZ file"
+        ) from error
+
+    required_arrays = (
+        "wavenumber",
+        "mean_energy_spectrum",
+        "compensated_energy_spectrum",
+    )
+    with np.load(path) as arrays:
+        missing = [name for name in required_arrays if name not in arrays]
+        if missing:
+            raise ValueError(
+                f"missing required array(s): {', '.join(missing)}"
+            )
+        wavenumbers, mean_energies, compensated_energies = (
+            np.asarray(arrays[name], dtype=float) for name in required_arrays
+        )
+
+    values = (wavenumbers, mean_energies, compensated_energies)
+    if any(value.ndim != 1 for value in values):
+        raise ValueError("spectrum arrays must be one-dimensional")
+    if not wavenumbers.size:
+        raise ValueError("spectrum contains no data")
+    if not (wavenumbers.size == mean_energies.size
+            == compensated_energies.size):
+        raise ValueError("spectrum arrays must have the same length")
+    if not all(np.all(np.isfinite(value)) for value in values):
+        raise ValueError("spectrum contains non-finite values")
+    return wavenumbers, mean_energies, compensated_energies
+
+
+def read_spectrum(path):
+    """Read a mean spectrum CSV or an analysis arrays NPZ file."""
+    if path.suffix.lower() == ".npz":
+        return read_npz_spectrum(path)
+    return read_csv_spectrum(path)
 
 
 def positive_log_data(wavenumbers, values):
@@ -99,9 +143,15 @@ def make_figure(path):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="Plot a burgers_mean_spectrum.csv file produced by run_solver."
+        description=(
+            "Plot a burgers_mean_spectrum.csv file produced by run_solver or "
+            "an analysis_arrays.npz file produced by analyze_run.py."
+        )
     )
-    parser.add_argument("csv_file", type=Path, help="mean-spectrum CSV file")
+    parser.add_argument(
+        "spectrum_file", type=Path,
+        help="mean-spectrum CSV or analysis-arrays NPZ file",
+    )
     parser.add_argument(
         "-o", "--output", type=Path,
         help="save the figure to this path instead of only displaying it",
@@ -120,7 +170,7 @@ def parse_arguments():
 def main():
     parser, arguments = parse_arguments()
     try:
-        figure = make_figure(arguments.csv_file)
+        figure = make_figure(arguments.spectrum_file)
     except (OSError, RuntimeError, ValueError) as error:
         parser.error(str(error))
 
