@@ -143,8 +143,8 @@ def parse_arguments():
         help="save as a .gif or .mp4 instead of only displaying the animation",
     )
     parser.add_argument(
-        "--fps", type=float, default=20.0,
-        help="saved-animation frame rate (default: 20)",
+        "--fps", type=float, default=60.0,
+        help="saved-animation frame rate (default: 60)",
     )
     parser.add_argument(
         "--interval-ms", type=float,
