@@ -51,7 +51,7 @@
         "spectral_exponent": 0.0,
         "stationary_rms": 0.1,
         "correlation_time": 0.5,
-        "clock_interval": 0.05,
+        "clock_interval": 0.025,
         "clock_reference_time": 0.0
       }
     },
