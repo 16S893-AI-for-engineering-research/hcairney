@@ -36,7 +36,7 @@ int main() {
 
   const burgers::RunResultMetadata result;
   const std::string metadata = burgers::serializeRunMetadata(config, result);
-  expect(metadata.find("\"schema_version\": 4") != std::string::npos,
+  expect(metadata.find("\"schema_version\": 5") != std::string::npos,
          "metadata must contain its schema version");
   expect(metadata.find("\"smarties_linked\": false") != std::string::npos,
          "metadata must document SMARTIES independence");
@@ -45,6 +45,12 @@ int main() {
   expect(metadata.find("\"write_initial_profile\":true") !=
            std::string::npos,
          "metadata must record initial-profile output");
+  expect(metadata.find("\"write_profile_history\":true") !=
+           std::string::npos,
+         "metadata must record profile-history output");
+  expect(metadata.find("\"write_online_spectrum\":true") !=
+           std::string::npos,
+         "metadata must record online-spectrum output");
   expect(metadata.find("profile_step_interval") == std::string::npos,
          "metadata must not contain the obsolete profile step interval");
   expect(metadata.find("\"numerical_advancement_performed\": false") !=

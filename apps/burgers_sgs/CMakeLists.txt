@@ -95,6 +95,7 @@ endfunction()
 add_library(burgers_core STATIC
   src/BurgersSolver.cpp
   src/Config.cpp
+  src/ConfigIO.cpp
   src/ConvectiveFlux.cpp
   src/Diagnostics.cpp
   src/Forcing.cpp
@@ -109,7 +110,9 @@ add_library(burgers::core ALIAS burgers_core)
 
 target_include_directories(burgers_core
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
-  PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../source/extern")
 target_compile_definitions(burgers_core PRIVATE
   BURGERS_BUILD_CONFIGURATION=\"$<CONFIG>\")
 burgers_configure_target(burgers_core)
@@ -119,6 +122,14 @@ target_link_libraries(run_solver PRIVATE burgers::core)
 burgers_configure_target(run_solver)
 
 if(BUILD_TESTING)
+  add_executable(test_config_io tests/test_config_io.cpp)
+  target_link_libraries(test_config_io PRIVATE burgers::core)
+  burgers_configure_target(test_config_io)
+
+  add_test(NAME burgers.config_io COMMAND test_config_io)
+  set_tests_properties(burgers.config_io PROPERTIES
+    LABELS "configuration;verification")
+
   add_executable(test_phase0_scaffolding tests/test_phase0_scaffolding.cpp)
   target_link_libraries(test_phase0_scaffolding PRIVATE burgers::core)
   burgers_configure_target(test_phase0_scaffolding)

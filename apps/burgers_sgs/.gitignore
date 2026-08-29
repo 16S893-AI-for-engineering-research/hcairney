@@ -2,4 +2,8 @@
 /burgers_run_metadata.json
 /burgers_history.csv
 /burgers_final_profile.csv
-
+/burgers_profiles.csv
+/burgers_mean_spectrum.csv
+/analysis_summary.json
+/analysis_arrays.npz
+__pycache__/

@@ -761,9 +761,12 @@ Every standalone run should record:
 CSV is sufficient for initial scalar histories and profiles. Keep file output
 outside the numerical kernels, and ensure verification tests can run without
 creating output files. Profile-history snapshots use the same prescribed
-physical times as scalar-history samples; the final adaptive PDE step is
-shortened to reach each shared output time. Add a more scalable format only if
-DNS data volume makes CSV demonstrably inadequate.
+physical-time clock as configured profile samples; scalar and profile clocks
+may use different intervals, and the final adaptive PDE step is shortened to
+reach their union. Add a more scalable format only if DNS data volume makes CSV
+demonstrably inadequate. Production parameter studies may disable the online
+reference DFT and compute block-resolved spectra from profile snapshots with
+the documented NumPy analysis tools.
 
 ## 10. Overall definition of readiness for RL
 

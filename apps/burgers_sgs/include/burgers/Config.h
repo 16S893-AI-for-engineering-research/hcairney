@@ -149,7 +149,10 @@ struct OutputConfig {
   std::string profile_history_filename = "burgers_profiles.csv";
   std::string spectrum_filename = "burgers_mean_spectrum.csv";
   double history_interval = 0.1;
+  double profile_interval = 0.1;
   bool write_initial_profile = true;
+  bool write_profile_history = true;
+  bool write_online_spectrum = true;
   double statistics_start_time = 0.0;
 };
 
