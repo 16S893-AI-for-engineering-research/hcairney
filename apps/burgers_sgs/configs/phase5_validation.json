@@ -50,8 +50,8 @@
         "wavenumbers": [1, 2, 3],
         "spectral_exponent": 0.0,
         "stationary_rms": 0.3,
-        "correlation_time": 0.25,
-        "clock_interval": 0.025,
+        "correlation_time": 1.0,
+        "clock_interval": 0.1,
         "clock_reference_time": 0.0
       }
     },
