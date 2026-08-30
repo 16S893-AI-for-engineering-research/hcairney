@@ -49,7 +49,7 @@
       "stochastic": {
         "wavenumbers": [1, 2, 3],
         "spectral_exponent": 0.0,
-        "stationary_rms": 0.3,
+        "stationary_rms": 0.4,
         "correlation_time": 0.5,
         "clock_interval": 0.05,
         "clock_reference_time": 0.0
