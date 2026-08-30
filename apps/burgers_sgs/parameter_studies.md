@@ -57,13 +57,24 @@ interval. The initial row has zero interval duration; its power and molecular
 dissipation values are instantaneous and should not enter interval-weighted
 stationary averages.
 
-## NumPy analysis
+## Python analysis
 
 Create a Python environment and install:
 
 ```sh
 python3 -m pip install -r requirements-analysis.txt
 ```
+
+Plot the kinetic-energy history and energy injection/dissipation balance for
+one run with:
+
+```sh
+python3 scripts/plot_history.py \
+  runs/stationarity/baseline/seed_5489/burgers_history.csv
+```
+
+This creates `KE.png` and `balance.png` beside the input CSV. Pass
+`--output-directory DIRECTORY` to write both figures elsewhere.
 
 Analyze one run over a selected stationary window:
 
