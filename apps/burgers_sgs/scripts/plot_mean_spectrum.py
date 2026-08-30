@@ -141,6 +141,11 @@ def make_figure(path):
     return figure
 
 
+def output_path_for_spectrum(spectrum_path, output_path):
+    """Place the output file alongside the input spectrum file."""
+    return spectrum_path.parent / output_path.name
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description=(
@@ -153,8 +158,11 @@ def parse_arguments():
         help="mean-spectrum CSV or analysis-arrays NPZ file",
     )
     parser.add_argument(
-        "-o", "--output", type=Path,
-        help="save the figure to this path instead of only displaying it",
+        "-o", "--output", type=Path, default=Path("spectrum.png"),
+        help=(
+            "save the figure with this filename beside the spectrum file "
+            "(default: spectrum.png)"
+        ),
     )
     parser.add_argument(
         "--dpi", type=int, default=150,
@@ -174,9 +182,11 @@ def main():
     except (OSError, RuntimeError, ValueError) as error:
         parser.error(str(error))
 
-    if arguments.output is not None:
-        figure.savefig(arguments.output, dpi=arguments.dpi)
-    if arguments.output is None or arguments.show:
+    output_path = output_path_for_spectrum(
+        arguments.spectrum_file, arguments.output
+    )
+    figure.savefig(output_path, dpi=arguments.dpi)
+    if arguments.show:
         import matplotlib.pyplot as plt
         plt.show()
 

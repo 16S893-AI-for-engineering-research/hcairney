@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import numpy as np
 
@@ -12,6 +13,32 @@ SCRIPTS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS))
 
 import plot_mean_spectrum  # noqa: E402
+
+
+class OutputPathTests(unittest.TestCase):
+    def test_default_output_filename_is_spectrum_png(self):
+        with mock.patch.object(
+            sys, "argv", ["plot_mean_spectrum.py", "runs/case/data.npz"]
+        ):
+            _, arguments = plot_mean_spectrum.parse_arguments()
+
+        self.assertEqual(arguments.output, Path("spectrum.png"))
+
+    def test_places_output_beside_csv_input(self):
+        actual = plot_mean_spectrum.output_path_for_spectrum(
+            Path("runs/case/burgers_mean_spectrum.csv"),
+            Path("mean_spectrum.png"),
+        )
+
+        self.assertEqual(actual, Path("runs/case/mean_spectrum.png"))
+
+    def test_uses_only_output_filename_for_npz_input(self):
+        actual = plot_mean_spectrum.output_path_for_spectrum(
+            Path("runs/case/analysis_arrays.npz"),
+            Path("figures/mean_spectrum.png"),
+        )
+
+        self.assertEqual(actual, Path("runs/case/mean_spectrum.png"))
 
 
 class NpzSpectrumTests(unittest.TestCase):

@@ -4,11 +4,35 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS))
 
 import animate_profiles  # noqa: E402
+
+
+class OutputPathTests(unittest.TestCase):
+    def test_default_output_is_movie_beside_profile_data(self):
+        with mock.patch.object(
+            sys,
+            "argv",
+            ["animate_profiles.py", "runs/case/burgers_profiles.csv"],
+        ):
+            _, arguments = animate_profiles.parse_arguments()
+
+        actual = animate_profiles.output_path_for_profiles(
+            arguments.csv_file, arguments.output
+        )
+        self.assertEqual(actual, Path("runs/case/movie.mp4"))
+
+    def test_uses_only_custom_output_filename(self):
+        actual = animate_profiles.output_path_for_profiles(
+            Path("runs/case/burgers_profiles.csv"),
+            Path("animations/custom.gif"),
+        )
+
+        self.assertEqual(actual, Path("runs/case/custom.gif"))
 
 
 class AnimationTitleTests(unittest.TestCase):

@@ -158,14 +158,22 @@ def make_animation(path, interval_ms):
     return figure, animation
 
 
+def output_path_for_profiles(profile_path, output_path):
+    """Place the output animation alongside the input profile data."""
+    return profile_path.parent / output_path.name
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Animate a burgers_profiles.csv file produced by run_solver."
     )
     parser.add_argument("csv_file", type=Path, help="profile-history CSV file")
     parser.add_argument(
-        "-o", "--output", type=Path,
-        help="save as a .gif or .mp4 instead of only displaying the animation",
+        "-o", "--output", type=Path, default=Path("movie.mp4"),
+        help=(
+            "save with this .gif or .mp4 filename beside the profile data "
+            "(default: movie.mp4)"
+        ),
     )
     parser.add_argument(
         "--fps", type=float, default=60.0,
@@ -198,26 +206,27 @@ def main():
     if not math.isfinite(interval_ms) or interval_ms <= 0.0:
         parser.error("--interval-ms must be finite and positive")
 
-    if arguments.output is not None:
-        suffix = arguments.output.suffix.lower()
-        if suffix not in {".gif", ".mp4"}:
-            parser.error("--output must have a .gif or .mp4 extension")
+    suffix = arguments.output.suffix.lower()
+    if suffix not in {".gif", ".mp4"}:
+        parser.error("--output must have a .gif or .mp4 extension")
+
+    output_path = output_path_for_profiles(
+        arguments.csv_file, arguments.output
+    )
 
     try:
         figure, animation = make_animation(arguments.csv_file, interval_ms)
-        if arguments.output is not None:
-            writer = "pillow" if arguments.output.suffix.lower() == ".gif" \
-                else "ffmpeg"
-            animation.save(
-                arguments.output,
-                writer=writer,
-                fps=arguments.fps,
-                dpi=arguments.dpi,
-            )
+        writer = "pillow" if suffix == ".gif" else "ffmpeg"
+        animation.save(
+            output_path,
+            writer=writer,
+            fps=arguments.fps,
+            dpi=arguments.dpi,
+        )
     except (OSError, RuntimeError, ValueError) as error:
         parser.error(str(error))
 
-    if arguments.output is None or arguments.show:
+    if arguments.show:
         import matplotlib.pyplot as plt
         plt.show()
     else:
