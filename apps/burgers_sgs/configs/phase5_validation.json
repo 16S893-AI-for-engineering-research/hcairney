@@ -43,7 +43,7 @@
       },
       "deterministic": {
         "modes": [
-          {"wavenumber": 1, "amplitude": 0.15, "phase": 0.0}
+          {"wavenumber": 1, "amplitude": 0.2, "phase": 0.0}
         ]
       },
       "stochastic": {
