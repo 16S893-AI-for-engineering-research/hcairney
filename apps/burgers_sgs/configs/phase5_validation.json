@@ -43,15 +43,15 @@
       },
       "deterministic": {
         "modes": [
-          {"wavenumber": 1, "amplitude": 0.2, "phase": 0.0}
+          {"wavenumber": 1, "amplitude": 0.1, "phase": 0.0}
         ]
       },
       "stochastic": {
         "wavenumbers": [1, 2, 3],
         "spectral_exponent": 0.0,
         "stationary_rms": 0.3,
-        "correlation_time": 0.5,
-        "clock_interval": 0.05,
+        "correlation_time": 0.1,
+        "clock_interval": 0.01,
         "clock_reference_time": 0.0
       }
     },
