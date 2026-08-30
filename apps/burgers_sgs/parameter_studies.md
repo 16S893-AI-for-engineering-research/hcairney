@@ -92,6 +92,16 @@ This writes:
 - `analysis_arrays.npz`: pointwise temporal means and variances, their block
   uncertainties, and raw and compensated spectra with block uncertainties.
 
+Plot the temporal mean velocity profile and its pointwise temporal block
+standard error with:
+
+```sh
+python3 scripts/plot_mean_velocity_profile.py \
+  runs/stationarity/baseline/seed_5489/analysis_arrays.npz
+```
+
+This writes `mean_velocity_profile.png` beside the input NPZ file.
+
 If `--block-duration` is omitted, the script uses five times the largest
 estimated integrated autocorrelation time among the principal scalar
 observables. Always inspect the resulting block count. Fewer than ten complete
@@ -112,6 +122,16 @@ python3 scripts/analyze_ensemble.py \
   runs/candidate/seed_26003 \
   runs/candidate/seed_52009 \
   -o runs/candidate/ensemble_summary.json
+```
+
+This also writes `ensemble_arrays.npz` beside the ensemble summary. It contains
+the pointwise mean of the seed mean profiles and the standard error calculated
+from their between-seed sample variability. The same plotting command accepts
+this archive and labels its uncertainty as between-seed:
+
+```sh
+python3 scripts/plot_mean_velocity_profile.py \
+  runs/candidate/ensemble_arrays.npz
 ```
 
 The ensemble report contains the Student-t interval across seed means and a
