@@ -64,7 +64,7 @@
       }
     },
     "closure": {
-      "type": "static_smagorinsky",
+      "type": "no_closure",
       "static_coefficient": 0.17,
       "minimum_coefficient": 0,
       "maximum_coefficient": 1,
