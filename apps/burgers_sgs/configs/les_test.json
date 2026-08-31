@@ -45,7 +45,7 @@
         "modes": [
           {
             "wavenumber": 1,
-            "amplitude": 0.1,
+            "amplitude": 0.0,
             "phase": 0
           }
         ]
