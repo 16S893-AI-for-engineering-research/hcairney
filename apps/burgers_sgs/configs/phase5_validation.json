@@ -30,7 +30,7 @@
       "final_time": 200.0,
       "advective_cfl": 0.4,
       "diffusive_cfl": 0.2,
-      "maximum_steps": 1000000
+      "maximum_steps": 2000000
     },
     "forcing": {
       "type": "composite",
