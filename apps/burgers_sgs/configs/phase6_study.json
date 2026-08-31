@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "inputs": {
-    "grid_candidate_analysis": "../runs/test/grid_refinement/n1024/seed_5489/analysis_summary.json",
-    "grid_reference_analysis": "../runs/test/grid_refinement/n2048/seed_5489/analysis_summary.json",
+    "grid_candidate_analysis": "../runs/finalization/grid/n1024/seed_5489/analysis_summary.json",
+    "grid_reference_analysis": "../runs/finalization/grid/n2048/seed_5489/analysis_summary.json",
     "target_analyses": [
-      "../runs/phase6/target/n1024/seed_5489/analysis_summary.json",
-      "../runs/phase6/target/n1024/seed_13007/analysis_summary.json",
-      "../runs/phase6/target/n1024/seed_26003/analysis_summary.json",
-      "../runs/phase6/target/n1024/seed_52009/analysis_summary.json"
+      "../runs/finalization/target/n1024/seed_5489/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_13007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_26003/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_52009/analysis_summary.json"
     ]
   },
   "design": {

@@ -51,16 +51,16 @@ The checked-in study definition initially points at the existing
 `runs/test/grid_refinement` directories. To produce fresh equivalent runs:
 
 ```sh
-mkdir -p runs/phase6/grid/n1024/seed_5489
+mkdir -p runs/finalization/grid/n1024/seed_5489
 build/run_solver \
   --config configs/phase6_grid_n1024.json \
-  --output-directory runs/phase6/grid/n1024/seed_5489 \
+  --output-directory runs/finalization/grid/n1024/seed_5489 \
   --seed 5489
 
-mkdir -p runs/phase6/grid/n2048/seed_5489
+mkdir -p runs/finalization/grid/n2048/seed_5489
 build/run_solver \
   --config configs/phase6_grid_n2048.json \
-  --output-directory runs/phase6/grid/n2048/seed_5489 \
+  --output-directory runs/finalization/grid/n2048/seed_5489 \
   --seed 5489
 ```
 
@@ -96,10 +96,10 @@ For each seed, create a unique directory and run the same versioned
 configuration. For example:
 
 ```sh
-mkdir -p runs/phase6/target/n1024/seed_5489
+mkdir -p runs/finalization/target/n1024/seed_5489
 build/run_solver \
   --config configs/phase6_target_n1024.json \
-  --output-directory runs/phase6/target/n1024/seed_5489 \
+  --output-directory runs/finalization/target/n1024/seed_5489 \
   --seed 5489
 ```
 
