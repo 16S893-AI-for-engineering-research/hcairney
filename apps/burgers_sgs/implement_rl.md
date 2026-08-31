@@ -239,18 +239,39 @@ steps but remain short enough for feedback to affect the evolving state.
 
 ### 5.3 Initial observations
 
-Begin with a small periodic stencil that is identical at every cell. One
-candidate is
+The initial observation must be Galilean invariant and therefore must not
+contain \(u\) itself. Define the dimensionless local gradient
 
 \[
-  o_i = [u_{i-r},\ldots,u_i,\ldots,u_{i+r},
-         \Delta x\,u_{x,i},\Delta x^2u_{xx,i}],
+  z_i = \frac{\sqrt{(u_{x,i})^2}\,\Delta x^2}{\nu}
+      = \frac{|u_{x,i}|\,\Delta x^2}{\nu}
 \]
 
-with duplicated quantities removed after testing. Use differences or
-nondimensional derivatives when possible to improve grid transfer. The stencil
-orientation is meaningful in one dimension and may distinguish flow features
-without revealing absolute position.
+and transformed feature
+
+\[
+  q_i = \ln(1+z_i).
+\]
+
+For the first implementation, give each agent a configurable small periodic
+stencil of this feature,
+
+\[
+  o_i = [q_{i-r},\ldots,q_i,\ldots,q_{i+r}],
+\]
+
+where \(r\geq0\) is a configuration parameter shared by all agents. Thus
+\(r=0\) gives agent \(i\) only \(q_i\); larger values add neighboring gradient
+features, with periodic wrapping at the domain boundary. Keep \(r\) fixed and
+small relative to the number of grid cells. The stencil orientation is
+meaningful in one dimension and may distinguish flow features without
+revealing absolute position. Use the same documented discrete derivative as
+the numerical diagnostics.
+
+This logarithm has an argument greater than or equal to one, but requires
+\(\nu>0\). The observation builder must reject a nonpositive viscosity. The
+absolute gradient deliberately makes compression and expansion with the same
+magnitude indistinguishable to the initial policy.
 
 Start with a memoryless feed-forward policy. Add appended past observations or
 a recurrent network only if a controlled comparison shows that the
@@ -258,9 +279,9 @@ instantaneous local stencil is insufficient. Explicit time is not an
 observation; state dependence already makes the applied forcing time varying.
 If identical local stencils occur at locations requiring systematically
 different corrections, enlarge the translation-equivariant receptive field or
-add physical local derivatives before considering any absolute-coordinate
-feature. Such conflicting local transitions are evidence of partial
-observability, not a reason to assign cell-specific parameters.
+add other Galilean-invariant local derivatives before considering any
+absolute-coordinate feature. Such conflicting local transitions are evidence
+of partial observability, not a reason to assign cell-specific parameters.
 
 ### 5.4 Mean estimator and reward
 
