@@ -212,6 +212,7 @@ ForcingPower forcingPower(const Grid& grid,
   power.manufactured = powerInput(grid, state, forcing.manufactured);
   power.deterministic = powerInput(grid, state, forcing.deterministic);
   power.stochastic = powerInput(grid, state, forcing.stochastic);
+  power.prescribed = powerInput(grid, state, forcing.prescribed);
   power.total = powerInput(grid, state, forcing.total);
   return power;
 }

@@ -22,6 +22,7 @@ struct AdvanceResult {
   std::size_t forcing_clock_step_count = 0;
   double deterministic_work = 0.0;
   double stochastic_work = 0.0;
+  double prescribed_work = 0.0;
   double manufactured_work = 0.0;
   double molecular_dissipation = 0.0;
   double sgs_dissipation = 0.0;
@@ -33,6 +34,7 @@ struct SspRk3StepBudget {
   double time_step = 0.0;
   double deterministic_work = 0.0;
   double stochastic_work = 0.0;
+  double prescribed_work = 0.0;
   double manufactured_work = 0.0;
   double molecular_dissipation = 0.0;
   double sgs_dissipation = 0.0;
@@ -60,6 +62,13 @@ public:
   void setPrescribedCoefficientField(
     const std::vector<double>& coefficients);
   void closureFields(const State& state, ClosureFields& fields) const;
+
+  // Physical cell-centered source values supplied here are held until the
+  // next call or until explicitly cleared. Action projection and amplitude
+  // scaling belong to the caller, not the solver.
+  void setPrescribedAdditiveForcingField(
+    const std::vector<double>& forcing);
+  void clearPrescribedAdditiveForcingField() noexcept;
 
   // Autonomous convenience overload. Any forcing requires the explicit-time
   // overload below.
@@ -95,6 +104,8 @@ public:
                           const StepObserver& observer) const;
 
 private:
+  bool hasActiveForcing() const noexcept;
+  void evaluateForcingFields(double time, ForcingFields& fields) const;
   void rightHandSideWithClosure(const State& state,
                                 double time,
                                 State& derivative,
@@ -108,6 +119,8 @@ private:
   Limiter limiter_;
   std::unique_ptr<ClosureModel> closure_;
   mutable Forcing forcing_;
+  State prescribed_additive_forcing_;
+  bool prescribed_additive_forcing_is_set_;
   double advective_cfl_;
   double diffusive_cfl_;
   std::size_t maximum_steps_;

@@ -282,6 +282,8 @@ std::string serializeRunMetadata(const RunConfig& config,
          << result.deterministic_work << ",\n"
          << "    \"stochastic_work\": "
          << result.stochastic_work << ",\n"
+         << "    \"prescribed_work\": "
+         << result.prescribed_work << ",\n"
          << "    \"manufactured_work\": "
          << result.manufactured_work << ",\n"
          << "    \"molecular_dissipation\": "

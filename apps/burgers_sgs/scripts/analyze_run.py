@@ -29,6 +29,7 @@ RATE_COLUMNS = (
     "sgs_dissipation",
     "deterministic_power",
     "stochastic_power",
+    "prescribed_power",
     "manufactured_power",
     "interval_numerical_dissipation_rate",
     "total_power",
@@ -91,6 +92,8 @@ def read_history(path):
             arrays[name] = np.zeros_like(times)
     if "sgs_dissipation" not in arrays:
         arrays["sgs_dissipation"] = np.zeros_like(times)
+    if "prescribed_power" not in arrays:
+        arrays["prescribed_power"] = np.zeros_like(times)
     if "interval_start_time" not in arrays:
         arrays["interval_start_time"] = np.concatenate(([times[0]], times[:-1]))
     if "interval_duration" not in arrays:
@@ -99,6 +102,7 @@ def read_history(path):
         arrays["total_power"] = (
             arrays["deterministic_power"]
             + arrays["stochastic_power"]
+            + arrays["prescribed_power"]
             + arrays["manufactured_power"]
         )
     if "interval_energy_change_rate" not in arrays:

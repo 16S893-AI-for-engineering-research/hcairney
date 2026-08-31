@@ -48,6 +48,21 @@ class HistoryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "strictly increasing"):
                 plot_history.read_history(path)
 
+    def test_includes_prescribed_power_in_derived_total(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "burgers_history.csv"
+            path.write_text(
+                HEADER.replace(
+                    "manufactured_power,",
+                    "prescribed_power,manufactured_power,",
+                )
+                + "0,2,0.2,0.4,0.1,0.3,0.0,0.05\n"
+            )
+
+            history = plot_history.read_history(path)
+
+        self.assertAlmostEqual(history["total_power"][0], 0.8)
+
 
 if __name__ == "__main__":
     unittest.main()

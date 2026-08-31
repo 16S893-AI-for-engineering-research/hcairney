@@ -143,6 +143,7 @@ struct HistoryRow {
   double maximum_eddy_viscosity;
   double deterministic_power;
   double stochastic_power;
+  double prescribed_power;
   double manufactured_power;
   double interval_numerical_dissipation_rate;
   double interval_start_time;
@@ -173,6 +174,7 @@ HistoryRow makeHistoryRow(double time,
     solver.faceViscosityAveraging());
   double deterministic_power = power.deterministic;
   double stochastic_power = power.stochastic;
+  double prescribed_power = power.prescribed;
   double manufactured_power = power.manufactured;
   double numerical_dissipation = 0.0;
   double interval_start_time = time;
@@ -188,9 +190,11 @@ HistoryRow makeHistoryRow(double time,
     sgs_dissipation = interval->sgs_dissipation / duration;
     deterministic_power = interval->deterministic_work / duration;
     stochastic_power = interval->stochastic_work / duration;
+    prescribed_power = interval->prescribed_work / duration;
     manufactured_power = interval->manufactured_work / duration;
     numerical_dissipation = interval->numerical_dissipation / duration;
-    total_power = deterministic_power + stochastic_power + manufactured_power;
+    total_power = deterministic_power + stochastic_power + prescribed_power +
+      manufactured_power;
     energy_change_rate = interval->energy_change / duration;
     budget_residual_rate = total_power - molecular_dissipation -
       sgs_dissipation - numerical_dissipation - energy_change_rate;
@@ -209,6 +213,7 @@ HistoryRow makeHistoryRow(double time,
     closure_statistics.maximum_eddy_viscosity,
     deterministic_power,
     stochastic_power,
+    prescribed_power,
     manufactured_power,
     numerical_dissipation,
     interval_start_time,
@@ -230,7 +235,8 @@ void writeHistory(const std::string& path,
             "sgs_dissipation,minimum_coefficient,mean_coefficient,"
             "maximum_coefficient,mean_eddy_viscosity,"
             "maximum_eddy_viscosity,"
-            "deterministic_power,stochastic_power,manufactured_power,"
+            "deterministic_power,stochastic_power,prescribed_power,"
+            "manufactured_power,"
             "interval_numerical_dissipation_rate,interval_start_time,"
             "interval_duration,total_power,interval_energy_change_rate,"
             "interval_budget_residual_rate\n";
@@ -242,7 +248,7 @@ void writeHistory(const std::string& path,
            << row.mean_eddy_viscosity << ','
            << row.maximum_eddy_viscosity << ','
            << row.deterministic_power << ',' << row.stochastic_power << ','
-           << row.manufactured_power << ','
+           << row.prescribed_power << ',' << row.manufactured_power << ','
            << row.interval_numerical_dissipation_rate << ','
            << row.interval_start_time << ',' << row.interval_duration << ','
            << row.total_power << ',' << row.interval_energy_change_rate << ','
@@ -339,6 +345,7 @@ void accumulateAdvance(burgers::AdvanceResult& total,
   total.forcing_clock_step_count += increment.forcing_clock_step_count;
   total.deterministic_work += increment.deterministic_work;
   total.stochastic_work += increment.stochastic_work;
+  total.prescribed_work += increment.prescribed_work;
   total.manufactured_work += increment.manufactured_work;
   total.molecular_dissipation += increment.molecular_dissipation;
   total.sgs_dissipation += increment.sgs_dissipation;
@@ -518,6 +525,7 @@ int main(int argc, char* argv[]) {
       result.forcing_clock_step_count += advance.forcing_clock_step_count;
       result.deterministic_work += advance.deterministic_work;
       result.stochastic_work += advance.stochastic_work;
+      result.prescribed_work += advance.prescribed_work;
       result.manufactured_work += advance.manufactured_work;
       result.molecular_dissipation += advance.molecular_dissipation;
       result.sgs_dissipation += advance.sgs_dissipation;

@@ -225,8 +225,9 @@ void checkTimestepAndEnergyBudget() {
          "dissipation");
   const double reconstructed_change =
     budget.deterministic_work + budget.stochastic_work +
-    budget.manufactured_work - budget.molecular_dissipation -
-    budget.sgs_dissipation - budget.numerical_dissipation;
+    budget.prescribed_work + budget.manufactured_work -
+    budget.molecular_dissipation - budget.sgs_dissipation -
+    budget.numerical_dissipation;
   expectNear(reconstructed_change, budget.energy_change, 2.0e-15,
              "SSP-RK3 energy budget must close after separating SGS "
              "dissipation");

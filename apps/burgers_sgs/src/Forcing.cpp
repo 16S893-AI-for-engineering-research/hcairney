@@ -61,6 +61,7 @@ ForcingFields::ForcingFields(const Grid& grid)
   : manufactured(grid, 0.0),
     deterministic(grid, 0.0),
     stochastic(grid, 0.0),
+    prescribed(grid, 0.0),
     total(grid, 0.0) {}
 
 Forcing::Forcing(const Grid& grid,
@@ -248,6 +249,7 @@ void Forcing::requireFieldCompatibility(const ForcingFields& fields) const {
   if(fields.manufactured.size() != grid_.cellCount() ||
      fields.deterministic.size() != grid_.cellCount() ||
      fields.stochastic.size() != grid_.cellCount() ||
+     fields.prescribed.size() != grid_.cellCount() ||
      fields.total.size() != grid_.cellCount()) {
     throw std::invalid_argument(
       "forcing output fields must match the forcing grid");
@@ -319,6 +321,7 @@ void Forcing::evaluate(double time, ForcingFields& fields) const {
   fields.manufactured.fill(0.0);
   fields.deterministic.fill(0.0);
   fields.stochastic.fill(0.0);
+  fields.prescribed.fill(0.0);
   fields.total.fill(0.0);
 
   if(manufactured_enabled_) {

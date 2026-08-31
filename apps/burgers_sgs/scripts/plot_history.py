@@ -51,13 +51,17 @@ def read_history(path):
            zip(columns["time"], columns["time"][1:])):
         raise ValueError("history times must be strictly increasing")
 
+    if "prescribed_power" not in columns:
+        columns["prescribed_power"] = [0.0] * len(columns["time"])
+
     total_power = columns.get("total_power")
     if total_power is None:
         total_power = [
-            deterministic + stochastic + manufactured
-            for deterministic, stochastic, manufactured in zip(
+            deterministic + stochastic + prescribed + manufactured
+            for deterministic, stochastic, prescribed, manufactured in zip(
                 columns["deterministic_power"],
                 columns["stochastic_power"],
+                columns["prescribed_power"],
                 columns["manufactured_power"],
             )
         ]

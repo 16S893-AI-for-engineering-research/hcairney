@@ -11,6 +11,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace burgers {
@@ -78,6 +79,8 @@ BurgersSolver::BurgersSolver(const RunConfig& config)
     closure_(makeClosureModel(grid_, config.closure)),
     forcing_(grid_, config.forcing, config.viscosity.molecular,
              config.random.seed),
+    prescribed_additive_forcing_(grid_, 0.0),
+    prescribed_additive_forcing_is_set_(false),
     advective_cfl_(config.time_integration.advective_cfl),
     diffusive_cfl_(config.time_integration.diffusive_cfl),
     maximum_steps_(config.time_integration.maximum_steps) {}
@@ -110,9 +113,53 @@ void BurgersSolver::closureFields(const State& state,
   closure_->evaluate(grid_, state, fields);
 }
 
+void BurgersSolver::setPrescribedAdditiveForcingField(
+  const std::vector<double>& forcing) {
+  if(forcing.size() != grid_.cellCount()) {
+    throw std::invalid_argument(
+      "prescribed additive forcing field size does not match the solver "
+      "grid");
+  }
+  State validated(grid_, 0.0);
+  for(std::size_t cell = 0; cell < forcing.size(); ++cell) {
+    if(std::isfinite(forcing[cell]) == 0) {
+      throw std::invalid_argument(
+        "prescribed additive forcing at cell " + std::to_string(cell) +
+        " must be finite");
+    }
+    validated[cell] = forcing[cell];
+  }
+  prescribed_additive_forcing_ = std::move(validated);
+  prescribed_additive_forcing_is_set_ = true;
+}
+
+void BurgersSolver::clearPrescribedAdditiveForcingField() noexcept {
+  prescribed_additive_forcing_.fill(0.0);
+  prescribed_additive_forcing_is_set_ = false;
+}
+
+bool BurgersSolver::hasActiveForcing() const noexcept {
+  return forcing_.type() != ForcingType::None ||
+         prescribed_additive_forcing_is_set_;
+}
+
+void BurgersSolver::evaluateForcingFields(
+  double time, ForcingFields& fields) const {
+  forcing_.evaluate(time, fields);
+  for(std::size_t cell = 0; cell < grid_.cellCount(); ++cell) {
+    fields.prescribed[cell] = prescribed_additive_forcing_[cell];
+    fields.total[cell] += fields.prescribed[cell];
+    if(std::isfinite(fields.total[cell]) == 0) {
+      throw std::runtime_error(
+        "composed forcing produced a non-finite value at cell " +
+        std::to_string(cell));
+    }
+  }
+}
+
 void BurgersSolver::rightHandSide(const State& state,
                                   State& derivative) const {
-  if(forcing_.type() != ForcingType::None) {
+  if(hasActiveForcing()) {
     throw std::invalid_argument(
       "right-hand side with forcing requires physical time");
   }
@@ -158,7 +205,7 @@ void BurgersSolver::rightHandSideWithClosure(
   }
 
   ForcingFields forcing_fields(grid_);
-  forcing_.evaluate(time, forcing_fields);
+  evaluateForcingFields(time, forcing_fields);
 
   const double inverse_width = 1.0 / grid_.cellWidth();
   for(std::size_t cell = 0; cell < grid_.cellCount(); ++cell) {
@@ -219,7 +266,7 @@ double BurgersSolver::stableTimeStep(const State& state, double time) const {
 
 void BurgersSolver::forcingFields(double time, ForcingFields& fields) const {
   requireFiniteTime(time, "forcing field time");
-  forcing_.evaluate(time, fields);
+  evaluateForcingFields(time, fields);
 }
 
 std::string BurgersSolver::serializeStochasticForcingState() const {
@@ -233,7 +280,7 @@ void BurgersSolver::restoreStochasticForcingState(
 
 SspRk3StepBudget BurgersSolver::advanceSspRk3(
   State& state, double time_step) const {
-  if(forcing_.type() != ForcingType::None) {
+  if(hasActiveForcing()) {
     throw std::invalid_argument(
       "SSP-RK3 with forcing requires physical time");
   }
@@ -274,7 +321,7 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
   const double initial_energy = kineticEnergy(grid_, initial);
 
   try {
-    forcing_.evaluate(time, forcing_zero);
+    evaluateForcingFields(time, forcing_zero);
     power_zero = forcingPower(grid_, initial, forcing_zero);
     rightHandSideWithClosure(
       initial, time, derivative, &closure_zero);
@@ -283,7 +330,7 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
     }
     requireCompatibleFiniteState(grid_, stage_one, "SSP-RK3 stage one");
 
-    forcing_.evaluate(stage_one_time, forcing_one);
+    evaluateForcingFields(stage_one_time, forcing_one);
     power_one = forcingPower(grid_, stage_one, forcing_one);
     rightHandSideWithClosure(
       stage_one, stage_one_time, derivative, &closure_one);
@@ -294,7 +341,7 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
     }
     requireCompatibleFiniteState(grid_, stage_two, "SSP-RK3 stage two");
 
-    forcing_.evaluate(stage_two_time, forcing_two);
+    evaluateForcingFields(stage_two_time, forcing_two);
     power_two = forcingPower(grid_, stage_two, forcing_two);
     rightHandSideWithClosure(
       stage_two, stage_two_time, derivative, &closure_two);
@@ -342,6 +389,10 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
     one_sixth * power_zero.stochastic +
     one_sixth * power_one.stochastic +
     two_thirds * power_two.stochastic);
+  budget.prescribed_work = time_step * (
+    one_sixth * power_zero.prescribed +
+    one_sixth * power_one.prescribed +
+    two_thirds * power_two.prescribed);
   budget.manufactured_work = time_step * (
     one_sixth * power_zero.manufactured +
     one_sixth * power_one.manufactured +
@@ -352,8 +403,9 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
   budget.energy_change = kineticEnergy(grid_, state) - initial_energy;
   budget.numerical_dissipation =
     budget.deterministic_work + budget.stochastic_work +
-    budget.manufactured_work - budget.molecular_dissipation -
-    budget.sgs_dissipation - budget.energy_change;
+    budget.prescribed_work + budget.manufactured_work -
+    budget.molecular_dissipation - budget.sgs_dissipation -
+    budget.energy_change;
   budget.advanced_forcing_clock =
     forcing_.currentClockIndex() != initial_clock_index;
   return budget;
@@ -422,6 +474,7 @@ AdvanceResult BurgersSolver::advanceTo(State& state,
     ++result.timestep_count;
     result.deterministic_work += budget.deterministic_work;
     result.stochastic_work += budget.stochastic_work;
+    result.prescribed_work += budget.prescribed_work;
     result.manufactured_work += budget.manufactured_work;
     result.molecular_dissipation += budget.molecular_dissipation;
     result.sgs_dissipation += budget.sgs_dissipation;

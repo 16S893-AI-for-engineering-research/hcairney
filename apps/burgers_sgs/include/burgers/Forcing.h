@@ -18,6 +18,7 @@ struct ForcingFields {
   State manufactured;
   State deterministic;
   State stochastic;
+  State prescribed;
   State total;
 };
 

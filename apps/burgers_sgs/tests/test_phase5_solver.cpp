@@ -140,8 +140,9 @@ void checkClockBoundAndEnergyBudget() {
     solver.advanceSspRk3(state, 0.0, 0.04);
   const double reconstructed_energy_change =
     budget.deterministic_work + budget.stochastic_work +
-    budget.manufactured_work - budget.molecular_dissipation -
-    budget.sgs_dissipation - budget.numerical_dissipation;
+    budget.prescribed_work + budget.manufactured_work -
+    budget.molecular_dissipation - budget.sgs_dissipation -
+    budget.numerical_dissipation;
   std::cout << "forced_step deterministic_work="
             << budget.deterministic_work
             << " stochastic_work=" << budget.stochastic_work

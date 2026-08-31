@@ -230,4 +230,14 @@ if(BUILD_TESTING)
   add_test(NAME burgers.phase7.closures COMMAND test_phase7_closures)
   set_tests_properties(burgers.phase7.closures PROPERTIES
     LABELS "phase7;verification")
+
+  add_executable(test_phase8_prescribed_forcing
+    tests/test_phase8_prescribed_forcing.cpp)
+  target_link_libraries(test_phase8_prescribed_forcing PRIVATE burgers::core)
+  burgers_configure_target(test_phase8_prescribed_forcing)
+
+  add_test(NAME burgers.phase8.prescribed_forcing
+    COMMAND test_phase8_prescribed_forcing)
+  set_tests_properties(burgers.phase8.prescribed_forcing PROPERTIES
+    LABELS "phase8;verification")
 endif()

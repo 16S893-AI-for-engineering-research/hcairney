@@ -27,6 +27,7 @@ struct ForcingPower {
   double manufactured = 0.0;
   double deterministic = 0.0;
   double stochastic = 0.0;
+  double prescribed = 0.0;
   double total = 0.0;
 };
 

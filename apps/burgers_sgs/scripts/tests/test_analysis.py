@@ -60,6 +60,7 @@ class SamplingTests(unittest.TestCase):
             path.write_text(header + rows)
             history = analyze_run.read_history(path)
         np.testing.assert_array_equal(history["sgs_dissipation"], [0.0, 0.0])
+        np.testing.assert_array_equal(history["prescribed_power"], [0.0, 0.0])
         np.testing.assert_array_equal(history["mean_coefficient"], [0.0, 0.0])
         np.testing.assert_allclose(
             history["interval_budget_residual_rate"],
