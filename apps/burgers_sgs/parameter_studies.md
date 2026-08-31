@@ -171,3 +171,43 @@ history over the selected analysis window.
 
 The Phase 6 acceptance, target-ensemble, and portable DNS-reference workflow is
 documented separately in `finalize_reference.md`.
+
+## Consequence for the RL study
+
+The resolution studies showed that the mean velocity profile is much less
+sensitive to grid resolution than expected. That is scientifically useful, but
+it also means that mean-profile error provides little leverage for identifying
+a spatial field of Smagorinsky coefficients. The first RL environment is
+therefore being reframed as effective-forcing control: with the deterministic
+reference forcing withheld, a shared local policy supplies a signed additive
+forcing whose discrete spatial mean is removed before application. Success is
+still measured against the accepted DNS mean profile, not against the known
+forcing field.
+
+The existing parameter studies remain necessary. They establish the stochastic
+forcing clock, stationary windows, autocorrelation time, target uncertainty,
+and numerical-resolution behavior needed to choose the RL decision interval
+and evaluation duration. Add the following controlled-LES studies before long
+training runs:
+
+1. Run the selected LES with deterministic forcing disabled and zero learned
+   forcing.
+2. Apply the known deterministic forcing through the new prescribed additive
+   field as an oracle/debug check of that path.
+3. Sweep the learned-forcing amplitude bound and decision interval using
+   scripted zero, random, and simple shared linear policies.
+4. Compare unsmoothed and periodically smoothed action fields, recording their
+   spectra and learned-forcing power.
+5. Fix the environment settings before comparing the no-action, shared linear,
+   and shared nonlinear RL policies on common held-out seeds.
+6. With all other settings and seed lists fixed, compare the directional
+   block-velocity and squared-EMA rewards, then compare local and shared global
+   aggregation for the more promising structure. Select no default reward from
+   training return alone; use frozen-policy mean-profile error and its sampling
+   uncertainty.
+
+Do not select the action bound solely from the magnitude of the DNS forcing:
+the optimal effective term on the coarse solver may compensate for numerical
+and unresolved-scale effects. Bounds must nevertheless be finite and justified
+by stability pilots. Full integration details are in
+[the SMARTIES integration guide](implement_rl.md).

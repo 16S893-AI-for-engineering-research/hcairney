@@ -128,7 +128,7 @@ class FinalizationTests(unittest.TestCase):
             study_path = root / "study.json"
             output = root / "finalized"
             study = {
-                "schema_version": 1,
+                "schema_version": 2,
                 "inputs": {
                     "grid_candidate_analysis": str(candidate),
                     "grid_reference_analysis": str(reference),
@@ -164,7 +164,7 @@ class FinalizationTests(unittest.TestCase):
                     "spectrum_relative_l1_grid": 0.01,
                     "numerical_to_molecular_dissipation": 0.01,
                     "energy_fraction_above_spectrum_band": 0.01,
-                    "mean_profile_relative_l2_sampling": 0.5,
+                    "target_profile_relative_l2_uncertainty": 0.5,
                     "minimum_complete_grid_blocks": 2,
                     "minimum_complete_blocks_per_window": 2,
                     "minimum_target_seed_count": 2,
@@ -188,6 +188,20 @@ class FinalizationTests(unittest.TestCase):
             self.assertTrue(all(
                 check["passed"] for check in report["checks"].values()
             ))
+            self.assertIn(
+                "sampling.stationarity_early_late_consistent_with_uncertainty",
+                report["checks"],
+            )
+            self.assertIn(
+                "sampling.target_profile_relative_l2_uncertainty",
+                report["checks"],
+            )
+            diagnostic_name = (
+                "sampling.early_late_relative_l2_upper_bound"
+            )
+            self.assertNotIn(diagnostic_name, report["checks"])
+            self.assertIn(diagnostic_name, report["diagnostics"])
+            self.assertFalse(report["diagnostics"][diagnostic_name]["required"])
             target_csv = output / "dns_target.csv"
             target_metadata = output / "dns_target_metadata.json"
             target_spectrum = output / "dns_spectrum.csv"
@@ -209,8 +223,36 @@ class FinalizationTests(unittest.TestCase):
             self.assertEqual(len(spectrum_rows), 3)
             self.assertIn("combined_standard_error", spectrum_rows[0])
 
+            legacy_study = json.loads(json.dumps(study))
+            legacy_study["schema_version"] = 1
+            legacy_study["acceptance"][
+                "mean_profile_relative_l2_sampling"
+            ] = legacy_study["acceptance"].pop(
+                "target_profile_relative_l2_uncertainty"
+            )
+            legacy_output = root / "legacy"
+            legacy_study["output"]["directory"] = str(legacy_output)
+            study_path.write_text(json.dumps(legacy_study))
+
+            legacy_passed, legacy_report_path = finalize_phase6.finalize(
+                study_path
+            )
+
+            self.assertTrue(legacy_passed)
+            legacy_report = json.loads(legacy_report_path.read_text())
+            self.assertIn(
+                "sampling.early_late_relative_l2_upper_bound",
+                legacy_report["checks"],
+            )
+            self.assertIn(
+                "sampling.target_profile_relative_l2_uncertainty",
+                legacy_report["diagnostics"],
+            )
+
             failed_output = root / "failed"
-            study["acceptance"]["mean_profile_relative_l2_grid"] = 0.0
+            study["acceptance"][
+                "target_profile_relative_l2_uncertainty"
+            ] = 0.0
             study["output"]["directory"] = str(failed_output)
             study_path.write_text(json.dumps(study))
 
@@ -219,6 +261,9 @@ class FinalizationTests(unittest.TestCase):
             self.assertFalse(passed)
             failed_report = json.loads(failed_report_path.read_text())
             self.assertEqual(failed_report["overall_status"], "failed")
+            self.assertFalse(failed_report["checks"][
+                "sampling.target_profile_relative_l2_uncertainty"
+            ]["passed"])
             self.assertFalse((failed_output / "dns_target.csv").exists())
             self.assertFalse(
                 (failed_output / "dns_target_metadata.json").exists()

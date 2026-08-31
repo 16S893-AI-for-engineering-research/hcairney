@@ -658,8 +658,9 @@ def write_spectrum_csv(path, sampling):
 
 def finalize(study_path, output_override=None):
     study = load_json(study_path)
-    if study.get("schema_version") != 1:
-        raise ValueError("Phase 6 study schema_version must be 1")
+    study_schema_version = study.get("schema_version")
+    if study_schema_version not in (1, 2):
+        raise ValueError("Phase 6 study schema_version must be 1 or 2")
     base = study_path.parent
     inputs = study["inputs"]
     candidate = load_analysis(resolve_path(base, inputs["grid_candidate_analysis"]))
@@ -792,31 +793,55 @@ def finalize(study_path, output_override=None):
             acceptance["minimum_complete_blocks_per_window"],
             comparison="minimum",
         ),
-        "sampling.early_late_consistent_with_uncertainty": {
-            "value": sampling["observed_early_late_relative_l2"],
-            "threshold": sampling["null_difference_uncertainty"],
-            "comparison": "maximum",
-            "passed": bool(
-                sampling["observed_early_late_relative_l2"]
-                <= sampling["null_difference_uncertainty"]
-            ),
-        },
-        "sampling.early_late_relative_l2_upper_bound": check_entry(
-            sampling["early_late_relative_l2_upper_bound"],
-            acceptance["mean_profile_relative_l2_sampling"],
-        ),
-        "sampling.minimum_target_blocks": check_entry(
-            min(np.asarray(sampling["early_block_counts"])
-                + np.asarray(sampling["late_block_counts"])),
-            2 * int(acceptance["minimum_complete_blocks_per_window"]),
-            comparison="minimum",
-        ),
-        "sampling.minimum_target_seed_count": check_entry(
-            len(seeds),
-            acceptance["minimum_target_seed_count"],
-            comparison="minimum",
+    }
+    stationarity_check = {
+        "value": sampling["observed_early_late_relative_l2"],
+        "threshold": sampling["null_difference_uncertainty"],
+        "comparison": "maximum",
+        "passed": bool(
+            sampling["observed_early_late_relative_l2"]
+            <= sampling["null_difference_uncertainty"]
         ),
     }
+    diagnostics = {}
+    if study_schema_version == 1:
+        # Preserve the acceptance semantics of archived version-1 studies.
+        checks["sampling.early_late_consistent_with_uncertainty"] = (
+            stationarity_check
+        )
+        checks["sampling.early_late_relative_l2_upper_bound"] = check_entry(
+            sampling["early_late_relative_l2_upper_bound"],
+            acceptance["mean_profile_relative_l2_sampling"],
+        )
+        diagnostics["sampling.target_profile_relative_l2_uncertainty"] = {
+            "value": sampling["target_profile_relative_l2_uncertainty"],
+            "confidence_level": confidence,
+            "required": False,
+        }
+    else:
+        checks[
+            "sampling.stationarity_early_late_consistent_with_uncertainty"
+        ] = stationarity_check
+        checks["sampling.target_profile_relative_l2_uncertainty"] = check_entry(
+            sampling["target_profile_relative_l2_uncertainty"],
+            acceptance["target_profile_relative_l2_uncertainty"],
+        )
+        diagnostics["sampling.early_late_relative_l2_upper_bound"] = {
+            "value": sampling["early_late_relative_l2_upper_bound"],
+            "confidence_level": confidence,
+            "required": False,
+        }
+    checks["sampling.minimum_target_blocks"] = check_entry(
+        min(np.asarray(sampling["early_block_counts"])
+            + np.asarray(sampling["late_block_counts"])),
+        2 * int(acceptance["minimum_complete_blocks_per_window"]),
+        comparison="minimum",
+    )
+    checks["sampling.minimum_target_seed_count"] = check_entry(
+        len(seeds),
+        acceptance["minimum_target_seed_count"],
+        comparison="minimum",
+    )
     overall_passed = all(entry["passed"] for entry in checks.values())
 
     output_config = study["output"]
@@ -834,7 +859,7 @@ def finalize(study_path, output_override=None):
         "target_spectrum_filename", "dns_spectrum.csv"
     )
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "phase": 6,
         "overall_status": "passed" if overall_passed else "failed",
         "study_definition": str(study_path.resolve()),
@@ -847,6 +872,7 @@ def finalize(study_path, output_override=None):
             "target_runs": [source_identity(target) for target in targets],
         },
         "checks": checks,
+        "diagnostics": diagnostics,
         "grid_metrics": grid,
         "sampling_metrics": {
             "early_block_counts": sampling["early_block_counts"],

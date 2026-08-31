@@ -8,6 +8,25 @@ grid convergence, physical-scale resolution, numerical dissipation, spin-up,
 and sampling convergence before writing a target that a later SMARTIES
 environment can load.
 
+## Role in the revised RL problem
+
+The accepted bundle remains the source of the RL target, but only the mean
+velocity profile and its uncertainty define primary success. The deterministic
+forcing stored in the source-run configuration is provenance and an
+oracle/debug input; it is not an action label and the learned forcing is not
+expected to reproduce it.
+
+During controlled LES training, the known deterministic component is normally
+disabled and replaced by a shared-policy, zero-net additive forcing. The
+environment must verify the target hashes and conservatively restrict the DNS
+profile to the LES grid. The DNS variance, spectrum, energy, and dissipation
+remain mandatory evaluation diagnostics even though they are not primary
+optimization targets in the candidate reward structures. Reward definitions
+and their matched comparisons are specified in
+[the SMARTIES integration guide](implement_rl.md). This preserves the existing
+Phase 6 artifact and acceptance criteria while making the narrower mean-profile
+objective explicit.
+
 The versioned default study is `configs/phase6_study.json`. All paths in that
 file are resolved relative to the study file, so the workflow does not depend
 on the shell's current directory.

@@ -3,18 +3,31 @@
 ## 1. Purpose
 
 This application is a precursor to reinforcement-learning (RL) subgrid-scale
-(SGS) modeling for large-eddy simulation (LES). The immediate objective is to
-build and verify a reliable finite-volume solver for the one-dimensional
-viscous Burgers equation. Turbulent forcing, classical SGS baselines, offline
-generation of a DNS mean profile, and SMARTIES integration will be added only
-after the unclosed solver has passed its verification suite.
+(SGS) modeling for implicitly filtered large-eddy simulation (LES). The
+verified solver, turbulent forcing, classical SGS baselines, and offline DNS
+reference remain the numerical foundation. The first RL problem is now to learn
+an additive, zero-net forcing that makes the LES reproduce the DNS mean velocity
+profile. It is not to reproduce the deterministic DNS forcing point by point,
+nor to output a Smagorinsky coefficient.
 
-The solver must remain independent of SMARTIES. The eventual RL environment
-will wrap the solver and supply a field of closure coefficients in the same way
-that a classical closure model does. This separation should allow the numerical
-method, forcing, closures, and RL interface to be tested independently.
+This change follows the parameter studies in which the mean profile was much
+less sensitive to grid resolution than expected. That makes mean-profile error
+a weak discriminator between conventional coefficient fields and leaves the
+original coefficient-learning problem poorly conditioned for an initial RL
+integration test. An additive forcing gives the policy direct control over the
+quantity used for success while the instantaneous turbulent state and the
+finite-time mean estimate remain noisy. It is therefore a useful test of the
+SMARTIES coupling and of learning in an unsteady LES, even though it is not a
+claim that the learned forcing is the unique or physically exact SGS term.
 
-The initial governing equation is
+The solver must remain independent of SMARTIES. The environment will wrap the
+solver, collect one raw scalar action per cell from a single shared policy,
+project the resulting field to zero discrete mean, and supply it as an additive
+source held over a physical-time decision interval. This separation keeps the
+numerical method, reference forcing, classical closures, action projection, and
+RL interface independently testable.
+
+The reference calculation uses
 
 \[
   \frac{\partial u}{\partial t}
@@ -28,6 +41,23 @@ The initial governing equation is
 on the periodic domain \(x\in[0,2\pi)\). The molecular viscosity \(\nu\) is
 constant. The solver stores cell averages on a uniform mesh and uses double
 precision.
+
+The initial controlled LES instead uses
+
+\[
+  \frac{\partial u}{\partial t}
+  + \frac{\partial}{\partial x}\left(\frac{u^2}{2}\right)
+  = \frac{\partial}{\partial x}
+    \left[\left(\nu + \nu_{\mathrm{sgs}}\right)
+    \frac{\partial u}{\partial x}\right]
+  + f'(x,t) + f_{\mathrm{RL}}(x,t).
+\]
+
+The known deterministic component \(F_{\mathrm{mean}}\) is withheld in this
+environment. It may be applied in an oracle/debug baseline, but it is not a
+training label. The learned term may differ from it because the coarse
+discretization, numerical dissipation, and any retained classical closure are
+part of the controlled dynamics.
 
 ## 2. Fixed design decisions
 
@@ -50,21 +80,29 @@ The following decisions define the initial scope:
   another comparison.
 - Define all SGS coefficients and eddy viscosities at cell centers. Interpolate
   viscosity to faces only when constructing the conservative viscous flux.
-- Restrict the first closures to a single Smagorinsky-like coefficient per
-  cell. The future RL policy will output one local coefficient for each cell,
-  with all cells using the same policy.
+- Retain the verified Smagorinsky-like closures as classical baselines. The
+  first RL policy acts through an additive cell-centered source instead of a
+  prescribed eddy-viscosity coefficient.
+- Use one agent per LES cell and one shared, memoryless policy initially. The
+  policy parameters, observation definition, normalization, and action bounds
+  are identical at every cell. Do not provide cell index or absolute position
+  as an observation.
+- Remove the volume-weighted discrete mean of every learned action field before
+  it is applied. Spatial smoothing and amplitude limiting must preserve this
+  constraint.
 - Generate the target DNS mean profile offline using a high-resolution,
   demonstrably grid-converged configuration of this solver. No DNS will evolve
   alongside the LES during RL training.
-- Use mean and stochastic forcing without a spatial zero mode. This permits an
-  inhomogeneous mean velocity profile without a bulk-force/drag balance.
+- Use reference deterministic forcing, stochastic forcing, and learned forcing
+  without a spatial zero mode. This permits an inhomogeneous mean velocity
+  profile without a bulk-force/drag balance.
 
 The following choices are deliberately deferred until the preceding components
 can inform them: the MUSCL limiter, the exact deterministic forcing modes, the
-stochastic forcing process and parameters, DNS and LES resolutions, SGS
-coefficient bounds, the complete dynamic SGS model, and the RL observation and reward
-aggregation. They must remain configurable rather than becoming implicit
-constants in numerical kernels.
+stochastic forcing process and parameters, DNS and LES resolutions, learned
+forcing bounds and smoothing, the complete dynamic SGS model, and the final RL
+observation, reward structure, and reward aggregation. They must remain
+configurable rather than becoming implicit constants in numerical kernels.
 
 ## 3. Proposed source layout
 
@@ -110,6 +148,10 @@ apps/burgers_sgs/
     generate_dns_mean.cpp
 
   environment/          # added after the solver and closures are verified
+    ActionProjection.*
+    MeanProfileEstimator.*
+    ObservationBuilder.*
+    RewardModel.*
     SGSEnvironment.*
     smarties_main.cpp
 ```
@@ -255,12 +297,13 @@ Use one common closure interface with implementations for:
 - `DynamicSmagorinsky`: reserved for a possible later test-filter-based model;
   it is explicitly unsupported in the initial Phase 7 implementation.
 - `PrescribedCoefficientField`: accepts one cell-centered \(C_{S,i}\) per cell;
-  this will be used by the future RL environment without putting RL code in the
-  solver.
+  this remains useful for solver verification and non-RL coefficient-field
+  experiments.
 
-The first RL model will be restricted to nonnegative, bounded coefficients.
 Configuration and reports use \(C_S\), while Phase 7 closure kernels store
-\(C_S^2\) internally to avoid a redundant sign and repeated squaring.
+\(C_S^2\) internally to avoid a redundant sign and repeated squaring. These
+coefficient conventions do not constrain the learned additive forcing, which
+is signed and has its own physical units and bounds.
 
 The initial Phase 7 baseline deliberately omits the dynamic model. If it is
 revisited, first add independently verified filtering operations and document
@@ -271,9 +314,9 @@ small denominators and negative coefficients are handled.
 ### 4.4 Time integration and timestep selection
 
 Implement SSP-RK3 as a method-of-lines integrator. Recompute state-dependent
-fluxes and eddy viscosity at every RK stage. A prescribed RL coefficient may be
-held fixed over an eventual RL decision interval, but the eddy viscosity still
-changes with the stage velocity gradient.
+fluxes and eddy viscosity at every RK stage. The projected learned forcing is
+held fixed over an RL decision interval and evaluated as the same additive
+field at every RK stage within that interval.
 
 Select the timestep from both constraints:
 
@@ -354,6 +397,48 @@ separately before composition. Their discrete power inputs are also retained
 separately. Per-step work and molecular dissipation use the SSP-RK3 weights
 \(1/6,1/6,2/3\), and numerical dissipation is the residual of the resulting
 time-discrete energy balance.
+
+### 4.6 Learned additive forcing
+
+SMARTIES supplies one raw scalar action \(a_i\) for every LES cell. The same
+policy maps local observations to \(a_i\) at all cells; there are no learned
+cell-specific constants. The environment, not the policy, converts the raw
+actions into the applied field. First apply any configured periodic,
+constant-preserving smoothing to obtain \(s_i\). For a nonuniform
+generalization, form the volume-weighted mean and projection
+
+\[
+  \langle s\rangle_V =
+  \frac{\sum_i V_i s_i}{\sum_i V_i},
+  \qquad p_i=s_i-\langle s\rangle_V.
+\]
+
+Repeat the mean removal defensively after any later field transformation.
+Finally apply a common physical scale and, if needed, a single field-wide
+rescaling to satisfy \(|f_i|\leq A_f\):
+
+\[
+  f_{\mathrm{RL},i}
+  = A_f\,\frac{p_i}{\max(1,\|p\|_\infty)}.
+\]
+
+Here \(p\) is nondimensional and \(A_f\) has forcing units. A uniform raw
+action field correctly projects to zero. Do not clip cells independently after
+projection because that generally reintroduces a nonzero mean. Record raw,
+smoothed, projected, and applied action summaries so action saturation and
+projection effects are visible.
+
+The learned field is a separate forcing component in the solver energy budget:
+
+\[
+  P_{\mathrm{RL}}=\int u f_{\mathrm{RL}}\,dx.
+\]
+
+Zero net force does not imply zero power, so this term must not be folded into
+numerical dissipation. The initial environment disables the known deterministic
+reference forcing, retains the same stochastic forcing process, and uses
+\(f_{\mathrm{RL}}\) in its place. Alternative compositions must be explicit in
+configuration and metadata.
 
 ## 5. Phased implementation plan
 
@@ -527,13 +612,21 @@ place. Dynamic Smagorinsky is not a Phase 7 completion requirement.
 **Completion criterion:** the static baseline and prescribed-field path are
 reproducible, conservative, stable under documented bounds, and the static
 baseline is evaluated against the same offline DNS statistics intended for the
-future RL model.
+controlled learned-forcing model.
 
 ### Phase 8: SMARTIES environment
 
 This phase is intentionally deferred until the solver and baselines are
-verified. Its expected form is recorded in Section 8 so current solver APIs do
-not obstruct it.
+verified. Add the learned additive-forcing interface, its projection and
+diagnostics, a SMARTIES-independent environment core, and finally the SMARTIES
+communication loop. The implementation sequence and acceptance tests are in
+[the SMARTIES integration guide](implement_rl.md).
+
+**Completion criterion:** the environment conserves the periodic mean under
+the learned action, reproduces seeded rollouts, exchanges one action and
+transition per cell per decision, terminates cleanly on timeout or failure, and
+passes short training and evaluation smoke tests without exposing cell
+position to the shared policy.
 
 ## 6. Solver verification plan
 
@@ -551,7 +644,10 @@ scripts, but their configurations and expected results must remain versioned.
 - Reconstruction of a constant state.
 - Centered gradients and Laplacians on periodic Fourier modes.
 - Face interpolation of constant and spatially varying viscosity.
-- Zero, deterministic, manufactured, and stochastic forcing components.
+- Zero, deterministic, manufactured, stochastic, and prescribed learned
+  forcing components.
+- Volume-weighted action projection, periodic smoothing, field-wide amplitude
+  limiting, and invariance under cyclic permutation of cells.
 - Fixed-seed reproducibility and serialization/restart of stochastic forcing
   state if restart support is added.
 
@@ -631,6 +727,7 @@ of
 \[
   \frac{dE}{dt}
   = P_{\mathrm{mean}} + P_{\mathrm{stochastic}}
+    + P_{\mathrm{RL}}
     -\varepsilon_\nu-\varepsilon_{\mathrm{sgs}}
     -\varepsilon_{\mathrm{num}}.
 \]
@@ -664,6 +761,9 @@ DNS result.
 - Confirm that SGS viscosity participates in the diffusive timestep bound.
 - Reject negative molecular viscosity, invalid grid sizes, non-finite state,
   and coefficient arrays of the wrong size with descriptive errors.
+- Reject non-finite learned actions and additive fields of the wrong size;
+  terminate an episode cleanly if a bounded action still produces an invalid
+  state.
 - Ensure failures are observable by the future environment rather than silently
   propagating `NaN` values.
 
@@ -705,49 +805,81 @@ sum of such modes. The target profile may itself have a nonzero domain mean if
 that mean is established by the initial condition; it is the net forcing that
 must vanish to avoid secular acceleration in the periodic domain.
 
-## 8. Future RL formulation and constraints on current APIs
+## 8. RL formulation and constraints on current APIs
 
-The expected SMARTIES environment uses one agent per cell and a single shared
-policy. Every agent produces one local, bounded \(C_{S,i}\) (or equivalently
-\(C_{S,i}^2\)). The solver receives the complete coefficient field through
-`PrescribedCoefficientField`, computes cell-centered SGS viscosity, interpolates
-it to faces, and advances conservatively.
+The SMARTIES environment uses one agent per cell and one shared policy. It must
+not call `agentsDefineDifferentMDP()`: all cells have the same observation and
+action definitions and contribute experience to the same policy. The policy
+receives translation-equivariant local features, initially a periodic velocity
+stencil and derived local gradients. Cell index, absolute \(x\), and the local
+DNS target value are excluded so the learned mapping cannot memorize a spatial
+forcing profile.
 
-The target \(\overline u^{DNS}(x)\) is loaded from the offline statistics file.
-The LES mean is estimated during an episode, likely with an exponential moving
-average (EMA). A candidate local linear reward is
+Every agent produces one signed raw action. After all actions have been
+collected, the environment smooths them if configured, removes their
+volume-weighted mean, applies a field-wide bound-preserving scale, and holds the
+resulting \(f_{\mathrm{RL}}\) fixed over one physical-time decision interval.
+Independent per-agent exploration noise is permitted; shared exploration noise
+would largely disappear under the zero-mean projection. The solver must support
+the following without putting SMARTIES types in `burgers_core`:
+
+- setting and clearing a complete cell-centered additive forcing field;
+- holding that field over a requested physical-time advance;
+- accounting separately for learned-forcing work;
+- exposing immutable local stencils and diagnostics;
+- resetting the PDE, stochastic forcing, running mean, and episode counters
+  deterministically from a seed;
+- detecting numerical failure; and
+- advancing to a requested time despite adaptive PDE timesteps and forcing
+  clock boundaries.
+
+The target \(\overline u^{DNS}(x)\) is loaded from the accepted offline bundle
+and conservatively restricted to the LES grid. Success is defined by the
+normalized error of the statistically converged LES mean profile, not by
+forcing-field error. During training, a block mean or an EMA supplies a noisy
+finite-time estimate. Reward structure must remain configurable and be tested
+rather than being treated as part of the additive-forcing definition. One
+local candidate uses the direction of the pre-action EMA error and the
+time-weighted velocity block generated after applying the action:
 
 \[
-  r_i^n =
+  r_{i,\mathrm{dir}}^n =
   -\operatorname{sign}(\widehat U_i^n-U_i^{DNS})
-   (u_i^{n+1}-U_i^{DNS}).
+   \frac{U_{i,\mathrm{block}}^n-U_i^{DNS}}{U_{\mathrm{scale}}}
+  -\lambda_a\left(\frac{f_{\mathrm{RL},i}^n}{f_{\max}}\right)^2.
 \]
 
-To avoid using the same fluctuation to determine the sign and the error:
+Here \(U_{i,\mathrm{block}}^n\) is the physical-time-weighted average at cell
+\(i\) over the decision interval following action \(n\). Cache
+\(\widehat U_i^n\), apply the action, accumulate the block, compute the reward,
+and only then update the EMA. This ordering prevents the same fluctuation from
+setting both the sign and the signed error. A second candidate directly
+penalizes the updated mean estimate:
 
-1. Form the sign from the existing EMA.
-2. Apply the action and advance the solver.
-3. Evaluate the reward from the new sample or decision-block average.
-4. Update the EMA afterward.
+\[
+  r_{i,\mathrm{EMA2}}^n =
+  -w_i\left(\frac{\widehat U_i^{n+1}-U_i^{DNS}}{U_{\mathrm{scale}}}\right)^2
+  -\lambda_a\left(\frac{f_{\mathrm{RL},i}^n}{f_{\max}}\right)^2.
+\]
 
-The exact observations, reward aggregation, EMA timescale, agent synchronization,
-and SMARTIES settings are intentionally deferred. The solver must nevertheless
-support the following without redesign:
+The directional reward offers more immediate but noisier credit and can be
+temporarily misdirected when its lagged sign crosses the target. The squared-
+EMA reward is smoother and directly reflects mean-squared error, but spreads
+credit across the estimator history and retains a finite-sample variance
+penalty. Test both with identical training and held-out seeds. Also compare
+local rewards with their shared, volume-weighted global aggregations. Because
+the action projection couples cells, no local reward provides perfect
+individual credit assignment; that limitation must be reported rather than
+hidden. Reward choice does not change the statistically converged mean-profile
+error used as the primary evaluation metric.
 
-- setting a full cell-centered coefficient field before an advance,
-- holding that coefficient field over a physical-time decision interval,
-- exposing local stencils and diagnostics without exposing internal mutable
-  storage,
-- resetting deterministically from a seed,
-- detecting numerical failure, and
-- advancing to a requested physical time despite adaptive PDE timesteps.
-
-Mean-profile recovery alone does not uniquely identify correct SGS physics.
-Therefore, even if the reward uses only the mean profile, comparisons must also
-report variance, energy, spectra, molecular and SGS dissipation, numerical
-dissipation, coefficient distributions, and stability. Evaluate trained models
-on held-out forcing amplitudes, viscosities, grids, and random seeds before
-claiming closure generalization.
+Mean-profile recovery does not uniquely identify SGS physics. Variance, energy,
+spectra, molecular/SGS/numerical dissipation, learned-forcing power, action
+spectra, and stability are mandatory evaluation diagnostics even when they are
+not reward terms. Generalization claims require held-out seeds, initial
+conditions, grids, viscosities, and forcing parameters. The detailed build
+order, SMARTIES calls, tests, and ablations are maintained in
+[the SMARTIES integration guide](implement_rl.md).
 
 ## 9. Reproducibility and output requirements
 
@@ -756,10 +888,14 @@ Every standalone run should record:
 - domain, grid, molecular viscosity, initial condition, and final time;
 - flux, reconstruction, limiter, time integrator, and CFL values;
 - forcing type, modes, amplitudes, correlation times, and random seed;
-- closure type and all coefficient bounds or regularization parameters;
+- closure type, learned-forcing composition, projection, smoothing, action
+  bounds, reward structure and aggregation, mean-estimator timescale, reward
+  scaling, and regularization parameters;
 - timestep counts, rejected/final shortened steps, and failure status;
-- time histories of mean, energy, power input, molecular dissipation, SGS
-  dissipation, and estimated numerical dissipation; and
+- time histories of mean, energy, every forcing power contribution, molecular
+  dissipation, SGS dissipation, and estimated numerical dissipation;
+- raw and applied action norms, projection residual, saturation fraction, and
+  learned-forcing spectrum at configured intervals; and
 - code/build metadata sufficient to reproduce the executable.
 
 CSV is sufficient for initial scalar histories and profiles. Keep file output
@@ -786,8 +922,11 @@ SMARTIES integration should begin only when all of the following are true:
 5. The high-resolution offline target is resolution- and sampling-converged.
 6. Static Smagorinsky provides a tested classical comparison baseline; a
    dynamic analog remains optional future work.
-7. The prescribed local coefficient field uses the same cell-centered closure
-   path as the classical models.
+7. A SMARTIES-independent additive-field setter, zero-mean projection, action
+   bounds, and learned-work diagnostic pass their tests.
+8. Applying the known deterministic forcing through the new additive-field
+   path reproduces the corresponding coarse reference run within tolerance.
 
-At that point the RL work should primarily add an environment and a new source
-of \(C_{S,i}\), rather than modify the PDE solver.
+At that point the remaining RL work should primarily add the environment state,
+reward, episode lifecycle, and SMARTIES communication loop rather than alter
+the verified numerical kernels.

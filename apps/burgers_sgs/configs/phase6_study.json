@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "inputs": {
     "grid_candidate_analysis": "../runs/finalization/grid/n1024/seed_5489/analysis_summary.json",
     "grid_reference_analysis": "../runs/finalization/grid/n2048/seed_5489/analysis_summary.json",
@@ -11,14 +11,22 @@
       "../runs/finalization/target/n1024/seed_104005/analysis_summary.json",
       "../runs/finalization/target/n1024/seed_208001/analysis_summary.json",
       "../runs/finalization/target/n1024/seed_416003/analysis_summary.json",
-      "../runs/finalization/target/n1024/seed_832007/analysis_summary.json"
+      "../runs/finalization/target/n1024/seed_832007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_5491/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_13009/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_26005/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_52011/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_104007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_208003/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_416005/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_832009/analysis_summary.json"
     ]
   },
   "design": {
     "candidate_resolution": 1024,
     "reference_resolution": 2048,
     "paired_grid_seed": 5489,
-    "target_seeds": [5489, 13007, 26003, 52009, 104005, 208001, 416003, 832007],
+    "target_seeds": [5489, 13007, 26003, 52009, 104005, 208001, 416003, 832007, 5491, 13009, 26005, 52011, 104007, 208003, 416005, 832009],
     "spinup_end": 20.0,
     "grid_window": [20.0, 200.0],
     "sampling_windows": {
@@ -44,13 +52,13 @@
     "spectrum_relative_l1_grid": 0.005,
     "numerical_to_molecular_dissipation": 0.01,
     "energy_fraction_above_spectrum_band": 0.00001,
-    "mean_profile_relative_l2_sampling": 0.02,
+    "target_profile_relative_l2_uncertainty": 0.05,
     "minimum_complete_grid_blocks": 10,
     "minimum_complete_blocks_per_window": 10,
     "minimum_target_seed_count": 4
   },
   "output": {
-    "directory": "../runs/finalization/grid",
+    "directory": "../runs/finalization",
     "report_filename": "finalization_report.json",
     "target_csv_filename": "dns_target.csv",
     "target_spectrum_filename": "dns_spectrum.csv",
