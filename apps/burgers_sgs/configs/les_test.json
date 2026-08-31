@@ -4,7 +4,7 @@
     "grid": {
       "x_begin": 0,
       "x_end": 6.283185307179586,
-      "cell_count": 64
+      "cell_count": 32
     },
     "initial_condition": {
       "type": "sinusoidal",
