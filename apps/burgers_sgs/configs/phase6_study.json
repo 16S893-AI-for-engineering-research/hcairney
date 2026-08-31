@@ -19,14 +19,30 @@
       "../runs/finalization/target/n1024/seed_104007/analysis_summary.json",
       "../runs/finalization/target/n1024/seed_208003/analysis_summary.json",
       "../runs/finalization/target/n1024/seed_416005/analysis_summary.json",
-      "../runs/finalization/target/n1024/seed_832009/analysis_summary.json"
+      "../runs/finalization/target/n1024/seed_832009/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_5493/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_13011/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_26007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_52013/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_104009/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_208005/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_416007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_832011/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_5495/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_13013/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_26009/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_52015/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_104011/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_208007/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_416009/analysis_summary.json",
+      "../runs/finalization/target/n1024/seed_832013/analysis_summary.json"
     ]
   },
   "design": {
     "candidate_resolution": 1024,
     "reference_resolution": 2048,
     "paired_grid_seed": 5489,
-    "target_seeds": [5489, 13007, 26003, 52009, 104005, 208001, 416003, 832007, 5491, 13009, 26005, 52011, 104007, 208003, 416005, 832009],
+    "target_seeds": [5489, 13007, 26003, 52009, 104005, 208001, 416003, 832007, 5491, 13009, 26005, 52011, 104007, 208003, 416005, 832009, 5493, 13011, 26007, 52013, 104009, 208005, 416007, 832011, 5495, 13013, 26009, 52015, 104011, 208007, 416009, 832013],
     "spinup_end": 20.0,
     "grid_window": [20.0, 200.0],
     "sampling_windows": {
