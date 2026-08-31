@@ -94,6 +94,7 @@ endfunction()
 
 add_library(burgers_core STATIC
   src/BurgersSolver.cpp
+  src/ClosureModel.cpp
   src/Config.cpp
   src/ConfigIO.cpp
   src/ConvectiveFlux.cpp
@@ -221,4 +222,12 @@ if(BUILD_TESTING)
   add_test(NAME burgers.phase5.solver COMMAND test_phase5_solver)
   set_tests_properties(burgers.phase5.solver PROPERTIES
     LABELS "phase5;verification")
+
+  add_executable(test_phase7_closures tests/test_phase7_closures.cpp)
+  target_link_libraries(test_phase7_closures PRIVATE burgers::core)
+  burgers_configure_target(test_phase7_closures)
+
+  add_test(NAME burgers.phase7.closures COMMAND test_phase7_closures)
+  set_tests_properties(burgers.phase7.closures PROPERTIES
+    LABELS "phase7;verification")
 endif()

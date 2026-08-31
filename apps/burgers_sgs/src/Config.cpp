@@ -1,6 +1,7 @@
 #include "burgers/Config.h"
 
 #include <cmath>
+#include <limits>
 #include <set>
 
 namespace burgers {
@@ -322,6 +323,24 @@ std::vector<std::string> validate(const RunConfig& config) {
      config.closure.denominator_regularization < 0.0) {
     errors.emplace_back(
       "closure.denominator_regularization must be nonnegative");
+  }
+  const double maximum_safely_squarable =
+    std::sqrt(std::numeric_limits<double>::max());
+  if(isFinite(config.closure.maximum_coefficient) &&
+     config.closure.maximum_coefficient > maximum_safely_squarable) {
+    errors.emplace_back(
+      "closure.maximum_coefficient must be safely representable when "
+      "squared");
+  }
+  if(!config.closure.store_squared_coefficient) {
+    errors.emplace_back(
+      "closure.store_squared_coefficient must be true; Phase 7 uses C_S in "
+      "configuration and C_S^2 internally");
+  }
+  if(config.closure.type == ClosureType::DynamicSmagorinsky) {
+    errors.emplace_back(
+      "closure.type dynamic_smagorinsky is intentionally unsupported in "
+      "Phase 7");
   }
 
   if(config.output.directory.empty()) {

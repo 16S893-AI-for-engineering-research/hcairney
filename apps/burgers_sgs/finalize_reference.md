@@ -22,7 +22,8 @@ on the shell's current directory.
   statistics. Its NPZ output includes the complete-block profile arrays used by
   the finalizer.
 - `scripts/finalize_phase6.py` evaluates the study definition and writes the
-  acceptance report and, when every required check passes, the DNS target.
+  acceptance report and, when every required check passes, the DNS target
+  bundle used by Phase 7 and the future environment.
 
 Install the analysis dependencies before using the Python tools:
 
@@ -182,9 +183,12 @@ When every check passes, the finalizer additionally writes:
 - `dns_target.csv`, with cell centers, mean velocity, within-run temporal
   standard error, between-seed standard error, hierarchical-bootstrap combined
   standard error, temporal variance, and variance standard error;
+- `dns_spectrum.csv`, with the ensemble mean energy spectrum and separate
+  within-time, between-seed, and combined standard errors;
 - `dns_target_metadata.json`, with sampling counts and duration, uncertainty
-  method, complete run/build/configuration metadata, hashes of every source
-  analysis, the target CSV hash, and an embedded copy of the acceptance report.
+  method, ensemble scalar energy and dissipation statistics, complete
+  run/build/configuration metadata, hashes of every source analysis and target
+  CSV, and an embedded copy of the acceptance report.
 
 The CSV is the portable field file intended for the future C++ environment.
 The metadata JSON is the evidence and provenance record that makes it an

@@ -37,8 +37,9 @@ Grid makeSolverGrid(const RunConfig& config) {
     throw std::invalid_argument(
       "solver supports only SSP-RK3 time integration");
   }
-  if(config.closure.type != ClosureType::NoClosure) {
-    throw std::invalid_argument("Phase 5 solver does not support SGS closure");
+  if(config.closure.type == ClosureType::DynamicSmagorinsky) {
+    throw std::invalid_argument(
+      "dynamic_smagorinsky is intentionally unsupported in Phase 7");
   }
   return Grid(config.grid);
 }
@@ -70,9 +71,11 @@ void requireFiniteTime(double value, const char* name) {
 BurgersSolver::BurgersSolver(const RunConfig& config)
   : grid_(makeSolverGrid(config)),
     molecular_viscosity_(config.viscosity.molecular),
+    face_viscosity_averaging_(config.viscosity.face_averaging),
     reconstruction_(config.numerical_method.reconstruction),
     convective_flux_(config.numerical_method.convective_flux),
     limiter_(config.numerical_method.limiter),
+    closure_(makeClosureModel(grid_, config.closure)),
     forcing_(grid_, config.forcing, config.viscosity.molecular,
              config.random.seed),
     advective_cfl_(config.time_integration.advective_cfl),
@@ -87,6 +90,26 @@ double BurgersSolver::molecularViscosity() const noexcept {
   return molecular_viscosity_;
 }
 
+FaceViscosityAveraging
+BurgersSolver::faceViscosityAveraging() const noexcept {
+  return face_viscosity_averaging_;
+}
+
+ClosureType BurgersSolver::closureType() const noexcept {
+  return closure_->type();
+}
+
+void BurgersSolver::setPrescribedCoefficientField(
+  const std::vector<double>& coefficients) {
+  closure_->setCoefficientField(coefficients);
+}
+
+void BurgersSolver::closureFields(const State& state,
+                                  ClosureFields& fields) const {
+  requireCompatibleFiniteState(grid_, state, "closure input");
+  closure_->evaluate(grid_, state, fields);
+}
+
 void BurgersSolver::rightHandSide(const State& state,
                                   State& derivative) const {
   if(forcing_.type() != ForcingType::None) {
@@ -99,6 +122,14 @@ void BurgersSolver::rightHandSide(const State& state,
 void BurgersSolver::rightHandSide(const State& state,
                                   double time,
                                   State& derivative) const {
+  rightHandSideWithClosure(state, time, derivative, nullptr);
+}
+
+void BurgersSolver::rightHandSideWithClosure(
+  const State& state,
+  double time,
+  State& derivative,
+  ClosureFields* closure_fields) const {
   requireCompatibleFiniteState(grid_, state, "right-hand-side input");
   requireFiniteTime(time, "right-hand-side time");
   if(derivative.size() != grid_.cellCount()) {
@@ -114,8 +145,17 @@ void BurgersSolver::rightHandSide(const State& state,
   computeConvectiveFluxes(face_states,
                           convective_flux_,
                           advective_fluxes);
-  computeMolecularViscousFluxes(
-    grid_, state, molecular_viscosity_, viscous_fluxes);
+  ClosureFields evaluated_closure(grid_);
+  closure_->evaluate(grid_, state, evaluated_closure);
+  computeViscousFluxes(grid_,
+                       state,
+                       molecular_viscosity_,
+                       evaluated_closure.eddy_viscosity,
+                       face_viscosity_averaging_,
+                       viscous_fluxes);
+  if(closure_fields != nullptr) {
+    *closure_fields = evaluated_closure;
+  }
 
   ForcingFields forcing_fields(grid_);
   forcing_.evaluate(time, forcing_fields);
@@ -143,15 +183,24 @@ double BurgersSolver::stableTimeStep(const State& state) const {
     maximum_speed = std::max(maximum_speed, std::abs(value));
   }
 
+  ClosureFields closure_fields(grid_);
+  closure_->evaluate(grid_, state, closure_fields);
+  double maximum_effective_viscosity = molecular_viscosity_;
+  for(const double value : closure_fields.eddy_viscosity) {
+    maximum_effective_viscosity =
+      std::max(maximum_effective_viscosity,
+               molecular_viscosity_ + value);
+  }
+
   const double infinity = std::numeric_limits<double>::infinity();
   const double advective_limit =
     maximum_speed > 0.0
       ? advective_cfl_ * grid_.cellWidth() / maximum_speed
       : infinity;
   const double diffusive_limit =
-    molecular_viscosity_ > 0.0
+    maximum_effective_viscosity > 0.0
       ? diffusive_cfl_ * grid_.cellWidth() * grid_.cellWidth() /
-          molecular_viscosity_
+          maximum_effective_viscosity
       : infinity;
   const double time_step = std::min(advective_limit, diffusive_limit);
 
@@ -219,12 +268,16 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
   ForcingPower power_zero;
   ForcingPower power_one;
   ForcingPower power_two;
+  ClosureFields closure_zero(grid_);
+  ClosureFields closure_one(grid_);
+  ClosureFields closure_two(grid_);
   const double initial_energy = kineticEnergy(grid_, initial);
 
   try {
     forcing_.evaluate(time, forcing_zero);
     power_zero = forcingPower(grid_, initial, forcing_zero);
-    rightHandSide(initial, time, derivative);
+    rightHandSideWithClosure(
+      initial, time, derivative, &closure_zero);
     for(std::size_t cell = 0; cell < grid_.cellCount(); ++cell) {
       stage_one[cell] = initial[cell] + time_step * derivative[cell];
     }
@@ -232,7 +285,8 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
 
     forcing_.evaluate(stage_one_time, forcing_one);
     power_one = forcingPower(grid_, stage_one, forcing_one);
-    rightHandSide(stage_one, stage_one_time, derivative);
+    rightHandSideWithClosure(
+      stage_one, stage_one_time, derivative, &closure_one);
     for(std::size_t cell = 0; cell < grid_.cellCount(); ++cell) {
       stage_two[cell] =
         0.75 * initial[cell] +
@@ -242,7 +296,8 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
 
     forcing_.evaluate(stage_two_time, forcing_two);
     power_two = forcingPower(grid_, stage_two, forcing_two);
-    rightHandSide(stage_two, stage_two_time, derivative);
+    rightHandSideWithClosure(
+      stage_two, stage_two_time, derivative, &closure_two);
     for(std::size_t cell = 0; cell < grid_.cellCount(); ++cell) {
       state[cell] =
         (1.0 / 3.0) * initial[cell] +
@@ -266,6 +321,16 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
       grid_, stage_one, molecular_viscosity_) +
     two_thirds * molecularDissipation(
       grid_, stage_two, molecular_viscosity_);
+  const double weighted_sgs_dissipation =
+    one_sixth * sgsDissipation(
+      grid_, initial, closure_zero.eddy_viscosity,
+      face_viscosity_averaging_) +
+    one_sixth * sgsDissipation(
+      grid_, stage_one, closure_one.eddy_viscosity,
+      face_viscosity_averaging_) +
+    two_thirds * sgsDissipation(
+      grid_, stage_two, closure_two.eddy_viscosity,
+      face_viscosity_averaging_);
 
   SspRk3StepBudget budget;
   budget.time_step = time_step;
@@ -283,11 +348,12 @@ SspRk3StepBudget BurgersSolver::advanceSspRk3(
     two_thirds * power_two.manufactured);
   budget.molecular_dissipation =
     time_step * weighted_molecular_dissipation;
+  budget.sgs_dissipation = time_step * weighted_sgs_dissipation;
   budget.energy_change = kineticEnergy(grid_, state) - initial_energy;
   budget.numerical_dissipation =
     budget.deterministic_work + budget.stochastic_work +
     budget.manufactured_work - budget.molecular_dissipation -
-    budget.energy_change;
+    budget.sgs_dissipation - budget.energy_change;
   budget.advanced_forcing_clock =
     forcing_.currentClockIndex() != initial_clock_index;
   return budget;
@@ -358,6 +424,7 @@ AdvanceResult BurgersSolver::advanceTo(State& state,
     result.stochastic_work += budget.stochastic_work;
     result.manufactured_work += budget.manufactured_work;
     result.molecular_dissipation += budget.molecular_dissipation;
+    result.sgs_dissipation += budget.sgs_dissipation;
     result.numerical_dissipation += budget.numerical_dissipation;
     result.energy_change += budget.energy_change;
     if(budget.advanced_forcing_clock) {

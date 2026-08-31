@@ -62,6 +62,8 @@ int main() {
   original.grid.cell_count = 512;
   original.output.profile_interval = 0.2;
   original.output.write_online_spectrum = false;
+  original.closure.type = burgers::ClosureType::StaticSmagorinsky;
+  original.closure.static_coefficient = 0.27;
   original.random.seed = 982451653u;
 
   try {
@@ -75,6 +77,13 @@ int main() {
            "configuration round trip must preserve profile interval");
     expect(!restored.output.write_online_spectrum,
            "configuration round trip must preserve spectrum output switch");
+    expect(restored.closure.type == burgers::ClosureType::StaticSmagorinsky,
+           "configuration round trip must preserve closure type");
+    expect(restored.closure.static_coefficient == 0.27,
+           "configuration round trip must preserve C_S");
+    expect(restored.closure.store_squared_coefficient,
+           "configuration round trip must preserve the internal C_S-squared "
+           "representation");
     expect(restored.random.seed == original.random.seed,
            "configuration round trip must preserve the full seed");
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compute block-aware Phase 5 statistics and spectra from one run."""
+"""Compute block-aware forced-run statistics and spectra."""
 
 import argparse
 import csv
@@ -15,9 +15,18 @@ except ModuleNotFoundError as error:
     ) from error
 
 
-SNAPSHOT_COLUMNS = ("mean", "kinetic_energy", "spatial_variance")
+CORE_SNAPSHOT_COLUMNS = ("mean", "kinetic_energy", "spatial_variance")
+CLOSURE_SNAPSHOT_COLUMNS = (
+    "minimum_coefficient",
+    "mean_coefficient",
+    "maximum_coefficient",
+    "mean_eddy_viscosity",
+    "maximum_eddy_viscosity",
+)
+SNAPSHOT_COLUMNS = (*CORE_SNAPSHOT_COLUMNS, *CLOSURE_SNAPSHOT_COLUMNS)
 RATE_COLUMNS = (
     "molecular_dissipation",
+    "sgs_dissipation",
     "deterministic_power",
     "stochastic_power",
     "manufactured_power",
@@ -50,7 +59,13 @@ def read_history(path):
     with path.open(newline="") as input_file:
         reader = csv.DictReader(input_file)
         fieldnames = set(reader.fieldnames or ())
-        required = {"time", *SNAPSHOT_COLUMNS, *RATE_COLUMNS[:-3]}
+        # Closure columns were added in Phase 7. Retain support for completed
+        # Phase 5/6 histories by requiring only their original columns.
+        required = {
+            "time", *CORE_SNAPSHOT_COLUMNS, "molecular_dissipation",
+            "deterministic_power", "stochastic_power", "manufactured_power",
+            "interval_numerical_dissipation_rate",
+        }
         missing = required.difference(fieldnames)
         if missing:
             raise ValueError(
@@ -70,7 +85,12 @@ def read_history(path):
     if np.any(np.diff(times) <= 0.0):
         raise ValueError(f"{path} times must be strictly increasing")
 
-    # Read old Phase 5 histories as well as the clarified schema.
+    # Read old Phase 5/6 histories as zero-SGS runs.
+    for name in CLOSURE_SNAPSHOT_COLUMNS:
+        if name not in arrays:
+            arrays[name] = np.zeros_like(times)
+    if "sgs_dissipation" not in arrays:
+        arrays["sgs_dissipation"] = np.zeros_like(times)
     if "interval_start_time" not in arrays:
         arrays["interval_start_time"] = np.concatenate(([times[0]], times[:-1]))
     if "interval_duration" not in arrays:
@@ -89,6 +109,7 @@ def read_history(path):
         arrays["interval_budget_residual_rate"] = (
             arrays["total_power"]
             - arrays["molecular_dissipation"]
+            - arrays["sgs_dissipation"]
             - arrays["interval_numerical_dissipation_rate"]
             - arrays["interval_energy_change_rate"]
         )
@@ -415,7 +436,8 @@ def main():
 
         candidate_columns = (
             "kinetic_energy", "spatial_variance", "molecular_dissipation",
-            "interval_numerical_dissipation_rate", "total_power",
+            "sgs_dissipation", "interval_numerical_dissipation_rate",
+            "total_power",
         )
         window_mask = (history["time"] > start) & (history["time"] <= end)
         correlation_times = []
@@ -449,6 +471,8 @@ def main():
                 "mean_total_power": scalars["total_power"]["mean"],
                 "mean_molecular_dissipation":
                     scalars["molecular_dissipation"]["mean"],
+                "mean_sgs_dissipation":
+                    scalars["sgs_dissipation"]["mean"],
                 "mean_numerical_dissipation":
                     scalars["interval_numerical_dissipation_rate"]["mean"],
                 "mean_energy_change_rate":
@@ -460,6 +484,17 @@ def main():
                     / scalars["molecular_dissipation"]["mean"]
                     if scalars["molecular_dissipation"]["mean"] != 0.0
                     else None
+                ),
+                "numerical_to_total_physical_dissipation_ratio": (
+                    scalars["interval_numerical_dissipation_rate"]["mean"]
+                    / (
+                        scalars["molecular_dissipation"]["mean"]
+                        + scalars["sgs_dissipation"]["mean"]
+                    )
+                    if (
+                        scalars["molecular_dissipation"]["mean"]
+                        + scalars["sgs_dissipation"]["mean"]
+                    ) != 0.0 else None
                 ),
             },
         }

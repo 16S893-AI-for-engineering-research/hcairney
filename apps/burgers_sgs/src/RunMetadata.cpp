@@ -139,7 +139,7 @@ std::string serializeRunMetadata(const RunConfig& config,
   output << std::setprecision(std::numeric_limits<double>::max_digits10);
 
   output << "{\n"
-         << "  \"schema_version\": 5,\n"
+         << "  \"schema_version\": 6,\n"
          << "  \"created_utc\": " << jsonString(utcTimestamp()) << ",\n"
          << "  \"phase\": " << result.phase << ",\n"
          << "  \"build\": {\n"
@@ -286,6 +286,8 @@ std::string serializeRunMetadata(const RunConfig& config,
          << result.manufactured_work << ",\n"
          << "    \"molecular_dissipation\": "
          << result.molecular_dissipation << ",\n"
+         << "    \"sgs_dissipation\": "
+         << result.sgs_dissipation << ",\n"
          << "    \"numerical_dissipation\": "
          << result.numerical_dissipation << ",\n"
          << "    \"energy_change\": "

@@ -42,6 +42,7 @@ struct RunResultMetadata {
   double stochastic_work = 0.0;
   double manufactured_work = 0.0;
   double molecular_dissipation = 0.0;
+  double sgs_dissipation = 0.0;
   double numerical_dissipation = 0.0;
   double energy_change = 0.0;
 };

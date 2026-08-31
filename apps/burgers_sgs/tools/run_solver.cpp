@@ -135,6 +135,12 @@ struct HistoryRow {
   double kinetic_energy;
   double spatial_variance;
   double molecular_dissipation;
+  double sgs_dissipation;
+  double minimum_coefficient;
+  double mean_coefficient;
+  double maximum_coefficient;
+  double mean_eddy_viscosity;
+  double maximum_eddy_viscosity;
   double deterministic_power;
   double stochastic_power;
   double manufactured_power;
@@ -151,11 +157,20 @@ HistoryRow makeHistoryRow(double time,
                           const burgers::State& state,
                           const burgers::AdvanceResult* interval = nullptr) {
   burgers::ForcingFields forcing(solver.grid());
+  burgers::ClosureFields closure(solver.grid());
   solver.forcingFields(time, forcing);
+  solver.closureFields(state, closure);
   const burgers::ForcingPower power =
     burgers::forcingPower(solver.grid(), state, forcing);
+  const burgers::ClosureStatistics closure_statistics =
+    burgers::closureStatistics(solver.grid(), closure);
   double molecular_dissipation = burgers::molecularDissipation(
     solver.grid(), state, solver.molecularViscosity());
+  double sgs_dissipation = burgers::sgsDissipation(
+    solver.grid(),
+    state,
+    closure.eddy_viscosity,
+    solver.faceViscosityAveraging());
   double deterministic_power = power.deterministic;
   double stochastic_power = power.stochastic;
   double manufactured_power = power.manufactured;
@@ -170,6 +185,7 @@ HistoryRow makeHistoryRow(double time,
     interval_start_time = interval->initial_time;
     interval_duration = duration;
     molecular_dissipation = interval->molecular_dissipation / duration;
+    sgs_dissipation = interval->sgs_dissipation / duration;
     deterministic_power = interval->deterministic_work / duration;
     stochastic_power = interval->stochastic_work / duration;
     manufactured_power = interval->manufactured_work / duration;
@@ -177,7 +193,7 @@ HistoryRow makeHistoryRow(double time,
     total_power = deterministic_power + stochastic_power + manufactured_power;
     energy_change_rate = interval->energy_change / duration;
     budget_residual_rate = total_power - molecular_dissipation -
-      numerical_dissipation - energy_change_rate;
+      sgs_dissipation - numerical_dissipation - energy_change_rate;
   }
   return HistoryRow{
     time,
@@ -185,6 +201,12 @@ HistoryRow makeHistoryRow(double time,
     burgers::kineticEnergy(solver.grid(), state),
     burgers::spatialVariance(solver.grid(), state),
     molecular_dissipation,
+    sgs_dissipation,
+    closure_statistics.minimum_coefficient,
+    closure_statistics.mean_coefficient,
+    closure_statistics.maximum_coefficient,
+    closure_statistics.mean_eddy_viscosity,
+    closure_statistics.maximum_eddy_viscosity,
     deterministic_power,
     stochastic_power,
     manufactured_power,
@@ -205,6 +227,9 @@ void writeHistory(const std::string& path,
   output.imbue(std::locale::classic());
   output << std::setprecision(std::numeric_limits<double>::max_digits10)
          << "time,mean,kinetic_energy,spatial_variance,molecular_dissipation,"
+            "sgs_dissipation,minimum_coefficient,mean_coefficient,"
+            "maximum_coefficient,mean_eddy_viscosity,"
+            "maximum_eddy_viscosity,"
             "deterministic_power,stochastic_power,manufactured_power,"
             "interval_numerical_dissipation_rate,interval_start_time,"
             "interval_duration,total_power,interval_energy_change_rate,"
@@ -212,6 +237,10 @@ void writeHistory(const std::string& path,
   for(const HistoryRow& row : history) {
     output << row.time << ',' << row.mean << ',' << row.kinetic_energy << ','
            << row.spatial_variance << ',' << row.molecular_dissipation << ','
+           << row.sgs_dissipation << ',' << row.minimum_coefficient << ','
+           << row.mean_coefficient << ',' << row.maximum_coefficient << ','
+           << row.mean_eddy_viscosity << ','
+           << row.maximum_eddy_viscosity << ','
            << row.deterministic_power << ',' << row.stochastic_power << ','
            << row.manufactured_power << ','
            << row.interval_numerical_dissipation_rate << ','
@@ -312,6 +341,7 @@ void accumulateAdvance(burgers::AdvanceResult& total,
   total.stochastic_work += increment.stochastic_work;
   total.manufactured_work += increment.manufactured_work;
   total.molecular_dissipation += increment.molecular_dissipation;
+  total.sgs_dissipation += increment.sgs_dissipation;
   total.numerical_dissipation += increment.numerical_dissipation;
   total.energy_change += increment.energy_change;
 }
@@ -374,7 +404,7 @@ int main(int argc, char* argv[]) {
   }
 
   burgers::RunResultMetadata result;
-  result.phase = 5;
+  result.phase = 7;
   result.final_time = config.time_integration.initial_time;
   if(!errors.empty()) {
     result.status = burgers::RunStatus::InvalidConfiguration;
@@ -490,6 +520,7 @@ int main(int argc, char* argv[]) {
       result.stochastic_work += advance.stochastic_work;
       result.manufactured_work += advance.manufactured_work;
       result.molecular_dissipation += advance.molecular_dissipation;
+      result.sgs_dissipation += advance.sgs_dissipation;
       result.numerical_dissipation += advance.numerical_dissipation;
       result.energy_change += advance.energy_change;
       time = advance.final_time;
@@ -530,7 +561,7 @@ int main(int argc, char* argv[]) {
     }
 
     result.status = burgers::RunStatus::Completed;
-    result.message = "Phase 5 configurable forced solve completed.";
+    result.message = "Phase 7 closure-capable forced solve completed.";
     result.numerical_advancement_performed = result.timestep_count != 0;
     result.final_time = time;
 

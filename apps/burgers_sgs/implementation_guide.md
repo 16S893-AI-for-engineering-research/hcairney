@@ -62,7 +62,7 @@ The following decisions define the initial scope:
 The following choices are deliberately deferred until the preceding components
 can inform them: the MUSCL limiter, the exact deterministic forcing modes, the
 stochastic forcing process and parameters, DNS and LES resolutions, SGS
-coefficient bounds, dynamic-model averaging, and the RL observation and reward
+coefficient bounds, the complete dynamic SGS model, and the RL observation and reward
 aggregation. They must remain configurable rather than becoming implicit
 constants in numerical kernels.
 
@@ -252,22 +252,21 @@ Use one common closure interface with implementations for:
 - `NoClosure`: \(\nu_{\mathrm{sgs}}=0\).
 - `StaticSmagorinsky`: a prescribed constant \(C_S\), evaluated locally to
   produce a spatially varying eddy viscosity.
-- `DynamicSmagorinsky`: a test-filter-based dynamic coefficient with its
-  averaging, regularization, and clipping choices exposed in configuration.
+- `DynamicSmagorinsky`: reserved for a possible later test-filter-based model;
+  it is explicitly unsupported in the initial Phase 7 implementation.
 - `PrescribedCoefficientField`: accepts one cell-centered \(C_{S,i}\) per cell;
   this will be used by the future RL environment without putting RL code in the
   solver.
 
 The first RL model will be restricted to nonnegative, bounded coefficients.
-Since \(C_S\) enters the model squared, consider representing and bounding
-\(C_S^2\) internally to avoid a redundant action sign.
+Configuration and reports use \(C_S\), while Phase 7 closure kernels store
+\(C_S^2\) internally to avoid a redundant sign and repeated squaring.
 
-Do not implement the dynamic model until the unclosed solver, filtering
-operations required by the dynamic procedure, and static model have been
-verified. Before using it as a baseline, document the one-dimensional Burgers
-version of the Germano identity, the definition of grid and test filters, how
-the least-squares coefficient is averaged, and how small denominators and
-negative coefficients are handled.
+The initial Phase 7 baseline deliberately omits the dynamic model. If it is
+revisited, first add independently verified filtering operations and document
+the one-dimensional Burgers version of the Germano identity, the definition of
+grid and test filters, how the least-squares coefficient is averaged, and how
+small denominators and negative coefficients are handled.
 
 ### 4.4 Time integration and timestep selection
 
@@ -514,16 +513,21 @@ refinement does not materially change it.
 
 1. Implement static Smagorinsky with a configurable constant \(C_S\).
 2. Sweep \(C_S\) to establish mean-profile and turbulence-statistic baselines.
-3. Implement the dynamic Smagorinsky analog only after its test filtering and
-   Germano-identity calculations have dedicated tests.
-4. Compare no-model, static, and dynamic results at identical LES resolution,
+3. Implement and test `PrescribedCoefficientField` through the same
+   cell-centered \(C_S^2\) and eddy-viscosity path used by the static model.
+4. Compare no-model and static results at identical LES resolution,
    forcing parameters, and sampling duration.
 5. Report mean-profile error together with energy, variance, spectrum,
    molecular dissipation, SGS dissipation, and numerical dissipation.
 
-**Completion criterion:** both baseline models are reproducible, conservative,
-stable under documented bounds, and evaluated against the same offline DNS
-statistics intended for the future RL model.
+The LES resolution, coefficient sweep, seeds, and sampling duration are chosen
+in a separate study after the implementation and verification path is in
+place. Dynamic Smagorinsky is not a Phase 7 completion requirement.
+
+**Completion criterion:** the static baseline and prescribed-field path are
+reproducible, conservative, stable under documented bounds, and the static
+baseline is evaluated against the same offline DNS statistics intended for the
+future RL model.
 
 ### Phase 8: SMARTIES environment
 
@@ -780,7 +784,8 @@ SMARTIES integration should begin only when all of the following are true:
 4. The stochastic and mean forcing produce a stationary, reproducible,
    inhomogeneous turbulent problem without bulk acceleration.
 5. The high-resolution offline target is resolution- and sampling-converged.
-6. Static and dynamic Smagorinsky analogs provide tested comparison baselines.
+6. Static Smagorinsky provides a tested classical comparison baseline; a
+   dynamic analog remains optional future work.
 7. The prescribed local coefficient field uses the same cell-centered closure
    path as the classical models.
 

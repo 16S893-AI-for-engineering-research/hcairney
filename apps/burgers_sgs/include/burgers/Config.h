@@ -133,11 +133,15 @@ struct ForcingConfig {
 
 struct ClosureConfig {
   ClosureType type = ClosureType::NoClosure;
+  // Configuration and metadata use C_S. Closure kernels square it once and
+  // store C_S^2 internally.
   double static_coefficient = 0.0;
   double minimum_coefficient = 0.0;
   double maximum_coefficient = 1.0;
+  // Reserved for a possible future dynamic model.
   double test_filter_ratio = 2.0;
   double denominator_regularization = 1.0e-12;
+  // Retained in schema version 1 for compatibility; Phase 7 requires true.
   bool store_squared_coefficient = true;
 };
 

@@ -340,12 +340,38 @@ def block_mask(analysis, window):
             & (ends <= window[1] + tolerance))
 
 
+def ensemble_mean_uncertainty(seed_values, block_values):
+    """Combine independent seeds and complete temporal blocks."""
+    seed_values = np.asarray(seed_values, dtype=float)
+    seed_count = seed_values.shape[0]
+    mean = np.mean(seed_values, axis=0)
+    temporal_variance = np.zeros_like(mean)
+    for blocks in block_values:
+        blocks = np.asarray(blocks, dtype=float)
+        if blocks.shape[0] >= 2:
+            temporal_variance += (
+                np.var(blocks, axis=0, ddof=1) / blocks.shape[0]
+            ) / (seed_count ** 2)
+    within = np.sqrt(temporal_variance)
+    if seed_count >= 2:
+        between = np.std(seed_values, axis=0, ddof=1) / math.sqrt(seed_count)
+    else:
+        between = np.zeros_like(mean)
+    return {
+        "mean": mean,
+        "within_temporal_standard_error": within,
+        "between_seed_standard_error": between,
+        "combined_standard_error": np.sqrt(within ** 2 + between ** 2),
+    }
+
+
 def sampling_statistics(targets, early_window, late_window, confidence,
                         bootstrap_samples, bootstrap_seed):
     reference_x = targets[0]["arrays"]["x"]
     early_blocks = []
     late_blocks = []
     all_blocks = []
+    spectrum_blocks = []
     variance_profiles = []
     variance_standard_errors = []
     early_counts = []
@@ -364,6 +390,11 @@ def sampling_statistics(targets, early_window, late_window, confidence,
         early_blocks.append(blocks[early_mask])
         late_blocks.append(blocks[late_mask])
         all_blocks.append(blocks[early_mask | late_mask])
+        spectrum_blocks.append(
+            arrays["mean_energy_spectrum_block_means"][
+                early_mask | late_mask
+            ]
+        )
         early_counts.append(int(np.count_nonzero(early_mask)))
         late_counts.append(int(np.count_nonzero(late_mask)))
         variance_profiles.append(arrays["temporal_variance_profile"])
@@ -418,6 +449,51 @@ def sampling_statistics(targets, early_window, late_window, confidence,
     combined_variance_se = np.sqrt(
         within_variance_se ** 2 + between_variance_se ** 2
     )
+
+    reference_wavenumber = targets[0]["arrays"]["wavenumber"]
+    for target in targets[1:]:
+        candidate_wavenumber = target["arrays"]["wavenumber"]
+        if (candidate_wavenumber.shape != reference_wavenumber.shape
+                or not np.array_equal(candidate_wavenumber,
+                                      reference_wavenumber)):
+            raise ValueError("target analyses use different spectrum grids")
+    spectrum = ensemble_mean_uncertainty(
+        np.stack([
+            target["arrays"]["mean_energy_spectrum"] for target in targets
+        ]),
+        spectrum_blocks,
+    )
+
+    scalar_names = (
+        "kinetic_energy",
+        "spatial_variance",
+        "molecular_dissipation",
+        "interval_numerical_dissipation_rate",
+        "total_power",
+    )
+    scalar_statistics = {}
+    for name in scalar_names:
+        try:
+            entries = [target["summary"]["scalars"][name]
+                       for target in targets]
+        except KeyError as error:
+            raise ValueError(
+                f"target analysis is missing scalar statistic {name}"
+            ) from error
+        combined = ensemble_mean_uncertainty(
+            np.asarray([entry["mean"] for entry in entries]),
+            [np.asarray(entry.get("block_means", [entry["mean"]]),
+                        dtype=float) for entry in entries],
+        )
+        scalar_statistics[name] = {
+            key: float(value) for key, value in combined.items()
+        }
+    scalar_statistics["sgs_dissipation"] = {
+        "mean": 0.0,
+        "within_temporal_standard_error": 0.0,
+        "between_seed_standard_error": 0.0,
+        "combined_standard_error": 0.0,
+    }
 
     generator = np.random.default_rng(bootstrap_seed)
     null_differences = np.empty(bootstrap_samples)
@@ -480,6 +556,15 @@ def sampling_statistics(targets, early_window, late_window, confidence,
         "combined_standard_error": combined_se,
         "temporal_variance_profile": target_variance,
         "temporal_variance_standard_error": combined_variance_se,
+        "wavenumber": reference_wavenumber,
+        "mean_energy_spectrum": spectrum["mean"],
+        "spectrum_within_temporal_standard_error":
+            spectrum["within_temporal_standard_error"],
+        "spectrum_between_seed_standard_error":
+            spectrum["between_seed_standard_error"],
+        "spectrum_combined_standard_error":
+            spectrum["combined_standard_error"],
+        "scalar_statistics": scalar_statistics,
         "early_block_counts": early_counts,
         "late_block_counts": late_counts,
         "observed_early_late_relative_l2": observed_difference,
@@ -542,6 +627,29 @@ def write_target_csv(path, sampling):
             sampling["combined_standard_error"],
             sampling["temporal_variance_profile"],
             sampling["temporal_variance_standard_error"],
+        )
+        for row in zip(*columns):
+            writer.writerow([format(float(value), ".17g") for value in row])
+    os.replace(temporary, path)
+
+
+def write_spectrum_csv(path, sampling):
+    temporary = path.with_name(f".{path.name}.tmp")
+    with temporary.open("w", newline="") as output:
+        writer = csv.writer(output)
+        writer.writerow([
+            "wavenumber",
+            "mean_energy",
+            "within_temporal_standard_error",
+            "between_seed_standard_error",
+            "combined_standard_error",
+        ])
+        columns = (
+            sampling["wavenumber"],
+            sampling["mean_energy_spectrum"],
+            sampling["spectrum_within_temporal_standard_error"],
+            sampling["spectrum_between_seed_standard_error"],
+            sampling["spectrum_combined_standard_error"],
         )
         for row in zip(*columns):
             writer.writerow([format(float(value), ".17g") for value in row])
@@ -722,6 +830,9 @@ def finalize(study_path, output_override=None):
     target_metadata_path = output_directory / output_config[
         "target_metadata_filename"
     ]
+    target_spectrum_path = output_directory / output_config.get(
+        "target_spectrum_filename", "dns_spectrum.csv"
+    )
     report = {
         "schema_version": 1,
         "phase": 6,
@@ -753,18 +864,22 @@ def finalize(study_path, output_override=None):
             "target_files_written": overall_passed,
             "target_csv": str(target_csv_path),
             "target_metadata": str(target_metadata_path),
+            "target_spectrum": str(target_spectrum_path),
         },
     }
     atomic_json(report_path, report)
 
     if overall_passed:
         write_target_csv(target_csv_path, sampling)
+        write_spectrum_csv(target_spectrum_path, sampling)
         target_metadata = {
             "schema_version": 1,
             "phase": 6,
             "status": "accepted_dns_target",
             "target_csv_filename": target_csv_path.name,
             "target_csv_sha256": file_sha256(target_csv_path),
+            "target_spectrum_filename": target_spectrum_path.name,
+            "target_spectrum_sha256": file_sha256(target_spectrum_path),
             "cell_count": int(sampling["x"].size),
             "domain": candidate["metadata"]["configuration"]["grid"],
             "seed_count": len(seeds),
@@ -790,6 +905,11 @@ def finalize(study_path, output_override=None):
                 "bootstrap; CSV reports temporal, between-seed, and hierarchical-"
                 "bootstrap combined pointwise standard errors"
             ),
+            "spectrum_and_scalar_uncertainty_method": (
+                "complete-block temporal standard error and between-seed "
+                "standard error combined in quadrature"
+            ),
+            "scalar_statistics": sampling["scalar_statistics"],
             "acceptance_report": report,
             "provenance": {
                 "grid_candidate": provenance_entry(candidate),

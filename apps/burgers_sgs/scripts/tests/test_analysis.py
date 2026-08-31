@@ -3,6 +3,7 @@
 
 import math
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -44,6 +45,29 @@ class SpectrumTests(unittest.TestCase):
 
 
 class SamplingTests(unittest.TestCase):
+    def test_old_history_is_read_as_zero_sgs(self):
+        header = (
+            "time,mean,kinetic_energy,spatial_variance,"
+            "molecular_dissipation,deterministic_power,stochastic_power,"
+            "manufactured_power,interval_numerical_dissipation_rate\n"
+        )
+        rows = (
+            "0,0,1,1,0.2,0.1,0.2,0,0.05\n"
+            "1,0,1.05,1.05,0.2,0.1,0.2,0,0.05\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "history.csv"
+            path.write_text(header + rows)
+            history = analyze_run.read_history(path)
+        np.testing.assert_array_equal(history["sgs_dissipation"], [0.0, 0.0])
+        np.testing.assert_array_equal(history["mean_coefficient"], [0.0, 0.0])
+        np.testing.assert_allclose(
+            history["interval_budget_residual_rate"],
+            history["total_power"] - history["molecular_dissipation"]
+            - history["interval_numerical_dissipation_rate"]
+            - history["interval_energy_change_rate"],
+        )
+
     def test_constant_series_has_zero_autocorrelation_time(self):
         times = np.arange(20, dtype=float) * 0.1
         values = np.ones(20)

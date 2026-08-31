@@ -42,7 +42,7 @@ def write_analysis(root, name, cell_count, seed, profile, perturbation=0.0):
     directory.mkdir()
     metadata_path = directory / "burgers_run_metadata.json"
     metadata = {
-        "schema_version": 5,
+        "schema_version": 6,
         "build": {"source_revision": "test"},
         "configuration": configuration(cell_count, seed),
         "result": {"status": "completed", "final_time": 4.0},
@@ -65,8 +65,18 @@ def write_analysis(root, name, cell_count, seed, profile, perturbation=0.0):
         "window": {"start": 0.0, "end": 4.0, "duration": 4.0},
         "block_duration": 1.0,
         "scalars": {
-            "kinetic_energy": {"mean": 1.0 + perturbation},
-            "molecular_dissipation": {"mean": 1.0 + perturbation},
+            name: {
+                "mean": value + perturbation,
+                "block_means": [value - 0.01, value + 0.01,
+                                value - 0.01, value + 0.01],
+            }
+            for name, value in {
+                "kinetic_energy": 1.0,
+                "spatial_variance": 0.5,
+                "molecular_dissipation": 1.0,
+                "interval_numerical_dissipation_rate": 0.001,
+                "total_power": 1.001,
+            }.items()
         },
         "energy_budget": {
             "numerical_to_molecular_dissipation_ratio": 0.001,
@@ -163,6 +173,7 @@ class FinalizationTests(unittest.TestCase):
                     "directory": str(output),
                     "report_filename": "phase6_report.json",
                     "target_csv_filename": "dns_target.csv",
+                    "target_spectrum_filename": "dns_spectrum.csv",
                     "target_metadata_filename": "dns_target_metadata.json",
                 },
             }
@@ -179,8 +190,10 @@ class FinalizationTests(unittest.TestCase):
             ))
             target_csv = output / "dns_target.csv"
             target_metadata = output / "dns_target_metadata.json"
+            target_spectrum = output / "dns_spectrum.csv"
             self.assertTrue(target_csv.exists())
             self.assertTrue(target_metadata.exists())
+            self.assertTrue(target_spectrum.exists())
             with target_csv.open(newline="") as input_file:
                 rows = list(csv.DictReader(input_file))
             self.assertEqual(len(rows), 4)
@@ -189,6 +202,12 @@ class FinalizationTests(unittest.TestCase):
             self.assertEqual(metadata["status"], "accepted_dns_target")
             self.assertEqual(metadata["seed_count"], 2)
             self.assertEqual(len(metadata["target_csv_sha256"]), 64)
+            self.assertEqual(len(metadata["target_spectrum_sha256"]), 64)
+            self.assertIn("kinetic_energy", metadata["scalar_statistics"])
+            with target_spectrum.open(newline="") as input_file:
+                spectrum_rows = list(csv.DictReader(input_file))
+            self.assertEqual(len(spectrum_rows), 3)
+            self.assertIn("combined_standard_error", spectrum_rows[0])
 
             failed_output = root / "failed"
             study["acceptance"]["mean_profile_relative_l2_grid"] = 0.0
@@ -204,6 +223,7 @@ class FinalizationTests(unittest.TestCase):
             self.assertFalse(
                 (failed_output / "dns_target_metadata.json").exists()
             )
+            self.assertFalse((failed_output / "dns_spectrum.csv").exists())
 
 
 if __name__ == "__main__":

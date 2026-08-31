@@ -49,6 +49,7 @@
     "directory": "../runs/phase6/finalized",
     "report_filename": "phase6_report.json",
     "target_csv_filename": "dns_target.csv",
+    "target_spectrum_filename": "dns_spectrum.csv",
     "target_metadata_filename": "dns_target_metadata.json"
   }
 }

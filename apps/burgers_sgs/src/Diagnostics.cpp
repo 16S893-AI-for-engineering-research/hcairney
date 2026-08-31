@@ -1,7 +1,10 @@
 #include "burgers/Diagnostics.h"
 
+#include "burgers/ViscousFlux.h"
+
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 
 namespace burgers {
@@ -128,6 +131,64 @@ double molecularDissipation(const Grid& grid,
   return molecular_viscosity * grid.cellWidth() * gradient_square_sum;
 }
 
+double sgsDissipation(const Grid& grid,
+                      const State& state,
+                      const State& eddy_viscosity,
+                      FaceViscosityAveraging averaging) {
+  requireCompatible(grid, state);
+  requireCompatible(grid, eddy_viscosity);
+  std::vector<double> face_effective(grid.cellCount(), 0.0);
+  interpolateEffectiveViscosityToFaces(
+    grid, 0.0, eddy_viscosity, averaging, face_effective);
+
+  double dissipation = 0.0;
+  double correction = 0.0;
+  for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+    const std::size_t right = grid.neighbor(cell, 1);
+    const double gradient =
+      (state[right] - state[cell]) / grid.cellWidth();
+    const double term =
+      face_effective[cell] * gradient * gradient - correction;
+    const double updated = dissipation + term;
+    correction = (updated - dissipation) - term;
+    dissipation = updated;
+  }
+  return grid.cellWidth() * dissipation;
+}
+
+ClosureStatistics closureStatistics(const Grid& grid,
+                                    const ClosureFields& fields) {
+  requireCompatible(grid, fields.coefficient_squared);
+  requireCompatible(grid, fields.eddy_viscosity);
+  ClosureStatistics statistics;
+  statistics.minimum_coefficient =
+    std::numeric_limits<double>::infinity();
+  double coefficient_sum = 0.0;
+  double viscosity_sum = 0.0;
+  for(std::size_t cell = 0; cell < grid.cellCount(); ++cell) {
+    const double squared = fields.coefficient_squared[cell];
+    const double viscosity = fields.eddy_viscosity[cell];
+    if(std::isfinite(squared) == 0 || squared < 0.0 ||
+       std::isfinite(viscosity) == 0 || viscosity < 0.0) {
+      throw std::invalid_argument(
+        "closure fields must contain finite nonnegative values");
+    }
+    const double coefficient = std::sqrt(squared);
+    statistics.minimum_coefficient =
+      std::min(statistics.minimum_coefficient, coefficient);
+    statistics.maximum_coefficient =
+      std::max(statistics.maximum_coefficient, coefficient);
+    statistics.maximum_eddy_viscosity =
+      std::max(statistics.maximum_eddy_viscosity, viscosity);
+    coefficient_sum += coefficient;
+    viscosity_sum += viscosity;
+  }
+  const double inverse_count = 1.0 / static_cast<double>(grid.cellCount());
+  statistics.mean_coefficient = coefficient_sum * inverse_count;
+  statistics.mean_eddy_viscosity = viscosity_sum * inverse_count;
+  return statistics;
+}
+
 double powerInput(const Grid& grid,
                   const State& state,
                   const State& forcing) {
@@ -170,6 +231,22 @@ ForcedEnergyBudgetRate forcedEnergyBudgetRate(
     molecularDissipation(grid, state, molecular_viscosity);
   budget.numerical_dissipation =
     budget.power.total - budget.molecular_dissipation - budget.energy_rate;
+  return budget;
+}
+
+ForcedEnergyBudgetRate forcedEnergyBudgetRate(
+  const Grid& grid,
+  const State& state,
+  const State& derivative,
+  const ForcingFields& forcing,
+  double molecular_viscosity,
+  const State& eddy_viscosity,
+  FaceViscosityAveraging averaging) {
+  ForcedEnergyBudgetRate budget = forcedEnergyBudgetRate(
+    grid, state, derivative, forcing, molecular_viscosity);
+  budget.sgs_dissipation =
+    sgsDissipation(grid, state, eddy_viscosity, averaging);
+  budget.numerical_dissipation -= budget.sgs_dissipation;
   return budget;
 }
 
@@ -231,6 +308,21 @@ UnforcedEnergyBudgetRate unforcedEnergyBudgetRate(
     molecularDissipation(grid, state, molecular_viscosity);
   budget.numerical_dissipation =
     -budget.energy_rate - budget.molecular_dissipation;
+  return budget;
+}
+
+UnforcedEnergyBudgetRate unforcedEnergyBudgetRate(
+  const Grid& grid,
+  const State& state,
+  const State& derivative,
+  double molecular_viscosity,
+  const State& eddy_viscosity,
+  FaceViscosityAveraging averaging) {
+  UnforcedEnergyBudgetRate budget = unforcedEnergyBudgetRate(
+    grid, state, derivative, molecular_viscosity);
+  budget.sgs_dissipation =
+    sgsDissipation(grid, state, eddy_viscosity, averaging);
+  budget.numerical_dissipation -= budget.sgs_dissipation;
   return budget;
 }
 
