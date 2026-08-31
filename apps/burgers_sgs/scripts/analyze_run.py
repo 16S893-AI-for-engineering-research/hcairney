@@ -260,6 +260,8 @@ def profile_statistics(times, coordinates, profiles, start, end,
     mean_profile_blocks = []
     variance_profile_blocks = []
     spectrum_blocks = []
+    retained_block_starts = []
+    retained_block_ends = []
     for block in range(block_count):
         left = start + block * block_duration
         right = left + block_duration
@@ -270,6 +272,8 @@ def profile_statistics(times, coordinates, profiles, start, end,
         mean_profile_blocks.append(np.mean(block_profiles, axis=0))
         variance_profile_blocks.append(np.var(block_profiles, axis=0, ddof=1))
         spectrum_blocks.append(np.mean(spectra[block_mask], axis=0))
+        retained_block_starts.append(left)
+        retained_block_ends.append(right)
 
     spectrum_size = spectra.shape[1]
     mean_profile_blocks = (np.asarray(mean_profile_blocks)
@@ -299,6 +303,14 @@ def profile_statistics(times, coordinates, profiles, start, end,
         "mean_energy_spectrum": mean_spectrum,
         "mean_energy_spectrum_standard_error": array_standard_error(spectrum_blocks),
         "compensated_energy_spectrum": compensated,
+        # Retain complete-block estimates so Phase 6 comparisons can preserve
+        # temporal and spatial correlations instead of reconstructing them
+        # from pointwise standard errors.
+        "block_start_time": np.asarray(retained_block_starts, dtype=float),
+        "block_end_time": np.asarray(retained_block_ends, dtype=float),
+        "mean_profile_block_means": mean_profile_blocks,
+        "temporal_variance_profile_block_means": variance_profile_blocks,
+        "mean_energy_spectrum_block_means": spectrum_blocks,
     }
     summary = {
         "profile_sample_count": int(profiles.shape[0]),

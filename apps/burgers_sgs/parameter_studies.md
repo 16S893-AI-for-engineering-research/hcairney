@@ -168,3 +168,6 @@ to set a study-specific common resolved band.
 Do not use the cumulative work and dissipation totals in run metadata as
 stationary averages: those totals include spin-up. Use interval-weighted scalar
 history over the selected analysis window.
+
+The Phase 6 acceptance, target-ensemble, and portable DNS-reference workflow is
+documented separately in `finalize_reference.md`.

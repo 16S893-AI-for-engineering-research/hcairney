@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "configuration": {
+    "grid": {
+      "x_begin": 0,
+      "x_end": 6.283185307179586,
+      "cell_count": 1024
+    },
+    "initial_condition": {
+      "type": "sinusoidal",
+      "mean": 0,
+      "amplitude": 0.1,
+      "wavenumber": 1,
+      "phase": 0,
+      "left_state": 1,
+      "right_state": -1
+    },
+    "viscosity": {
+      "molecular": 0.01,
+      "face_averaging": "arithmetic"
+    },
+    "numerical_method": {
+      "reconstruction": "muscl",
+      "convective_flux": "godunov",
+      "limiter": "monotonized_central"
+    },
+    "time_integration": {
+      "integrator": "ssp_rk3",
+      "initial_time": 0,
+      "final_time": 320,
+      "advective_cfl": 0.4,
+      "diffusive_cfl": 0.2,
+      "maximum_steps": 1000000
+    },
+    "forcing": {
+      "type": "composite",
+      "remove_discrete_mean": true,
+      "manufactured": {
+        "amplitude": 1,
+        "wavenumber": 1,
+        "phase": 0,
+        "decay_rate": 1
+      },
+      "deterministic": {
+        "modes": [
+          {
+            "wavenumber": 1,
+            "amplitude": 0.1,
+            "phase": 0
+          }
+        ]
+      },
+      "stochastic": {
+        "wavenumbers": [
+          1,
+          2,
+          3
+        ],
+        "spectral_exponent": 0,
+        "stationary_rms": 0.3,
+        "correlation_time": 0.25,
+        "clock_interval": 0.025,
+        "clock_reference_time": 0
+      }
+    },
+    "closure": {
+      "type": "no_closure",
+      "static_coefficient": 0,
+      "minimum_coefficient": 0,
+      "maximum_coefficient": 1,
+      "test_filter_ratio": 2,
+      "denominator_regularization": 1e-12,
+      "store_squared_coefficient": true
+    },
+    "output": {
+      "directory": "runs/phase6/target/n1024/seed_5489",
+      "metadata_filename": "burgers_run_metadata.json",
+      "scalar_history_filename": "burgers_history.csv",
+      "final_profile_filename": "burgers_final_profile.csv",
+      "profile_history_filename": "burgers_profiles.csv",
+      "spectrum_filename": "burgers_mean_spectrum.csv",
+      "history_interval": 0.05,
+      "profile_interval": 0.25,
+      "write_initial_profile": true,
+      "write_profile_history": true,
+      "write_online_spectrum": false,
+      "statistics_start_time": 20
+    },
+    "random": {
+      "seed": 5489
+    }
+  }
+}

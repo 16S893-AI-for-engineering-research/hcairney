@@ -59,6 +59,33 @@ class SamplingTests(unittest.TestCase):
         )
         np.testing.assert_allclose(blocks, [2.0, 7.0])
 
+    def test_profile_statistics_retain_complete_block_arrays(self):
+        times = np.array([0.5, 1.5, 2.5, 3.5])
+        coordinates = np.array([0.25, 0.75])
+        profiles = np.array([
+            [1.0, 2.0],
+            [3.0, 4.0],
+            [5.0, 6.0],
+            [7.0, 8.0],
+        ])
+
+        summary, arrays = analyze_run.profile_statistics(
+            times, coordinates, profiles, 0.0, 4.0, 2.0, 1.0
+        )
+
+        self.assertEqual(summary["profile_block_count"], 2)
+        np.testing.assert_allclose(arrays["block_start_time"], [0.0, 2.0])
+        np.testing.assert_allclose(arrays["block_end_time"], [2.0, 4.0])
+        np.testing.assert_allclose(
+            arrays["mean_profile_block_means"], [[2.0, 3.0], [6.0, 7.0]]
+        )
+        self.assertEqual(
+            arrays["temporal_variance_profile_block_means"].shape, (2, 2)
+        )
+        self.assertEqual(
+            arrays["mean_energy_spectrum_block_means"].shape, (2, 2)
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
