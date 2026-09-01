@@ -42,6 +42,22 @@ class OutputPathTests(unittest.TestCase):
 
         self.assertEqual(arguments.ylim, [-0.5, 0.5])
 
+    def test_parses_optional_x_limits(self):
+        with mock.patch.object(
+            sys,
+            "argv",
+            [
+                "plot_mean_velocity_profile.py",
+                "runs/case/analysis_arrays.npz",
+                "--xlim",
+                "0.25",
+                "0.75",
+            ],
+        ):
+            _, arguments = plot_mean_velocity_profile.parse_arguments()
+
+        self.assertEqual(arguments.xlim, [0.25, 0.75])
+
     def test_places_output_beside_npz_input(self):
         actual = plot_mean_velocity_profile.output_path_for_profile(
             Path("runs/case/analysis_arrays.npz"),
@@ -52,6 +68,22 @@ class OutputPathTests(unittest.TestCase):
 
 
 class ProfileInputTests(unittest.TestCase):
+    def test_applies_requested_x_limits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "analysis_arrays.npz"
+            np.savez(
+                path,
+                x=np.array([0.25, 0.75]),
+                mean_profile=np.array([-0.25, 0.25]),
+                mean_profile_standard_error=np.array([0.1, 0.1]),
+            )
+
+            figure = plot_mean_velocity_profile.make_figure(
+                path, xlim=(0.2, 0.8)
+            )
+
+        self.assertEqual(figure.axes[0].get_xlim(), (0.2, 0.8))
+
     def test_applies_requested_y_limits(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "analysis_arrays.npz"
