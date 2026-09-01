@@ -16,7 +16,7 @@
       "right_state": -1.0
     },
     "viscosity": {
-      "molecular": 0.1,
+      "molecular": 0.001,
       "face_averaging": "arithmetic"
     },
     "numerical_method": {
