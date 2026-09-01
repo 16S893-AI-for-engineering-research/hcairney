@@ -118,6 +118,20 @@ target_compile_definitions(burgers_core PRIVATE
   BURGERS_BUILD_CONFIGURATION=\"$<CONFIG>\")
 burgers_configure_target(burgers_core)
 
+add_library(burgers_environment STATIC
+  src/environment/ActionProjection.cpp
+  src/environment/MeanProfileEstimator.cpp
+  src/environment/ObservationBuilder.cpp
+  src/environment/RewardModel.cpp
+  src/environment/SGSEnvironment.cpp
+  src/environment/TargetProfile.cpp)
+add_library(burgers::environment ALIAS burgers_environment)
+
+target_link_libraries(burgers_environment PUBLIC burgers::core)
+target_include_directories(burgers_environment
+  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../source/extern")
+burgers_configure_target(burgers_environment)
+
 add_executable(run_solver tools/run_solver.cpp)
 target_link_libraries(run_solver PRIVATE burgers::core)
 burgers_configure_target(run_solver)
@@ -240,4 +254,30 @@ if(BUILD_TESTING)
     COMMAND test_phase8_prescribed_forcing)
   set_tests_properties(burgers.phase8.prescribed_forcing PROPERTIES
     LABELS "phase8;verification")
+
+  add_executable(test_phase8_environment_components
+    tests/test_phase8_environment_components.cpp)
+  target_link_libraries(test_phase8_environment_components
+    PRIVATE burgers::environment)
+  target_compile_definitions(test_phase8_environment_components PRIVATE
+    BURGERS_TEST_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
+  burgers_configure_target(test_phase8_environment_components)
+
+  add_test(NAME burgers.phase8.environment_components
+    COMMAND test_phase8_environment_components)
+  set_tests_properties(burgers.phase8.environment_components PROPERTIES
+    LABELS "phase8;environment;verification")
+
+  add_executable(test_phase8_environment_rollout
+    tests/test_phase8_environment_rollout.cpp)
+  target_link_libraries(test_phase8_environment_rollout
+    PRIVATE burgers::environment)
+  target_compile_definitions(test_phase8_environment_rollout PRIVATE
+    BURGERS_TEST_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
+  burgers_configure_target(test_phase8_environment_rollout)
+
+  add_test(NAME burgers.phase8.environment_rollout
+    COMMAND test_phase8_environment_rollout)
+  set_tests_properties(burgers.phase8.environment_rollout PROPERTIES
+    LABELS "phase8;environment;verification")
 endif()
