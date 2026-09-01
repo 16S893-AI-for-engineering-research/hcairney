@@ -83,7 +83,7 @@ def profile_labels(standard_error_kind, seed_count):
     )
 
 
-def make_figure(path):
+def make_figure(path, ylim=None):
     """Create a mean-profile figure from a run or ensemble analysis NPZ."""
     try:
         import matplotlib.pyplot as plt
@@ -110,6 +110,8 @@ def make_figure(path):
     axis.set_title(title)
     axis.set_xlabel(r"$x$")
     axis.set_ylabel(r"Mean velocity $\overline{u}$")
+    if ylim is not None:
+        axis.set_ylim(*ylim)
     axis.grid(alpha=0.3)
     axis.legend()
     figure.tight_layout()
@@ -140,6 +142,10 @@ def parse_arguments():
         help="resolution used with --output (default: 150)",
     )
     parser.add_argument(
+        "--ylim", type=float, nargs=2, metavar=("YMIN", "YMAX"),
+        help="set the y-axis limits (for example: --ylim -0.5 0.5)",
+    )
+    parser.add_argument(
         "--show", action="store_true",
         help="display the figure even when --output is supplied",
     )
@@ -149,7 +155,7 @@ def parse_arguments():
 def main():
     parser, arguments = parse_arguments()
     try:
-        figure = make_figure(arguments.analysis_file)
+        figure = make_figure(arguments.analysis_file, ylim=arguments.ylim)
     except (OSError, RuntimeError, ValueError) as error:
         parser.error(str(error))
 
