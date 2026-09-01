@@ -16,7 +16,7 @@
       "right_state": -1.0
     },
     "viscosity": {
-      "molecular": 0.001,
+      "molecular": 0.1,
       "face_averaging": "arithmetic"
     },
     "numerical_method": {
@@ -27,7 +27,7 @@
     "time_integration": {
       "integrator": "ssp_rk3",
       "initial_time": 0.0,
-      "final_time": 200.0,
+      "final_time": 320.0,
       "advective_cfl": 0.4,
       "diffusive_cfl": 0.2,
       "maximum_steps": 2000000
@@ -72,7 +72,7 @@
       "profile_history_filename": "burgers_profiles.csv",
       "spectrum_filename": "burgers_mean_spectrum.csv",
       "history_interval": 0.05,
-      "profile_interval": 0.05,
+      "profile_interval": 0.25,
       "write_initial_profile": true,
       "write_profile_history": true,
       "write_online_spectrum": false,
