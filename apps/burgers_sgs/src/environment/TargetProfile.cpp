@@ -32,14 +32,14 @@ std::string joinPath(const std::string& directory,
   if(filename.empty()) {
     throw std::invalid_argument("accepted target filename must not be empty");
   }
-  if(filename.front() == '/' || filename.front() == '\') {
+  if(filename.front() == '/' || filename.front() == '\\') {
     return filename;
   }
   if(directory.empty() || directory == ".") {
     return std::string("./") + filename;
   }
   const char last = directory.back();
-  return last == '/' || last == '\' ? directory + filename
+  return last == '/' || last == '\\' ? directory + filename
                                      : directory + '/' + filename;
 }
 

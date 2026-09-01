@@ -154,7 +154,7 @@ void SGSEnvironment::validateConfiguration() const {
     throw std::invalid_argument(
       "the controlled environment cannot enable manufactured forcing");
   }
-  if(hasNonzeroDeterministicForcing(config_)) {
+  if(hasNonzeroDeterministicForcing(config_.solver)) {
     throw std::invalid_argument(
       "the controlled environment must disable configured deterministic "
       "forcing; use the prescribed field for an oracle rollout");
