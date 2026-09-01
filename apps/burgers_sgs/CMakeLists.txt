@@ -9,6 +9,10 @@ option(BURGERS_ENABLE_SANITIZERS
   "Enable supported sanitizers for Debug builds"
   OFF)
 
+option(BURGERS_ENABLE_SMARTIES
+  "Build the optional SMARTIES communication executable"
+  OFF)
+
 set(BURGERS_GIT_REVISION "unknown")
 set(BURGERS_SOURCE_DIRTY "unknown")
 find_package(Git QUIET)
@@ -120,6 +124,7 @@ burgers_configure_target(burgers_core)
 
 add_library(burgers_environment STATIC
   src/environment/ActionProjection.cpp
+  src/environment/EnvironmentConfigIO.cpp
   src/environment/MeanProfileEstimator.cpp
   src/environment/ObservationBuilder.cpp
   src/environment/RewardModel.cpp
@@ -135,6 +140,28 @@ burgers_configure_target(burgers_environment)
 add_executable(run_solver tools/run_solver.cpp)
 target_link_libraries(run_solver PRIVATE burgers::core)
 burgers_configure_target(run_solver)
+
+if(BURGERS_ENABLE_SMARTIES)
+  if(NOT TARGET libsmarties)
+    message(FATAL_ERROR
+      "BURGERS_ENABLE_SMARTIES must be configured from the SMARTIES "
+      "repository root so the libsmarties target and its MPI/OpenMP "
+      "dependencies are available")
+  endif()
+  if(NOT TARGET MPI::MPI_CXX OR NOT TARGET OpenMP::OpenMP_CXX)
+    message(FATAL_ERROR
+      "The SMARTIES MPI and OpenMP dependency targets are unavailable")
+  endif()
+
+  add_executable(burgers_smarties
+    src/environment/smarties_main.cpp)
+  target_link_libraries(burgers_smarties PRIVATE
+    burgers::environment
+    libsmarties
+    MPI::MPI_CXX
+    OpenMP::OpenMP_CXX)
+  burgers_configure_target(burgers_smarties)
+endif()
 
 if(BUILD_TESTING)
   add_executable(test_config_io tests/test_config_io.cpp)
@@ -267,6 +294,19 @@ if(BUILD_TESTING)
     COMMAND test_phase8_environment_components)
   set_tests_properties(burgers.phase8.environment_components PROPERTIES
     LABELS "phase8;environment;verification")
+
+  add_executable(test_phase8_environment_config_io
+    tests/test_phase8_environment_config_io.cpp)
+  target_link_libraries(test_phase8_environment_config_io
+    PRIVATE burgers::environment)
+  target_compile_definitions(test_phase8_environment_config_io PRIVATE
+    BURGERS_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+  burgers_configure_target(test_phase8_environment_config_io)
+
+  add_test(NAME burgers.phase8.environment_config_io
+    COMMAND test_phase8_environment_config_io)
+  set_tests_properties(burgers.phase8.environment_config_io PROPERTIES
+    LABELS "phase8;environment;configuration;verification")
 
   add_executable(test_phase8_environment_rollout
     tests/test_phase8_environment_rollout.cpp)

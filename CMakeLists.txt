@@ -20,6 +20,9 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 option(COMPILE_PY_SO "Compile Python bindings" ON)
 option(SINGLE_PRECISION "Use float32 for neural networks operations" ON)
+option(BURGERS_ENABLE_SMARTIES
+  "Build the Burgers SGS SMARTIES environment and communication executable"
+  OFF)
 
 # Smarties library
 
@@ -142,6 +145,10 @@ set_target_properties(${smarties_core} PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${lib_output}"
   )
 
+if(BURGERS_ENABLE_SMARTIES)
+  add_subdirectory(apps/burgers_sgs)
+endif()
+
 # Python bindings
 
 if (COMPILE_PY_SO)
@@ -161,6 +168,4 @@ if (COMPILE_PY_SO)
     )
 
 endif()
-
-
 
