@@ -169,7 +169,14 @@ void Launcher::createGoRunDir(char* initDir, Uint folderID, MPI_Comm envAppCom)
 
       if( MPICommRank(envAppCom)<1 ) // app's root sets up dir
       {
-        mkdir(newDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if(mkdir(newDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) not_eq 0)
+          _die("Error creating simulation directory %s\n", newDir);
+
+        // copy_from_dir() writes into the current directory. Enter the new
+        // simulation directory first so setup files are placed alongside the
+        // application rather than in the parent run directory.
+        if(chdir(newDir) not_eq 0)
+          _die("Error entering simulation directory %s\n", newDir);
         if(distrib.setupFolder not_eq "") //copy any file in the setup dir
         {
           if (copy_from_dir(("../"+distrib.setupFolder).c_str()) not_eq 0 )
@@ -179,7 +186,8 @@ void Launcher::createGoRunDir(char* initDir, Uint folderID, MPI_Comm envAppCom)
 
       if( MPICommSize(envAppCom)>1 ) MPI_Barrier(envAppCom);
 
-      chdir(newDir);
+      if(chdir(newDir) not_eq 0)
+        _die("Error entering simulation directory %s\n", newDir);
       break;
     }
   }
