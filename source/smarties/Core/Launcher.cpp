@@ -13,16 +13,51 @@
 #include "../Utils/LauncherUtilities.h"
 #include "../Utils/SstreamUtilities.h"
 
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <exception>
 #include <omp.h>
 #include <fstream>
+#include <iostream>
+#include <sys/wait.h>
+#include <unistd.h>
 
 namespace smarties
 {
+
+namespace
+{
+
+[[noreturn]] void exitForkedApplication(const int status)
+{
+  // The application was forked after MPI_Init. It must not unwind through
+  // Engine/ExecutionInfo and call MPI_Finalize as if it were an MPI rank.
+  std::cout.flush();
+  std::cerr.flush();
+  std::fflush(nullptr);
+  _exit(status);
+}
+
+}
 
 Launcher::Launcher(Worker* const W, ExecutionInfo& D) :
   Communicator(W, D.generators[0], D.bTrain), distrib(D)
 {
   initArgumentFileNames();
+}
+
+Launcher::~Launcher()
+{
+  for(const pid_t child : forkedApplicationPids) {
+    pid_t result;
+    do {
+      result = waitpid(child, nullptr, 0);
+    } while(result == -1 && errno == EINTR);
+
+    if(result == -1 && errno != ECHILD)
+      std::perror("waitpid for forked SMARTIES application");
+  }
 }
 
 bool Launcher::forkApplication(const environment_callback_t & callback)
@@ -32,7 +67,6 @@ bool Launcher::forkApplication(const environment_callback_t & callback)
   const Uint totNumEnvs = distrib.nEnvironments;
   const Uint totNumProcess = MPICommSize(distrib.world_comm);
 
-  bool isChild = false;
   // TODO: reinstate the omp thread stuff for mpi implementations that do
   // process binding by default, avoiding pybind11 breaking.
   //#pragma omp parallel num_threads(nThreads)
@@ -43,29 +77,39 @@ bool Launcher::forkApplication(const environment_callback_t & callback)
     const int tgtCPU =  ( ( (-1-i) % thrN ) + thrN ) % thrN;
     const int workloadID = i + totNumEnvs * totNumProcess;
     //assert(nThreads == (Uint) omp_get_num_threads());
-    if( thrID==tgtCPU and isChild == false)
+    if( thrID==tgtCPU)
       //#pragma omp critical
       {
-        const int success = fork();
-        if ( success == -1 ) die("Failed to fork.");
-        if ( success ==  0 ) {
-          isChild = true;
-          usleep(10); // IDK, wait for parent to create socket file to be sure
-          //warn("entering SOCKET_clientConnect");
-          SOCK.server = SOCKET_clientConnect();
-          if(SOCK.server == -1) die("Failed to connect to parent process.");
-          //warn("exiting SOCKET_clientConnect");
-          launch(callback, workloadID, MPI_COMM_SELF);
-        } else assert(isChild == false);
+        const pid_t child = fork();
+        if ( child == -1 ) die("Failed to fork.");
+        if ( child ==  0 ) {
+          try {
+            usleep(10); // IDK, wait for parent to create socket file to be sure
+            //warn("entering SOCKET_clientConnect");
+            SOCK.server = SOCKET_clientConnect();
+            if(SOCK.server == -1) die("Failed to connect to parent process.");
+            //warn("exiting SOCKET_clientConnect");
+            launch(callback, workloadID, MPI_COMM_SELF);
+            exitForkedApplication(EXIT_SUCCESS);
+          } catch(const std::exception& error) {
+            std::fprintf(stderr, "Forked SMARTIES application error: %s\n",
+                         error.what());
+            exitForkedApplication(EXIT_FAILURE);
+          } catch(...) {
+            std::fprintf(stderr,
+                         "Forked SMARTIES application failed with an "
+                         "unknown exception.\n");
+            exitForkedApplication(EXIT_FAILURE);
+          }
+        }
+        forkedApplicationPids.push_back(child);
       }
   }
 
-  if(not isChild) {
-    //warn("entering SOCKET_serverConnect");
-    SOCKET_serverConnect(nOwnEnvs, SOCK.clients);
-    //warn("exiting SOCKET_serverConnect");
-  }
-  return isChild;
+  //warn("entering SOCKET_serverConnect");
+  SOCKET_serverConnect(nOwnEnvs, SOCK.clients);
+  //warn("exiting SOCKET_serverConnect");
+  return false;
 }
 
 void Launcher::runApplication(const environment_callback_t & callback )

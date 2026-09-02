@@ -12,6 +12,8 @@
 #include "../Communicator.h"
 #include "../Settings/ExecutionInfo.h"
 
+#include <sys/types.h>
+
 namespace smarties
 {
 
@@ -22,6 +24,7 @@ protected:
 
   std::vector<std::string> argsFiles;
   std::vector<Uint> argFilesStepsLimits;
+  std::vector<pid_t> forkedApplicationPids;
 
   void initArgumentFileNames();
   void createGoRunDir(char* initDir, Uint folderID, MPI_Comm anvAppCom);
@@ -37,6 +40,7 @@ public:
   void runApplication( const environment_callback_t & callback );
 
   Launcher(Worker* const W, ExecutionInfo& D);
+  ~Launcher();
 };
 
 } // end namespace smarties

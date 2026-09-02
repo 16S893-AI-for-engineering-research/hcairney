@@ -9,9 +9,9 @@
 import argparse, os, psutil, sys, shutil, subprocess, signal, glob
 
 def signal_handler(sig, frame):
-  JOBID = os.getenv('SLURM_JOB_ID')
-  cmd = "scancel " + JOBID
-  subprocess.run(cmd, executable=parsed.shell, shell=True) 
+  jobid = os.getenv('SLURM_JOB_ID')
+  if jobid:
+    subprocess.run(["scancel", jobid], check=False)
   sys.exit(0)
 
 SCRATCH       = os.getenv('SCRATCH') or ''
@@ -425,5 +425,7 @@ if __name__ == '__main__':
   cmd = cmd + setLaunchCommand(parsed, absRunPath)
 
   # print('COMMAND:' + cmd )
-  signal.signal(signal.SIGINT, signal_handler)
+  # Only override local Ctrl-C handling when this is actually a Slurm job.
+  if os.getenv('SLURM_JOB_ID'):
+    signal.signal(signal.SIGINT, signal_handler)
   subprocess.run(cmd, executable=parsed.shell, shell=True)

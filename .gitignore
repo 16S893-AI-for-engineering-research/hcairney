@@ -70,4 +70,6 @@ _deprecated*
 /source/Learners/Pytorch/__pycache__/
 /source/Learners/Pytorch/old_stuff.py
 
+benchmark_logs/
+
 *.swp
