@@ -35,6 +35,8 @@
   "output": {
     "resolved_environment_filename": "burgers_rl_resolved.json",
     "resolved_solver_filename": "burgers_solver_resolved.json",
-    "episode_summary_filename": "burgers_rl_episodes.csv"
+    "episode_summary_filename": "burgers_rl_episodes.csv",
+    "write_evaluation_output": true,
+    "evaluation_directory": "evaluation"
   }
 }

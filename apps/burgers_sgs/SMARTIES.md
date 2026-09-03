@@ -30,3 +30,22 @@ Each simulation directory receives `burgers_rl_resolved.json`,
 `burgers_rl_episodes.csv`. Training episode seeds come from the reproducible
 SMARTIES communicator random stream. Evaluation consumes the configured seed
 list in order and initially requires one SMARTIES evaluation environment.
+
+Detailed evaluation output is opt-in through `output.write_evaluation_output`
+in `burgers_rl.json`; omitting it preserves the original rollout path and
+defaults to `false`. When enabled, each held-out episode is written beneath
+`output.evaluation_directory` in a directory named from its evaluation index
+and seed. Each directory contains the same scalar history, profile history,
+final profile, optional mean spectrum, and run metadata written by
+`run_solver`. The scalar and profile clocks come from the referenced solver
+configuration. Reaching those clocks may subdivide a policy decision, but the
+selected action remains fixed for the entire decision interval.
+
+Three additional CSV files retain policy-specific diagnostics:
+
+- `burgers_rl_history.csv` contains one scalar row per decision, including
+  reward, action-projection, stability, and advancement diagnostics;
+- `burgers_rl_fields.csv` contains cell-resolved actions, rewards, running-mean
+  estimates, and target values in long form; and
+- `burgers_rl_spectra.csv` contains the raw and applied action spectra when
+  `environment.record_action_spectra` is enabled.

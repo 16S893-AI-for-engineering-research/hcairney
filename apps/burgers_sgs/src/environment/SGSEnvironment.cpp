@@ -226,6 +226,11 @@ void SGSEnvironment::reset(std::uint64_t episode_seed) {
   mean_estimator_.reset(state_.cellAverages());
 }
 
+void SGSEnvironment::beginObservation(
+  EnvironmentAdvanceObserver& observer) const {
+  observer.beginEpisode(*solver_, state_, time_, episode_end_time_);
+}
+
 std::vector<std::vector<double>> SGSEnvironment::observations() const {
   return observation_builder_.build(state_);
 }
@@ -300,8 +305,13 @@ StepResult SGSEnvironment::failureResult(
   return result;
 }
 
+StepResult SGSEnvironment::step(const std::vector<double>& raw_actions) {
+  return step(raw_actions, nullptr);
+}
+
 StepResult SGSEnvironment::step(
-  const std::vector<double>& raw_actions) {
+  const std::vector<double>& raw_actions,
+  EnvironmentAdvanceObserver* const observer) {
   if(status_ != EpisodeStatus::Running) {
     throw std::logic_error("cannot step an environment after episode end");
   }
@@ -339,26 +349,49 @@ StepResult SGSEnvironment::step(
   solver_->setPrescribedAdditiveForcingField(diagnostics.action.applied);
   mean_estimator_.beginBlock(time_, state_);
   double last_observed_time = time_;
-  try {
-    diagnostics.advance = solver_->advanceTo(
-      state_, time_, requested_end,
-      config_.solver.time_integration.maximum_steps,
-      [this, &last_observed_time](std::size_t, double observed_time,
-                                  const State& observed_state) {
-        mean_estimator_.observeAcceptedState(observed_time, observed_state);
-        last_observed_time = observed_time;
-      });
-    time_ = diagnostics.advance.final_time;
-  } catch(const std::exception& error) {
-    time_ = last_observed_time;
-    diagnostics.end_time = time_;
-    ActionHistoryEntry history;
-    history.start_time = diagnostics.start_time;
-    history.end_time = diagnostics.end_time;
-    history.raw = raw_actions;
-    history.applied = diagnostics.action.applied;
-    action_history_.push_back(history);
-    return failureResult(error.what(), std::move(diagnostics));
+  diagnostics.advance.initial_time = time_;
+  diagnostics.advance.final_time = time_;
+  std::size_t remaining_steps =
+    config_.solver.time_integration.maximum_steps;
+  while(time_ < requested_end) {
+    double advance_target = requested_end;
+    if(observer != nullptr) {
+      const double event_time = observer->nextEventTime();
+      if(std::isfinite(event_time) != 0) {
+        if(event_time <= time_ + timeTolerance(time_)) {
+          throw std::runtime_error(
+            "evaluation output event did not advance physical time");
+        }
+        advance_target = std::min(advance_target, event_time);
+      }
+    }
+
+    AdvanceResult advance;
+    try {
+      advance = solver_->advanceTo(
+        state_, time_, advance_target, remaining_steps,
+        [this, &last_observed_time](std::size_t, double observed_time,
+                                    const State& observed_state) {
+          mean_estimator_.observeAcceptedState(observed_time, observed_state);
+          last_observed_time = observed_time;
+        });
+    } catch(const std::exception& error) {
+      time_ = last_observed_time;
+      diagnostics.end_time = time_;
+      ActionHistoryEntry history;
+      history.start_time = diagnostics.start_time;
+      history.end_time = diagnostics.end_time;
+      history.raw = raw_actions;
+      history.applied = diagnostics.action.applied;
+      action_history_.push_back(history);
+      return failureResult(error.what(), std::move(diagnostics));
+    }
+    time_ = advance.final_time;
+    accumulateAdvanceResult(diagnostics.advance, advance);
+    remaining_steps -= advance.timestep_count;
+    if(observer != nullptr) {
+      observer->observeAdvance(*solver_, state_, advance);
+    }
   }
 
   diagnostics.end_time = time_;

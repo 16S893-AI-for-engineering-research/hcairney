@@ -95,6 +95,22 @@ bool boolMember(const Json& object,
   return value.get<bool>();
 }
 
+bool optionalBoolMember(const Json& object,
+                        const std::string& name,
+                        const std::string& path,
+                        bool fallback) {
+  if(object.find(name) == object.end()) return fallback;
+  return boolMember(object, name, path);
+}
+
+std::string optionalStringMember(const Json& object,
+                                 const std::string& name,
+                                 const std::string& path,
+                                 const std::string& fallback) {
+  if(object.find(name) == object.end()) return fallback;
+  return stringMember(object, name, path);
+}
+
 std::uint64_t unsignedMember(const Json& object,
                              const std::string& name,
                              const std::string& path) {
@@ -345,7 +361,8 @@ EnvironmentApplicationConfig loadEnvironmentApplicationConfig(
   const Json& output = objectMember(document, "output", "document");
   requireKeys(output,
               {"resolved_environment_filename", "resolved_solver_filename",
-               "episode_summary_filename"},
+               "episode_summary_filename", "write_evaluation_output",
+               "evaluation_directory"},
               "document.output");
   result.output.resolved_environment_filename = stringMember(
     output, "resolved_environment_filename", "document.output");
@@ -353,6 +370,10 @@ EnvironmentApplicationConfig loadEnvironmentApplicationConfig(
     output, "resolved_solver_filename", "document.output");
   result.output.episode_summary_filename = stringMember(
     output, "episode_summary_filename", "document.output");
+  result.output.write_evaluation_output = optionalBoolMember(
+    output, "write_evaluation_output", "document.output", false);
+  result.output.evaluation_directory = optionalStringMember(
+    output, "evaluation_directory", "document.output", "evaluation");
 
   return result;
 }
@@ -396,7 +417,9 @@ std::string serializeEnvironmentApplicationConfig(
     {"resolved_environment_filename",
      config.output.resolved_environment_filename},
     {"resolved_solver_filename", config.output.resolved_solver_filename},
-    {"episode_summary_filename", config.output.episode_summary_filename}};
+    {"episode_summary_filename", config.output.episode_summary_filename},
+    {"write_evaluation_output", config.output.write_evaluation_output},
+    {"evaluation_directory", config.output.evaluation_directory}};
   return document.dump(2) + "\n";
 }
 

@@ -68,6 +68,10 @@ int main() {
            "RL config must preserve the action scale");
     expect(config.evaluation_seeds.size() == 4u,
            "RL config must preserve the held-out seed list");
+    expect(config.output.write_evaluation_output,
+           "example RL config must enable detailed evaluation output");
+    expect(config.output.evaluation_directory == "evaluation",
+           "RL config must preserve the evaluation output directory");
     expect(config.solver_config_path.find("configs/les_test.json") !=
              std::string::npos,
            "solver path must resolve relative to the RL document");
@@ -83,6 +87,8 @@ int main() {
       burgers::environment::loadEnvironmentApplicationConfig(temporary);
     expect(restored.environment.decision_interval == 0.1,
            "resolved RL configuration must round trip");
+    expect(restored.output.write_evaluation_output,
+           "evaluation output setting must round trip");
 
     const std::string unknown = replaceOnce(
       serialized, "\"environment\": {",

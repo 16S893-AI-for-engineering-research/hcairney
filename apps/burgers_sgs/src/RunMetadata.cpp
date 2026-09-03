@@ -163,7 +163,8 @@ std::string serializeRunMetadata(const RunConfig& config,
          << jsonBool(build.assertions_enabled) << ",\n"
          << "    \"sanitizers_enabled\": "
          << jsonBool(build.sanitizers_enabled) << ",\n"
-         << "    \"smarties_linked\": false\n"
+         << "    \"smarties_linked\": "
+         << jsonBool(result.smarties_linked) << "\n"
          << "  },\n"
          << "  \"configuration\": {\n"
          << "    \"grid\": {\"x_begin\":" << config.grid.x_begin

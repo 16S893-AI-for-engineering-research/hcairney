@@ -30,6 +30,10 @@ struct AdvanceResult {
   double energy_change = 0.0;
 };
 
+// Combine consecutive advances while preserving their common outer interval.
+void accumulateAdvanceResult(AdvanceResult& total,
+                             const AdvanceResult& increment);
+
 struct SspRk3StepBudget {
   double time_step = 0.0;
   double deterministic_work = 0.0;

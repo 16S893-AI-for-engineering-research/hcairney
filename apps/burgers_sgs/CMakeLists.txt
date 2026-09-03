@@ -108,6 +108,7 @@ add_library(burgers_core STATIC
   src/InitialCondition.cpp
   src/ManufacturedSolution.cpp
   src/Reconstruction.cpp
+  src/RunOutputRecorder.cpp
   src/State.cpp
   src/RunMetadata.cpp
   src/ViscousFlux.cpp)

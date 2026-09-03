@@ -15,6 +15,26 @@
 #include <vector>
 
 namespace burgers {
+
+void accumulateAdvanceResult(AdvanceResult& total,
+                             const AdvanceResult& increment) {
+  if(total.timestep_count == 0u && total.final_time == total.initial_time) {
+    total.initial_time = increment.initial_time;
+  }
+  total.final_time = increment.final_time;
+  total.timestep_count += increment.timestep_count;
+  total.shortened_final_step_count += increment.shortened_final_step_count;
+  total.forcing_clock_step_count += increment.forcing_clock_step_count;
+  total.deterministic_work += increment.deterministic_work;
+  total.stochastic_work += increment.stochastic_work;
+  total.prescribed_work += increment.prescribed_work;
+  total.manufactured_work += increment.manufactured_work;
+  total.molecular_dissipation += increment.molecular_dissipation;
+  total.sgs_dissipation += increment.sgs_dissipation;
+  total.numerical_dissipation += increment.numerical_dissipation;
+  total.energy_change += increment.energy_change;
+}
+
 namespace {
 
 std::string joinErrors(const std::vector<std::string>& errors) {

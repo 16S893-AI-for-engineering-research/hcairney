@@ -16,6 +16,10 @@ struct EnvironmentOutputConfig {
     "burgers_solver_resolved.json";
   std::string episode_summary_filename =
     "burgers_rl_episodes.csv";
+  // Detailed per-episode output is intentionally opt-in so existing training
+  // and evaluation runs retain their original numerical advancement path.
+  bool write_evaluation_output = false;
+  std::string evaluation_directory = "evaluation";
 };
 
 struct EnvironmentApplicationConfig {

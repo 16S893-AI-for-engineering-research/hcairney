@@ -46,6 +46,7 @@ struct RunResultMetadata {
   double sgs_dissipation = 0.0;
   double numerical_dissipation = 0.0;
   double energy_change = 0.0;
+  bool smarties_linked = false;
 };
 
 BuildMetadata currentBuildMetadata();

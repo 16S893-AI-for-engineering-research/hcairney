@@ -88,6 +88,21 @@ struct StepResult {
   EpisodeStatus status = EpisodeStatus::Running;
 };
 
+// Evaluation output may request exact physical-time stops within one policy
+// decision. The environment keeps the action fixed across all such stops.
+class EnvironmentAdvanceObserver {
+public:
+  virtual ~EnvironmentAdvanceObserver() = default;
+  virtual void beginEpisode(const BurgersSolver& solver,
+                            const State& state,
+                            double initial_time,
+                            double final_time) = 0;
+  virtual double nextEventTime() const noexcept = 0;
+  virtual void observeAdvance(const BurgersSolver& solver,
+                              const State& state,
+                              const AdvanceResult& advance) = 0;
+};
+
 class SGSEnvironment {
 public:
   explicit SGSEnvironment(const SGSEnvironmentConfig& config);
@@ -109,8 +124,11 @@ public:
   const std::vector<RewardHistoryEntry>& rewardHistory() const noexcept;
 
   void reset(std::uint64_t episode_seed);
+  void beginObservation(EnvironmentAdvanceObserver& observer) const;
   std::vector<std::vector<double>> observations() const;
   StepResult step(const std::vector<double>& raw_actions);
+  StepResult step(const std::vector<double>& raw_actions,
+                  EnvironmentAdvanceObserver* observer);
 
 private:
   void validateConfiguration() const;
