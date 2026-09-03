@@ -1,5 +1,8 @@
 # Burgers SMARTIES executable
 
+See [`SMARTIES_FLOWCHART.md`](SMARTIES_FLOWCHART.md) for the multi-environment
+runtime architecture and the per-decision state/action flow.
+
 The optional `burgers_smarties` target is configured from the repository root
 with `BURGERS_ENABLE_SMARTIES=ON`. Standalone builds of `apps/burgers_sgs`
 leave the option off and retain no SMARTIES, MPI, or OpenMP dependency.
