@@ -324,8 +324,16 @@ StepResult SGSEnvironment::step(
   diagnostics.episode_seed = episode_seed_;
   diagnostics.decision_index = decision_index_;
   diagnostics.start_time = time_;
+  // Anchor decision boundaries to the episode clock instead of repeatedly
+  // adding the interval to the current time.  This prevents round-off from
+  // accumulating until a nominal decision boundary diverges from an indexed
+  // output event at the same physical time.
+  const double scheduled_end =
+    config_.solver.time_integration.initial_time +
+    (static_cast<double>(decision_index_) + 1.0) *
+      config_.decision_interval;
   const double requested_end = std::min(
-    episode_end_time_, diagnostics.start_time + config_.decision_interval);
+    episode_end_time_, scheduled_end);
   diagnostics.end_time = requested_end;
   diagnostics.warmup = transitionIsWarmup(requested_end);
   diagnostics.pre_action_mean = mean_estimator_.estimate();
@@ -358,7 +366,7 @@ StepResult SGSEnvironment::step(
     if(observer != nullptr) {
       const double event_time = observer->nextEventTime();
       if(std::isfinite(event_time) != 0) {
-        if(event_time <= time_ + timeTolerance(time_)) {
+        if(event_time <= time_) {
           throw std::runtime_error(
             "evaluation output event did not advance physical time");
         }
