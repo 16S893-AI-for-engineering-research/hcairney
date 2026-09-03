@@ -4,7 +4,7 @@
     "grid": {
       "x_begin": 0,
       "x_end": 6.283185307179586,
-      "cell_count": 64
+      "cell_count": 32
     },
     "initial_condition": {
       "type": "sinusoidal",
@@ -27,7 +27,7 @@
     "time_integration": {
       "integrator": "ssp_rk3",
       "initial_time": 0,
-      "final_time": 640,
+      "final_time": 320,
       "advective_cfl": 0.4,
       "diffusive_cfl": 0.2,
       "maximum_steps": 1000000
@@ -45,7 +45,7 @@
         "modes": [
           {
             "wavenumber": 1,
-            "amplitude": 0.0,
+            "amplitude": 0.1,
             "phase": 0
           }
         ]
