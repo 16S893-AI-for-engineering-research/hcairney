@@ -261,9 +261,20 @@ void appMain(smarties::Communicator* const comm, int argc, char** argv) {
   std::size_t evaluation_episode = 0u;
   while(true) {
     const bool training = comm->isTraining();
-    const std::uint64_t seed = episodeSeed(
-      comm, application_config, evaluation_episode);
-    if(!training) ++evaluation_episode;
+    const bool evaluation_seeds_exhausted =
+      !training &&
+      evaluation_episode >= application_config.evaluation_seeds.size();
+    // SMARTIES decides that evaluation is complete asynchronously after the
+    // final terminal state.  It may therefore need one more application
+    // communication to deliver its shutdown signal.  Seed zero is used only
+    // to construct a valid initial-state probe; it is never recorded as an
+    // evaluation episode.  If SMARTIES did request more episodes than were
+    // configured, the probe completes normally and the error below remains
+    // diagnostic rather than being hidden as a successful shutdown.
+    const std::uint64_t seed = evaluation_seeds_exhausted
+      ? 0u
+      : episodeSeed(comm, application_config, evaluation_episode);
+    if(!training && !evaluation_seeds_exhausted) ++evaluation_episode;
     environment.reset(seed);
 
     std::vector<std::vector<double>> observations =
@@ -273,6 +284,12 @@ void appMain(smarties::Communicator* const comm, int argc, char** argv) {
         "environment produced an invalid initial observation field");
     }
     if(!sendInitialObservations(comm, observations)) return;
+    if(evaluation_seeds_exhausted) {
+      throw std::runtime_error(
+        "evaluation requested more episodes than the configured held-out "
+        "seed list; use one SMARTIES evaluation environment and provide at "
+        "least --nEvalEpisodes seeds");
+    }
 
     const double initial_time = environment.time();
     std::size_t decision_count = 0u;

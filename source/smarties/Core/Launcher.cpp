@@ -14,12 +14,14 @@
 #include "../Utils/SstreamUtilities.h"
 
 #include <cerrno>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <exception>
-#include <omp.h>
 #include <fstream>
 #include <iostream>
+#include <omp.h>
+#include <random>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -84,6 +86,14 @@ bool Launcher::forkApplication(const environment_callback_t & callback)
         if ( child == -1 ) die("Failed to fork.");
         if ( child ==  0 ) {
           try {
+            // Forked applications inherit the same Communicator PRNG state.
+            // Derive a reproducible stream for each workload so applications
+            // using getPRNG() do not generate identical environment seeds.
+            std::seed_seq applicationSeed {
+              static_cast<std::uint32_t>(distrib.randSeed),
+              static_cast<std::uint32_t>(workloadID)
+            };
+            getPRNG().seed(applicationSeed);
             usleep(10); // IDK, wait for parent to create socket file to be sure
             //warn("entering SOCKET_clientConnect");
             SOCK.server = SOCKET_clientConnect();
