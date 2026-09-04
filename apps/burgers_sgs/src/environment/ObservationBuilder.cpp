@@ -46,9 +46,8 @@ std::vector<double> ObservationBuilder::featureField(
   std::vector<double> features(grid_.cellCount(), 0.0);
   const double width_squared = grid_.cellWidth() * grid_.cellWidth();
   for(std::size_t cell = 0; cell < features.size(); ++cell) {
-    const double z =
-      std::abs(gradients[cell]) * width_squared / molecular_viscosity_;
-    features[cell] = std::log1p(z);
+    features[cell] =
+      gradients[cell] * width_squared / molecular_viscosity_;
     if(std::isfinite(features[cell]) == 0) {
       throw std::runtime_error(
         "observation feature became non-finite at cell " +

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot the distribution of the Burgers SGS observation input feature."""
+"""Plot distributions of Burgers SGS observation input features."""
 
 import argparse
 import csv
@@ -18,6 +18,9 @@ except ModuleNotFoundError as error:
 PROFILE_FILENAME = "burgers_profiles.csv"
 METADATA_FILENAME = "burgers_run_metadata.json"
 DEFAULT_OUTPUT_FILENAME = "input_distribution.png"
+DEFAULT_SECOND_DERIVATIVE_OUTPUT_FILENAME = (
+    "second_derivative_input_distribution.png"
+)
 
 
 def read_run_configuration(run_directory):
@@ -102,7 +105,17 @@ def input_features(profiles, cell_width, viscosity):
     gradients = (
         np.roll(profiles, -1, axis=1) - np.roll(profiles, 1, axis=1)
     ) / (2.0 * cell_width)
-    return np.log1p(np.abs(gradients) * cell_width ** 2 / viscosity)
+    return gradients * cell_width ** 2 / viscosity
+
+
+def second_derivative_features(profiles, cell_width, viscosity):
+    """Compute the proposed dimensionless second-derivative feature."""
+    second_derivatives = (
+        np.roll(profiles, -1, axis=1)
+        - 2.0 * profiles
+        + np.roll(profiles, 1, axis=1)
+    ) / cell_width ** 2
+    return second_derivatives * cell_width ** 3 / viscosity
 
 
 def default_bin_width(values):
@@ -143,17 +156,23 @@ def bin_edges(values, width):
 
 
 def load_run(run_directory):
-    """Load one normal or RL evaluation run and calculate all features."""
+    """Load one normal or RL evaluation run and calculate both features."""
     if not run_directory.is_dir():
         raise ValueError(f"run directory does not exist: {run_directory}")
     cell_count, cell_width, viscosity = read_run_configuration(run_directory)
     times, profiles = read_profiles(
         run_directory / PROFILE_FILENAME, cell_count
     )
-    return times, input_features(profiles, cell_width, viscosity), cell_width, viscosity
+    return (
+        times,
+        input_features(profiles, cell_width, viscosity),
+        second_derivative_features(profiles, cell_width, viscosity),
+        cell_width,
+        viscosity,
+    )
 
 
-def make_figure(features, width, frame_count, cell_count):
+def make_figure(features, width, frame_count, cell_count, xlabel=None):
     """Create a fixed-bin-width histogram of input feature values."""
     try:
         import matplotlib.pyplot as plt
@@ -174,7 +193,9 @@ def make_figure(features, width, frame_count, cell_count):
         f"Burgers input-feature distribution ({frame_count} frames, "
         f"{cell_count} cells)"
     )
-    axis.set_xlabel(r"$\ln(1 + |\partial u/\partial x|\,\Delta^2/\nu)$")
+    if xlabel is None:
+        xlabel = r"$(\partial u/\partial x)\,\Delta^2/\nu$"
+    axis.set_xlabel(xlabel)
     axis.set_ylabel("Frequency")
     axis.grid(axis="y", alpha=0.3)
     figure.tight_layout()
@@ -192,13 +213,30 @@ def parse_arguments():
     )
     parser.add_argument(
         "--bin-width", type=float,
-        help="histogram bin width (default: Freedman-Diaconis data estimate)",
+        help=(
+            "first-derivative histogram bin width "
+            "(default: Freedman-Diaconis data estimate)"
+        ),
+    )
+    parser.add_argument(
+        "--second-derivative-bin-width", type=float,
+        help=(
+            "second-derivative histogram bin width "
+            "(default: Freedman-Diaconis data estimate)"
+        ),
     )
     parser.add_argument(
         "-o", "--output", type=Path,
         help=(
             "output image path (default: input_distribution.png in the run "
             "directory)"
+        ),
+    )
+    parser.add_argument(
+        "--second-derivative-output", type=Path,
+        help=(
+            "second-derivative output image path (default: "
+            "second_derivative_input_distribution.png in the run directory)"
         ),
     )
     parser.add_argument(
@@ -221,30 +259,66 @@ def main():
         not math.isfinite(arguments.bin_width) or arguments.bin_width <= 0.0
     ):
         parser.error("--bin-width must be finite and positive")
+    if arguments.second_derivative_bin_width is not None and (
+        not math.isfinite(arguments.second_derivative_bin_width)
+        or arguments.second_derivative_bin_width <= 0.0
+    ):
+        parser.error(
+            "--second-derivative-bin-width must be finite and positive"
+        )
 
     try:
-        times, features, cell_width, viscosity = load_run(run_directory)
+        (
+            times,
+            features,
+            second_derivative_values,
+            cell_width,
+            viscosity,
+        ) = load_run(run_directory)
         width = (
             default_bin_width(features)
             if arguments.bin_width is None else arguments.bin_width
+        )
+        second_derivative_width = (
+            default_bin_width(second_derivative_values)
+            if arguments.second_derivative_bin_width is None
+            else arguments.second_derivative_bin_width
         )
         figure = make_figure(
             features, width, frame_count=features.shape[0],
             cell_count=features.shape[1],
         )
+        second_derivative_figure = make_figure(
+            second_derivative_values,
+            second_derivative_width,
+            frame_count=second_derivative_values.shape[0],
+            cell_count=second_derivative_values.shape[1],
+            xlabel=r"$(\partial^2 u/\partial x^2)\,\Delta^3/\nu$",
+        )
         output_path = (
             run_directory / DEFAULT_OUTPUT_FILENAME
             if arguments.output is None else arguments.output.expanduser()
         )
+        second_derivative_output_path = (
+            run_directory / DEFAULT_SECOND_DERIVATIVE_OUTPUT_FILENAME
+            if arguments.second_derivative_output is None
+            else arguments.second_derivative_output.expanduser()
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        second_derivative_output_path.parent.mkdir(parents=True, exist_ok=True)
         figure.savefig(output_path, dpi=arguments.dpi)
+        second_derivative_figure.savefig(
+            second_derivative_output_path, dpi=arguments.dpi
+        )
     except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as error:
         parser.error(str(error))
 
     print(
         f"Saved {features.size} samples from {times.size} frames to "
         f"{output_path} (Delta={cell_width:g}, nu={viscosity:g}, "
-        f"bin width={width:g})."
+        f"bin width={width:g}); second-derivative plot saved to "
+        f"{second_derivative_output_path} "
+        f"(bin width={second_derivative_width:g})."
     )
     if arguments.show:
         import matplotlib.pyplot as plt

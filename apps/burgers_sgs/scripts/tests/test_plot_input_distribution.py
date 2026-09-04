@@ -25,8 +25,17 @@ class InputFeatureTests(unittest.TestCase):
         )
 
         np.testing.assert_allclose(
-            actual, [[np.log1p(0.5), 0.0, np.log1p(0.5), 0.0]]
+            actual, [[0.5, 0.0, -0.5, 0.0]]
         )
+
+    def test_second_derivative_feature_uses_periodic_centered_stencil(self):
+        profiles = np.array([[0.0, 1.0, 0.0, -1.0]])
+
+        actual = plot_input_distribution.second_derivative_features(
+            profiles, cell_width=2.0, viscosity=4.0
+        )
+
+        np.testing.assert_allclose(actual, [[0.0, -1.0, 0.0, 1.0]])
 
     def test_default_bin_width_depends_on_data(self):
         narrow = plot_input_distribution.default_bin_width(
@@ -75,14 +84,18 @@ class RunInputTests(unittest.TestCase):
                 "1,1,0.5,0\n1,1,1.5,1\n1,1,2.5,0\n1,1,3.5,-1\n"
             )
 
-            times, features, cell_width, viscosity = (
+            times, features, second_derivatives, cell_width, viscosity = (
                 plot_input_distribution.load_run(run_directory)
             )
 
         np.testing.assert_allclose(times, [0.0, 1.0])
         np.testing.assert_allclose(
             features,
-            np.tile([np.log1p(0.5), 0.0, np.log1p(0.5), 0.0], (2, 1)),
+            np.tile([0.5, 0.0, -0.5, 0.0], (2, 1)),
+        )
+        np.testing.assert_allclose(
+            second_derivatives,
+            np.tile([0.0, -1.0, 0.0, 1.0], (2, 1)),
         )
         self.assertEqual(cell_width, 1.0)
         self.assertEqual(viscosity, 2.0)
@@ -94,6 +107,8 @@ class RunInputTests(unittest.TestCase):
             _, arguments = plot_input_distribution.parse_arguments()
 
         self.assertIsNone(arguments.output)
+        self.assertIsNone(arguments.second_derivative_bin_width)
+        self.assertIsNone(arguments.second_derivative_output)
 
 
 if __name__ == "__main__":

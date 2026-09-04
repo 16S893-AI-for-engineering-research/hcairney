@@ -240,17 +240,10 @@ steps but remain short enough for feedback to affect the evolving state.
 ### 5.3 Initial observations
 
 The initial observation must be Galilean invariant and therefore must not
-contain \(u\) itself. Define the dimensionless local gradient
+contain \(u\) itself. Define the signed, dimensionless local gradient feature
 
 \[
-  z_i = \frac{\sqrt{(u_{x,i})^2}\,\Delta x^2}{\nu}
-      = \frac{|u_{x,i}|\,\Delta x^2}{\nu}
-\]
-
-and transformed feature
-
-\[
-  q_i = \ln(1+z_i).
+  q_i = \frac{u_{x,i}\,\Delta x^2}{\nu}.
 \]
 
 For the first implementation, give each agent a configurable small periodic
@@ -268,10 +261,9 @@ meaningful in one dimension and may distinguish flow features without
 revealing absolute position. Use the same documented discrete derivative as
 the numerical diagnostics.
 
-This logarithm has an argument greater than or equal to one, but requires
-\(\nu>0\). The observation builder must reject a nonpositive viscosity. The
-absolute gradient deliberately makes compression and expansion with the same
-magnitude indistinguishable to the initial policy.
+This feature requires \(\nu>0\), so the observation builder must reject a
+nonpositive viscosity. Its sign allows the initial policy to distinguish
+compression from expansion.
 
 Start with a memoryless feed-forward policy. Add appended past observations or
 a recurrent network only if a controlled comparison shows that the
