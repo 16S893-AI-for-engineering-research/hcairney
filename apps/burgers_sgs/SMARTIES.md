@@ -13,6 +13,17 @@ The example argument file is
 and the strict versioned environment document is
 [`configs/burgers_rl.json`](configs/burgers_rl.json).
 
+For an evaluation-only oracle rollout, use
+[`configs/burgers_rl_app_settings_oracle.txt`](configs/burgers_rl_app_settings_oracle.txt).
+It replaces the frozen policy's actions with the cell averages of the known
+deterministic Fourier forcing immediately before the normal action-projection
+and environment-step path. The available application options are
+`--scripted-forcing-amplitude`, `--scripted-forcing-wavenumber`, and
+`--scripted-forcing-phase`; supplying the amplitude enables the mode, while
+the wavenumber and phase default to `1` and `0`. Scripted forcing is rejected
+during training, so launch it with `--nEvalEpisodes` and an existing restart
+checkpoint. An amplitude of zero provides the matched no-action rollout.
+
 Before launching, assemble a flat setup directory containing:
 
 - `burgers_rl.json`;

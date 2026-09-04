@@ -1,4 +1,5 @@
 #include "burgers/ConfigIO.h"
+#include "burgers/Forcing.h"
 #include "burgers/RunMetadata.h"
 #include "burgers/RunOutputRecorder.h"
 #include "burgers/environment/EnvironmentConfigIO.h"
@@ -33,6 +34,127 @@ using burgers::environment::EpisodeStatus;
 using burgers::environment::SGSEnvironment;
 using burgers::environment::StepResult;
 
+struct ScriptedForcingOptions {
+  bool enabled = false;
+  double amplitude = 0.0;
+  int wavenumber = 1;
+  double phase = 0.0;
+};
+
+bool parseOptionValue(const std::string& argument,
+                      const std::string& option,
+                      int argc,
+                      char** argv,
+                      int& index,
+                      std::string& value) {
+  if(argument == option) {
+    if(index + 1 >= argc) {
+      throw std::invalid_argument(option + " requires a value");
+    }
+    value = argv[++index];
+    if(value.empty()) {
+      throw std::invalid_argument(option + " requires a nonempty value");
+    }
+    return true;
+  }
+
+  const std::string prefix = option + "=";
+  if(argument.compare(0u, prefix.size(), prefix) != 0) return false;
+  value = argument.substr(prefix.size());
+  if(value.empty()) {
+    throw std::invalid_argument(option + " requires a nonempty value");
+  }
+  return true;
+}
+
+double parseFiniteOptionDouble(const std::string& value,
+                               const std::string& option) {
+  std::size_t consumed = 0u;
+  double parsed = 0.0;
+  try {
+    parsed = std::stod(value, &consumed);
+  } catch(const std::exception&) {
+    throw std::invalid_argument(option + " must be a finite number");
+  }
+  if(consumed != value.size() || std::isfinite(parsed) == 0) {
+    throw std::invalid_argument(option + " must be a finite number");
+  }
+  return parsed;
+}
+
+int parsePositiveOptionInt(const std::string& value,
+                           const std::string& option) {
+  std::size_t consumed = 0u;
+  long long parsed = 0;
+  try {
+    parsed = std::stoll(value, &consumed);
+  } catch(const std::exception&) {
+    throw std::invalid_argument(option + " must be a positive integer");
+  }
+  if(consumed != value.size() || parsed <= 0 ||
+     parsed > static_cast<long long>(std::numeric_limits<int>::max())) {
+    throw std::invalid_argument(option + " must be a positive integer");
+  }
+  return static_cast<int>(parsed);
+}
+
+ScriptedForcingOptions parseScriptedForcingOptions(int argc, char** argv) {
+  ScriptedForcingOptions result;
+  bool amplitude_seen = false;
+  bool wavenumber_seen = false;
+  bool phase_seen = false;
+  for(int index = 1; index < argc; ++index) {
+    const std::string argument(argv[index]);
+    std::string value;
+    if(parseOptionValue(argument, "--scripted-forcing-amplitude",
+                        argc, argv, index, value)) {
+      const double parsed = parseFiniteOptionDouble(
+        value, "--scripted-forcing-amplitude");
+      if(amplitude_seen && parsed != result.amplitude) {
+        throw std::invalid_argument(
+          "multiple conflicting --scripted-forcing-amplitude values were "
+          "supplied");
+      }
+      result.amplitude = parsed;
+      amplitude_seen = true;
+      continue;
+    }
+    if(parseOptionValue(argument, "--scripted-forcing-wavenumber",
+                        argc, argv, index, value)) {
+      const int parsed = parsePositiveOptionInt(
+        value, "--scripted-forcing-wavenumber");
+      if(wavenumber_seen && parsed != result.wavenumber) {
+        throw std::invalid_argument(
+          "multiple conflicting --scripted-forcing-wavenumber values were "
+          "supplied");
+      }
+      result.wavenumber = parsed;
+      wavenumber_seen = true;
+      continue;
+    }
+    if(parseOptionValue(argument, "--scripted-forcing-phase",
+                        argc, argv, index, value)) {
+      const double parsed = parseFiniteOptionDouble(
+        value, "--scripted-forcing-phase");
+      if(phase_seen && parsed != result.phase) {
+        throw std::invalid_argument(
+          "multiple conflicting --scripted-forcing-phase values were "
+          "supplied");
+      }
+      result.phase = parsed;
+      phase_seen = true;
+    }
+  }
+
+  if(!amplitude_seen && (wavenumber_seen || phase_seen)) {
+    throw std::invalid_argument(
+      "--scripted-forcing-wavenumber and --scripted-forcing-phase require "
+      "--scripted-forcing-amplitude");
+  }
+  result.enabled = amplitude_seen;
+  return result;
+}
+
 std::string parseEnvironmentConfigPath(int argc, char** argv) {
   std::string result;
   for(int index = 1; index < argc; ++index) {
@@ -61,6 +183,46 @@ std::string parseEnvironmentConfigPath(int argc, char** argv) {
       "the SMARTIES app settings must provide --burgers-config FILE");
   }
   return result;
+}
+
+std::vector<double> scriptedRawActions(
+  const EnvironmentApplicationConfig& application_config,
+  const SGSEnvironment& environment,
+  const ScriptedForcingOptions& options) {
+  burgers::ForcingConfig forcing_config =
+    application_config.environment.solver.forcing;
+  forcing_config.type = burgers::ForcingType::DeterministicFourier;
+  forcing_config.deterministic.modes = {
+    {options.wavenumber, options.amplitude, options.phase}};
+
+  burgers::Forcing forcing(
+    environment.grid(), forcing_config,
+    application_config.environment.solver.viscosity.molecular, 0u);
+  burgers::ForcingFields fields(environment.grid());
+  forcing.evaluate(
+    application_config.environment.solver.time_integration.initial_time,
+    fields);
+
+  const burgers::environment::ActionProjectionConfig& action_config =
+    application_config.environment.action;
+  std::vector<double> raw_actions(environment.grid().cellCount(), 0.0);
+  for(std::size_t cell = 0; cell < raw_actions.size(); ++cell) {
+    const double raw =
+      fields.deterministic[cell] / action_config.forcing_scale;
+    if(raw < action_config.minimum_raw_action ||
+       raw > action_config.maximum_raw_action) {
+      throw std::invalid_argument(
+        "scripted forcing exceeds the configured raw-action bounds at cell " +
+        std::to_string(cell));
+    }
+    if(std::abs(raw) > 1.0) {
+      throw std::invalid_argument(
+        "scripted forcing would activate the action projection's global "
+        "rescaling; reduce its amplitude or increase forcing_scale");
+    }
+    raw_actions[cell] = raw;
+  }
+  return raw_actions;
 }
 
 std::string readRequiredFile(const std::string& path) {
@@ -539,6 +701,8 @@ bool sendStepResult(smarties::Communicator* comm,
 
 void appMain(smarties::Communicator* const comm, int argc, char** argv) {
   const std::string config_path = parseEnvironmentConfigPath(argc, argv);
+  const ScriptedForcingOptions scripted_forcing =
+    parseScriptedForcingOptions(argc, argv);
   const EnvironmentApplicationConfig application_config =
     burgers::environment::loadEnvironmentApplicationConfig(config_path);
 
@@ -548,6 +712,11 @@ void appMain(smarties::Communicator* const comm, int argc, char** argv) {
   static_cast<void>(readRequiredFile("settings.json"));
 
   SGSEnvironment environment(application_config.environment);
+  const std::vector<double> scripted_raw_actions =
+    scripted_forcing.enabled
+      ? scriptedRawActions(
+          application_config, environment, scripted_forcing)
+      : std::vector<double>();
   const std::size_t agent_count = environment.grid().cellCount();
   const std::size_t observation_size = environment.observationSize();
   if(agent_count > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
@@ -574,6 +743,16 @@ void appMain(smarties::Communicator* const comm, int argc, char** argv) {
   // setIsPartiallyObservable() selects a recurrent approximator, so partial
   // observability is documented rather than changing the network here.
   comm->finalizeProblemDescription();
+  if(scripted_forcing.enabled && comm->isTraining()) {
+    throw std::invalid_argument(
+      "scripted forcing is an evaluation-only mode; use --nEvalEpisodes");
+  }
+  if(scripted_forcing.enabled) {
+    std::cout << "Using scripted Fourier forcing override: amplitude="
+              << scripted_forcing.amplitude
+              << ", wavenumber=" << scripted_forcing.wavenumber
+              << ", phase=" << scripted_forcing.phase << '\n';
+  }
 
   std::size_t episode_index = 0u;
   std::size_t evaluation_episode = 0u;
@@ -640,6 +819,13 @@ void appMain(smarties::Communicator* const comm, int argc, char** argv) {
             "SMARTIES returned an action with the wrong dimension");
         }
         raw_actions[cell] = action[0];
+      }
+      // Complete the normal SMARTIES receive cycle before replacing the field
+      // so evaluation shutdown and agent synchronization remain unchanged.
+      // The environment then projects, records, and applies the scripted field
+      // through exactly the same path as a learned action field.
+      if(scripted_forcing.enabled) {
+        raw_actions = scripted_raw_actions;
       }
 
       const std::vector<std::vector<double>> last_finite_observations =
