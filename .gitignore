@@ -76,3 +76,4 @@ benchmark_logs/
 *.swp
 
 env-cluster.sh
+submit_burgers.sh.*
