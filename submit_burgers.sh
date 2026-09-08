@@ -11,7 +11,7 @@ source ./env-cluster.sh
 # Allow the MPI rank and its forked environments to use allocated CPUs.
 export OMPI_MCA_hwloc_base_binding_policy=none
 
-runname=initial_test_directional_reward_modified_input_train_001
+runname=initial_test_radius_2_train_001
 
 python -u bin/smarties.py \
   build-burgers/apps/burgers_sgs/ \
@@ -25,4 +25,4 @@ python -u bin/smarties.py \
   --mpiProcsPerEnv 0 \
   --nThreads 4 \
   --nTrainSteps 100000 \
-  --args "--randSeed 5489 --appSettings ../../../configs/burgers_rl_app_settings.txt --setupFolder ../initial_test_directional_reward --redirectAppStdoutToFile 0"
+  --args "--randSeed 5489 --appSettings ../../../configs/burgers_rl_app_settings.txt --setupFolder ../initial_test_radius_2 --redirectAppStdoutToFile 0"
