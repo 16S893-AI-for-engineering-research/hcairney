@@ -65,6 +65,7 @@ _deprecated*
 
 /lib
 /build
+/build-burgers
 /units/build
 /extern
 /source/Learners/Pytorch/__pycache__/
@@ -73,3 +74,5 @@ _deprecated*
 benchmark_logs/
 
 *.swp
+
+env-cluster.sh
