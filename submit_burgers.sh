@@ -15,7 +15,7 @@ runname=initial_test_radius_2_train_001
 
 python -u bin/smarties.py \
   build-burgers/apps/burgers_sgs/ \
-  apps/burgers_sgs/runs/rl/initial_test_directional_reward/settings.json \
+  apps/burgers_sgs/runs/rl/initial_test_radius_2/settings.json \
   --execname burgers_smarties \
   --runprefix apps/burgers_sgs/runs/rl/ \
   --runname "$runname" \
