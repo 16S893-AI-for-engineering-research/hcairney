@@ -243,10 +243,10 @@ void checkRewards() {
 void checkAcceptedTarget() {
   const std::string metadata =
     std::string(BURGERS_TEST_SOURCE_DIR) +
-    "/runs/finalization/dns_target_metadata.json";
+    "/tests/fixtures/accepted_target/metadata.json";
   const burgers::environment::TargetProfile target =
     burgers::environment::TargetProfile::loadAccepted(metadata);
-  expect(target.cellCount() == 1024u,
+  expect(target.cellCount() == 128u,
          "accepted target loader must honor metadata cell count");
   expect(target.profileHash().size() == 64u &&
          target.spectrumHash().size() == 64u,
@@ -256,10 +256,10 @@ void checkAcceptedTarget() {
   expect(restricted.size() == les.cellCount(),
          "accepted target must conservatively restrict to the LES grid");
   double expected_first = 0.0;
-  for(std::size_t cell = 0; cell < 16u; ++cell) {
+  for(std::size_t cell = 0; cell < 2u; ++cell) {
     expected_first += target.meanVelocity()[cell];
   }
-  expected_first /= 16.0;
+  expected_first /= 2.0;
   expectNear(restricted[0], expected_first, 0.0,
              "restriction must average complete fine-cell groups");
 }

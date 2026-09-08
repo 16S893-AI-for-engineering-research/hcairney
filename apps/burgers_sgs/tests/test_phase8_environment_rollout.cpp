@@ -66,7 +66,7 @@ burgers::environment::SGSEnvironmentConfig environmentConfig() {
   config.solver.time_integration.maximum_steps = 10000u;
   config.target_metadata_path =
     std::string(BURGERS_TEST_SOURCE_DIR) +
-    "/runs/finalization/dns_target_metadata.json";
+    "/tests/fixtures/accepted_target/metadata.json";
   config.action.forcing_scale = 0.5;
   config.action.smoothing = burgers::environment::ActionSmoothing::None;
   config.reward.type = burgers::environment::RewardType::SquaredEma;

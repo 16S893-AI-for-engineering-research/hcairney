@@ -1,0 +1,13 @@
+{
+  "status": "accepted_dns_target",
+  "cell_count": 128,
+  "domain": {
+    "x_begin": 0.0,
+    "x_end": 6.283185307179586,
+    "cell_count": 128
+  },
+  "target_csv_filename": "mean_profile.csv",
+  "target_spectrum_filename": "energy_spectrum.csv",
+  "target_csv_sha256": "c79df19977299cb3dfacd4ef469eb103f71dd71c6c3bacda529a2d546bf19389",
+  "target_spectrum_sha256": "0b149edf23d218378d3d03406c9bf194b7e08291051950b9b679899af62027f4"
+}
