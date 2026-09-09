@@ -8,8 +8,8 @@ cd /home/gridsan/hcairney/ALD/smarties
 source "$(conda info --base)/etc/profile.d/conda.sh"
 source ./env-cluster.sh
 
-export LD_LIBRARY_PATH="$PWD/build-burgers-asan/build/lib:$LD_LIBRARY_PATH"
-export ASAN_OPTIONS="detect_leaks=0:halt_on_error=1"
+#export LD_LIBRARY_PATH="$PWD/build-burgers-asan/build/lib:$LD_LIBRARY_PATH"
+#export ASAN_OPTIONS="detect_leaks=0:halt_on_error=1"
 
 # Allow the MPI rank and its forked environments to use allocated CPUs.
 export OMPI_MCA_hwloc_base_binding_policy=none
