@@ -17,7 +17,7 @@ export OMPI_MCA_hwloc_base_binding_policy=none
 runname=initial_test_directional_reward_radius_3_train_001_shorttest_2
 
 python -u bin/smarties.py \
-  build-burgers-asan/build/smarties/apps/burgers_sgs/ \
+  build-burgers/apps/burgers_sgs/ \
   apps/burgers_sgs/runs/rl/initial_test_directional_reward_radius_3/settings.json \
   --execname burgers_smarties \
   --runprefix apps/burgers_sgs/runs/rl/ \
