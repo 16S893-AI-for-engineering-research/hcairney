@@ -22,7 +22,7 @@ python -u bin/smarties.py \
   --execname burgers_smarties \
   --runprefix apps/burgers_sgs/runs/rl/ \
   --runname "$runname" \
-  --restart apps/burgers_sgs/runs/rl/initial_test_directional_reward_radius_1_train_001 \
+  --restart apps/burgers_sgs/runs/rl/initial_test_directional_reward_modified_input_train_001 \
   --nProcesses 1 \
   --nLearners 1 \
   --nEnvironments 8 \
