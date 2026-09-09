@@ -14,7 +14,7 @@ export ASAN_OPTIONS="detect_leaks=0:halt_on_error=1"
 # Allow the MPI rank and its forked environments to use allocated CPUs.
 export OMPI_MCA_hwloc_base_binding_policy=none
 
-runname=initial_test_directional_reward_radius_3_train_001_shorttest
+runname=initial_test_directional_reward_radius_3_train_001_shorttest_2
 
 python -u bin/smarties.py \
   build-burgers-asan/build/smarties/apps/burgers_sgs/ \
