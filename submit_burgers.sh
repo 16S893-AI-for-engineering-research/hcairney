@@ -27,5 +27,5 @@ python -u bin/smarties.py \
   --nEnvironments 8 \
   --mpiProcsPerEnv 0 \
   --nThreads 4 \
-  --nTrainSteps 10 \
+  --nTrainSteps 1000 \
   --args "--randSeed 5489 --appSettings ../../../configs/burgers_rl_app_settings.txt --setupFolder ../initial_test_directional_reward_radius_3 --redirectAppStdoutToFile 0"
