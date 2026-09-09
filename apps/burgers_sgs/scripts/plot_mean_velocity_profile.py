@@ -2,6 +2,8 @@
 """Plot a mean Burgers velocity profile with standard-error shading."""
 
 import argparse
+import csv
+import math
 from pathlib import Path
 
 
@@ -83,7 +85,32 @@ def profile_labels(standard_error_kind, seed_count):
     )
 
 
-def make_figure(path, xlim=None, ylim=None):
+def read_reference_profile(path):
+    """Read only the coordinates and mean velocity from a DNS target CSV."""
+    coordinates, mean_velocity = [], []
+    with path.open(newline="") as stream:
+        reader = csv.DictReader(stream)
+        if not {"x", "mean_velocity"}.issubset(reader.fieldnames or []):
+            raise ValueError(
+                f"DNS reference {path} must contain x and mean_velocity columns"
+            )
+        for row in reader:
+            try:
+                x, mean = float(row["x"]), float(row["mean_velocity"])
+            except (TypeError, ValueError) as error:
+                raise ValueError(
+                    f"DNS reference {path} has invalid data on line {reader.line_num}"
+                ) from error
+            if not (math.isfinite(x) and math.isfinite(mean)):
+                raise ValueError(f"DNS reference {path} contains non-finite values")
+            coordinates.append(x)
+            mean_velocity.append(mean)
+    if not coordinates:
+        raise ValueError(f"DNS reference {path} contains no data")
+    return coordinates, mean_velocity
+
+
+def make_figure(path, xlim=None, ylim=None, reference=None):
     """Create a mean-profile figure from a run or ensemble analysis NPZ."""
     try:
         import matplotlib.pyplot as plt
@@ -97,6 +124,15 @@ def make_figure(path, xlim=None, ylim=None):
     title, uncertainty_label = profile_labels(
         standard_error_kind, seed_count
     )
+    reference_profile = None
+    if reference is not None:
+        reference_path = (
+            Path(path).absolute().parent.parent / "dns_target.csv"
+            if reference is True else Path(reference)
+        )
+        if not reference_path.is_file():
+            raise FileNotFoundError(f"DNS reference file not found: {reference_path}")
+        reference_profile = read_reference_profile(reference_path)
 
     figure, axis = plt.subplots(figsize=(7.0, 4.5))
     axis.plot(coordinates, mean_profile, linewidth=1.5, label="Mean velocity")
@@ -107,6 +143,11 @@ def make_figure(path, xlim=None, ylim=None):
         alpha=0.25,
         label=uncertainty_label,
     )
+    if reference_profile is not None:
+        axis.plot(
+            *reference_profile, linestyle="--", linewidth=1.5,
+            label="DNS reference",
+        )
     axis.set_title(title)
     axis.set_xlabel(r"$x$")
     axis.set_ylabel(r"Mean velocity $\overline{u}$")
@@ -152,6 +193,13 @@ def parse_arguments():
         help="set the y-axis limits (for example: --ylim -0.5 0.5)",
     )
     parser.add_argument(
+        "--reference", type=Path, nargs="?", const=True, metavar="CSV",
+        help=(
+            "plot DNS mean velocity from CSV; without a path, use dns_target.csv "
+            "in the parent of the directory containing the analysis file"
+        ),
+    )
+    parser.add_argument(
         "--show", action="store_true",
         help="display the figure even when --output is supplied",
     )
@@ -165,6 +213,7 @@ def main():
             arguments.analysis_file,
             xlim=arguments.xlim,
             ylim=arguments.ylim,
+            reference=arguments.reference,
         )
     except (OSError, RuntimeError, ValueError) as error:
         parser.error(str(error))
