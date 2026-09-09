@@ -319,6 +319,9 @@ void Worker::loopSocketsToMaster()
     // now all requests are completed and waiting to recv an 'action': terminate
     for(size_t i=0; i<nClients; ++i) {
       const auto& B = getCommBuffer(i+1);
+      // The pending request may belong to a different agent than the last reply.
+      const unsigned agentID = Agent::getMessageAgentID(B.dataStateBuf);
+      memcpy(B.dataActionBuf, &agentID, sizeof(agentID));
       Agent::messageLearnerStatus((char*) B.dataActionBuf) = KILL;
       SOCKET_Bsend(B.dataActionBuf, B.sizeActionMsg, getSocketID(i+1));
     }

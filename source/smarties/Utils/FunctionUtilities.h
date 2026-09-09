@@ -17,6 +17,7 @@
 #include <cstring> // memset, memcpy, ...
 #include <string>
 #include <numeric> // accumulate
+#include <cstdint>
 
 namespace smarties
 {
@@ -88,7 +89,7 @@ inline T* allocate_dirty(const Uint _size)
   T* ret = nullptr;
   assert(_size > 0);
   posix_memalign((void **) &ret, 64, roundUpSimd(_size) * sizeof(T));
-  assert(((uintptr_t)ret % 64) == 0);
+  assert((reinterpret_cast<std::uintptr_t>(ret) % 64) == 0);
   return ret;
 }
 
@@ -361,5 +362,4 @@ struct BufferedPRNG {
 } // end namespace smarties
 } // end namespace Utilities
 #endif // smarties_FunctionUtilties_h
-
 

@@ -110,6 +110,9 @@ void Master<CommType,Request_t>::waitForStateActionCallers(const std::vector<Uin
     for(size_t i=0; i<nClients; ++i) {
       const Uint callID = givenWorkers[i], callRank = callID+1;
       const COMM_buffer& B = getCommBuffer(callRank);
+      // The pending request may belong to a different agent than the last reply.
+      const unsigned agentID = Agent::getMessageAgentID(B.dataStateBuf);
+      memcpy(B.dataActionBuf, &agentID, sizeof(agentID));
       Agent::messageLearnerStatus((char*) B.dataActionBuf) = KILL;
       interface()->Send(B.dataActionBuf, B.sizeActionMsg, callRank, 22846);
     }

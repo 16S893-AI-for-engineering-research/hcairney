@@ -339,7 +339,8 @@ void ExecutionInfo::figureOutWorkersPattern()
       // should also equal:
       // nWorkers/world_size + ( (nWorkers%world_size) > world_rank );
       nForkedProcesses2spawn = nOwnedEnvironments;
-      learners_train_comm = world_comm;
+      // Own a separate communicator: the destructor frees learners_train_comm.
+      learners_train_comm = MPICommDup(world_comm);
       if(nEnvironments < nMasters) // then i need to share data
            workerless_masters_comm = MPICommDup(learners_train_comm);
       else workerless_masters_comm = MPI_COMM_NULL;
@@ -356,7 +357,8 @@ void ExecutionInfo::figureOutWorkersPattern()
       die("Detected 0 masters : this only works if each worker "
           "also serially runs its own environment.");
     nOwnedEnvironments  = 1;
-    learners_train_comm = world_comm;
+    // Own a separate communicator: the destructor frees learners_train_comm.
+    learners_train_comm = MPICommDup(world_comm);
     // all are workers implies all have data:
     workerless_masters_comm = MPI_COMM_NULL;
 
