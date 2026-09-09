@@ -127,7 +127,7 @@ def make_figure(path, xlim=None, ylim=None, reference=None):
     reference_profile = None
     if reference is not None:
         reference_path = (
-            Path(path).absolute().parent.parent / "dns_target.csv"
+            Path(path).absolute().parent.parent.parent / "dns_target.csv"
             if reference is True else Path(reference)
         )
         if not reference_path.is_file():

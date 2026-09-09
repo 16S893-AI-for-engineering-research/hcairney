@@ -73,8 +73,8 @@ class ProfileInputTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            run = root / "run"
-            run.mkdir()
+            run = root / "case" / "run"
+            run.mkdir(parents=True)
             path = run / "analysis_arrays.npz"
             np.savez(
                 path, x=[0.25, 0.75], mean_profile=[1.0, 2.0],
