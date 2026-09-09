@@ -66,6 +66,7 @@ _deprecated*
 /lib
 /build
 /build-burgers
+/build-burgers-asan
 /units/build
 /extern
 /source/Learners/Pytorch/__pycache__/

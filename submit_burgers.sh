@@ -8,13 +8,16 @@ cd /home/gridsan/hcairney/ALD/smarties
 source "$(conda info --base)/etc/profile.d/conda.sh"
 source ./env-cluster.sh
 
+export LD_LIBRARY_PATH="$PWD/build-burgers-asan/build/lib:$LD_LIBRARY_PATH"
+export ASAN_OPTIONS="detect_leaks=0:halt_on_error=1"
+
 # Allow the MPI rank and its forked environments to use allocated CPUs.
 export OMPI_MCA_hwloc_base_binding_policy=none
 
-runname=initial_test_directional_reward_radius_3_train_001
+runname=initial_test_directional_reward_radius_3_train_001_shorttest
 
 python -u bin/smarties.py \
-  build-burgers/apps/burgers_sgs/ \
+  build-burgers-asan/build/smarties/apps/burgers_sgs/ \
   apps/burgers_sgs/runs/rl/initial_test_directional_reward_radius_3/settings.json \
   --execname burgers_smarties \
   --runprefix apps/burgers_sgs/runs/rl/ \
@@ -24,5 +27,5 @@ python -u bin/smarties.py \
   --nEnvironments 8 \
   --mpiProcsPerEnv 0 \
   --nThreads 4 \
-  --nTrainSteps 100000 \
+  --nTrainSteps 10 \
   --args "--randSeed 5489 --appSettings ../../../configs/burgers_rl_app_settings.txt --setupFolder ../initial_test_directional_reward_radius_3 --redirectAppStdoutToFile 0"
