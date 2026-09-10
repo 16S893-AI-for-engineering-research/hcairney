@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Hugh Cairney — 16.S893 portfolio" } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const navItems = [
+  { href: `${base}`, label: "Home" },
+  { href: `${base}about/`, label: "About" },
+  { href: `${base}project/`, label: "Project" },
+  { href: `${base}dev-log/`, label: "Dev log" },
+];
+
+const currentPath = new URL(Astro.request.url).pathname;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta name="description" content={description} />
+    <title>{title} — Hugh Cairney</title>
+  </head>
+  <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+    <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+      <nav class="max-w-3xl mx-auto flex flex-wrap items-center gap-1 px-4 py-3 text-sm">
+        <a href={base} class="mr-4 font-mono text-amber-400 tracking-tight">
+          hcairney<span class="text-slate-500">/</span>16.S893
+        </a>
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              "px-3 py-1.5 rounded-md transition-colors",
+              currentPath === item.href || (item.href !== base && currentPath.startsWith(item.href))
+                ? "bg-slate-800 text-amber-300"
+                : "text-slate-300 hover:text-amber-300 hover:bg-slate-900",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-10">
+      <slot />
+    </main>
+
+    <footer class="border-t border-slate-800 text-center text-xs text-slate-500 py-6">
+      <p>16.S893 — AI Agents for Engineering Research · MIT · Fall 2026</p>
+      <p class="mt-1 opacity-60">
+        Psst — try the <kbd class="px-1 py-0.5 border border-slate-700 rounded">↑ ↑ ↓ ↓ ← → ← →</kbd> arrow sequence.
+      </p>
+    </footer>
+
+    <script src={`${base}easter-egg.js`} is:inline></script>
+  </body>
+</html>
