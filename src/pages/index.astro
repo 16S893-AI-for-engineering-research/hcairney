@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Home">
+  <section class="space-y-6">
+    <p class="font-mono text-xs uppercase tracking-widest text-amber-400">16.S893 · Fall 2026</p>
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">Hi, I'm Hugh.</h1>
+    <p class="text-lg text-slate-300 max-w-xl">
+      I'm a grad student using this site to document how I set up, sandbox, and
+      learn from AI coding agents while working on my semester research project.
+    </p>
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      <a
+        href={`${import.meta.env.BASE_URL}about/`}
+        class="px-4 py-2 rounded-md bg-amber-400 text-slate-950 font-medium hover:bg-amber-300 transition-colors"
+      >
+        About me →
+      </a>
+      <a
+        href={`${import.meta.env.BASE_URL}project/`}
+        class="px-4 py-2 rounded-md border border-slate-700 hover:border-amber-400 hover:text-amber-300 transition-colors"
+      >
+        My project →
+      </a>
+    </div>
+  </section>
+
+  <section class="mt-16" aria-label="animated visualization">
+    <canvas id="hero-canvas" class="w-full h-56 rounded-lg border border-slate-800 bg-slate-900/40"></canvas>
+    <p class="mt-2 text-xs text-slate-500 text-center">
+      A little animated placeholder — will become a visualization tied to my actual project.
+    </p>
+  </section>
+
+  <script>
+    const canvas = document.getElementById("hero-canvas") as HTMLCanvasElement | null;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+
+      function resize() {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      const particles = Array.from({ length: 40 }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: Math.random() * 2 + 0.5,
+        vx: (Math.random() - 0.5) * 0.0006,
+        vy: (Math.random() - 0.5) * 0.0006,
+      }));
+
+      function frame() {
+        if (!ctx || !canvas) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(251, 191, 36, 0.7)"; // amber-400
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > 1) p.vx *= -1;
+          if (p.y < 0 || p.y > 1) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x * canvas.width, p.y * canvas.height, p.r * dpr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+  </script>
+</BaseLayout>
