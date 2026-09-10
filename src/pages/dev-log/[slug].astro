@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("devLog");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<BaseLayout title={entry.data.title}>
+  <p class="text-xs font-mono text-slate-500 mb-1">
+    {entry.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+  </p>
+  <h1 class="text-3xl font-bold mb-6">{entry.data.title}</h1>
+  <div class="prose prose-invert prose-amber max-w-none">
+    <Content />
+  </div>
+  <a href={`${import.meta.env.BASE_URL}dev-log/`} class="inline-block mt-10 text-amber-300 hover:underline">
+    ← Back to dev log
+  </a>
+</BaseLayout>
