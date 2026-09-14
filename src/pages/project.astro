@@ -10,7 +10,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <div class="space-y-8 text-slate-300 leading-relaxed">
     <section>
       <h2 class="text-lg font-semibold text-amber-300 mb-1">The problem</h2>
-      <p><!-- TODO: from your field's point of view --></p>
+      <p><!-- TODO: from your field's point of view -->
+      Simulation of the Navier-Stokes (NS) equations at high Reynolds number is very expensive (if not prohibatively expensive), especially for flows over geometries of engineering interest (think of an airliner or fighter jet). Thus, many approaches have been developed in order to reduce the cost of NS simulations. One of these approaches is called large-eddy simulation (or LES) in which the larger scales of motion are directly simulated while the smaller scales are filtered out. The issue is that this filtering leads to a closure problem and so modeling the effect of these small-scale motions on the rest of the flow becomes necessary. This additional model is called a subgrid-scale (SGS) model. Most conventional SGS models were developed from consideration of elementary flows such as homogeneous isotropic turbulence (i.e. the simplest possible case of a turbulent flow). Developing new, data-driven closures which take into account more complicated physical phenomena (shear layers, shocks, heat transfer) is the primary goal of this project.
+      </p>
+      
     </section>
 
     <section>
