@@ -60,6 +60,9 @@ const currentPath = new URL(Astro.request.url).pathname;
       </p>
     </footer>
 
+    <script define:vars={{ base }} is:inline>
+      window.__SITE_BASE_URL__ = base;
+    </script>
     <script src={`${base}easter-egg.js`} is:inline></script>
   </body>
 </html>

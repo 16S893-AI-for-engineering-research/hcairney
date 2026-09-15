@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "vendor:chessjs": "esbuild --bundle --format=iife --global-name=ChessJS --minify node_modules/chess.js/dist/esm/chess.js --outfile=public/vendor/chess.iife.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -20,6 +21,11 @@
     "esbuild": true
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.20"
+    "@tailwindcss/typography": "^0.5.20",
+    "chess.js": "^1.4.0",
+    "esbuild": "^0.28.2",
+    "onnxruntime-node": "^1.30.0",
+    "onnxruntime-web": "^1.30.0",
+    "playwright": "^1.63.0"
   }
 }
