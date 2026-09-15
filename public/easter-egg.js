@@ -278,7 +278,7 @@
           cell.style.paddingBottom = "100%";
           cell.style.boxSizing = "border-box";
           const isLight = (row + col) % 2 === 0;
-          cell.style.background = isLight ? "#f0d9b5" : "#b58863";
+          cell.style.background = isLight ? "#cdeaff" : "#1e3a8a";
           if (square === selectedSquare) {
             cell.style.outline = "3px solid #38bdf8";
             cell.style.outlineOffset = "-3px";
@@ -298,7 +298,7 @@
 
           const piece = boardArray[row][col];
           if (piece) {
-            inner.textContent = pieceUnicode(piece);
+            inner.textContent = pieceUnicode(piece);\n          inner.style.color = isLight ? "#000" : "#fff";
           }
 
           cell.appendChild(inner);
