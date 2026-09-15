@@ -304,11 +304,10 @@
               inner.style.webkitTextStroke = "";
               inner.style.textShadow = "";
             } else {
-              // White pieces: black outline, no fill.
+              // White pieces: black outline, no fill (thin stroke).
               inner.style.color = "transparent";
-              inner.style.webkitTextStroke = "1.5px #000";
-              inner.style.textShadow =
-                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000";
+              inner.style.webkitTextStroke = "1px #000";
+              inner.style.textShadow = "";
             }
           }
 
