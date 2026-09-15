@@ -44,31 +44,109 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
+        // repaint background after a resize so old trails don't smear
+        if (ctx) {
+          ctx.fillStyle = "rgb(15, 23, 42)"; // slate-900 base
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
       }
       resize();
       window.addEventListener("resize", resize);
 
-      const particles = Array.from({ length: 40 }, () => ({
-        x: Math.random(),
-        y: Math.random(),
-        r: Math.random() * 2 + 0.5,
-        vx: (Math.random() - 0.5) * 0.0006,
-        vy: (Math.random() - 0.5) * 0.0006,
-      }));
-
-      function frame() {
-        if (!ctx || !canvas) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(251, 191, 36, 0.7)"; // amber-400
-        for (const p of particles) {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0 || p.x > 1) p.vx *= -1;
-          if (p.y < 0 || p.y > 1) p.vy *= -1;
-          ctx.beginPath();
-          ctx.arc(p.x * canvas.width, p.y * canvas.height, p.r * dpr, 0, Math.PI * 2);
-          ctx.fill();
+      // --- turbulent, divergence-free ("curl noise") flow field ---
+      // Sum of a few sin/cos octaves, each individually divergence-free,
+      // so the total field is too: v = curl(psi), psi = sum of sin*cos terms.
+      function curl(x: number, y: number, t: number) {
+        let vx = 0;
+        let vy = 0;
+        let amp = 1;
+        let freq = 1;
+        for (let o = 0; o < 3; o++) {
+          const px = x * freq + t * 0.15 * (o + 1) + o * 2.1;
+          const py = y * freq - t * 0.11 * (o + 1) + o * 5.7;
+          vx += -Math.sin(px) * Math.sin(py) * freq * amp;
+          vy += -Math.cos(px) * Math.cos(py) * freq * amp;
+          amp *= 0.55;
+          freq *= 2.1;
         }
+        return { vx, vy };
+      }
+
+      const NUM_PARTICLES = 90;
+      const TRAIL_LENGTH = 42; // number of past points kept per pathline
+      const SPEED = 0.045; // world-units per second
+      const NOISE_SCALE = 3.2; // spatial frequency of the flow field
+
+      type Particle = {
+        x: number;
+        y: number;
+        trail: { x: number; y: number }[];
+        hue: number;
+        age: number;
+        life: number;
+      };
+
+      function spawn(): Particle {
+        return {
+          x: Math.random(),
+          y: Math.random(),
+          trail: [],
+          hue: Math.random() < 0.5 ? 38 : 190, // amber or a cool teal accent
+          age: 0,
+          life: 6 + Math.random() * 8,
+        };
+      }
+
+      const particles: Particle[] = Array.from({ length: NUM_PARTICLES }, spawn);
+
+      let lastTime = performance.now();
+
+      function frame(now: number) {
+        if (!ctx || !canvas) return;
+        const dt = Math.min((now - lastTime) / 1000, 0.05);
+        lastTime = now;
+        const t = now / 1000;
+
+        // fade the previous frame slightly instead of clearing, so trails read
+        // as continuous pathlines rather than discrete dots
+        ctx.fillStyle = "rgba(15, 23, 42, 0.16)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        for (const p of particles) {
+          const { vx, vy } = curl(p.x * NOISE_SCALE, p.y * NOISE_SCALE, t);
+
+          p.trail.push({ x: p.x, y: p.y });
+          if (p.trail.length > TRAIL_LENGTH) p.trail.shift();
+
+          p.x += vx * SPEED * dt;
+          p.y += vy * SPEED * dt;
+          p.age += dt;
+
+          const offscreen = p.x < -0.05 || p.x > 1.05 || p.y < -0.05 || p.y > 1.05;
+          const expired = p.age > p.life;
+          if (offscreen || expired) {
+            Object.assign(p, spawn());
+            continue;
+          }
+
+          if (p.trail.length > 1) {
+            for (let i = 1; i < p.trail.length; i++) {
+              const a = p.trail[i - 1];
+              const b = p.trail[i];
+              const frac = i / p.trail.length; // 0 (old/faint) -> 1 (new/bright)
+              ctx.strokeStyle = `hsla(${p.hue}, 90%, 65%, ${frac * 0.55})`;
+              ctx.lineWidth = frac * 1.6 * dpr;
+              ctx.beginPath();
+              ctx.moveTo(a.x * canvas.width, a.y * canvas.height);
+              ctx.lineTo(b.x * canvas.width, b.y * canvas.height);
+              ctx.stroke();
+            }
+          }
+        }
+
         requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
