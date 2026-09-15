@@ -298,7 +298,8 @@
 
           const piece = boardArray[row][col];
           if (piece) {
-            inner.textContent = pieceUnicode(piece);\n          inner.style.color = isLight ? "#000" : "#fff";
+            inner.textContent = pieceUnicode(piece);
+            inner.style.color = isLight ? "#000" : "#fff";
           }
 
           cell.appendChild(inner);
