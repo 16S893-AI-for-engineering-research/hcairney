@@ -1,34 +1,205 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="Project">
-  <h1 class="text-3xl font-bold mb-2">Project overview</h1>
-  <p class="text-sm text-slate-500 mb-8">
-    Placeholder — full one-pager due Tue 22 Sep, after advisor sign-off.
-  </p>
 
-  <div class="space-y-8 text-slate-300 leading-relaxed">
-    <section>
-      <h2 class="text-lg font-semibold text-amber-300 mb-1">The problem</h2>
-      <p><!-- TODO: from your field's point of view -->
-      Simulation of the Navier-Stokes (NS) equations at high Reynolds number is very expensive (if not prohibatively expensive), especially for flows over geometries of engineering interest (think of an airliner or fighter jet). Thus, many approaches have been developed in order to reduce the cost of NS simulations. One of these approaches is called large-eddy simulation (or LES) in which the larger scales of motion are directly simulated while the smaller scales are filtered out. The issue is that this filtering leads to a closure problem and so modeling the effect of these small-scale motions on the rest of the flow becomes necessary. This additional model is called a subgrid-scale (SGS) model. Most conventional SGS models were developed from consideration of elementary flows such as homogeneous isotropic turbulence (i.e. the simplest possible case of a turbulent flow). Developing new, data-driven closures which take into account more complicated physical phenomena (shear layers, shocks, heat transfer) is the primary goal of this project.
-      </p>
-      
+<BaseLayout
+  title="Project"
+  description="Reinforcement-learning-based subgrid-scale modeling for large-eddy simulation."
+>
+  <article class="project-page">
+    <header class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="bubble-field" aria-hidden="true">
+        <span class="bubble bubble-1">LES</span>
+        <span class="bubble bubble-2">RL</span>
+        <span class="bubble bubble-3">SGS</span>
+        <span class="bubble bubble-4">CFD</span>
+        <span class="bubble bubble-5">τ<sub>ij</sub></span>
+        <span class="bubble bubble-6">∇·u = 0</span>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Research project · Fall 2026</p>
+        <h1>Teaching turbulence<br />to model <em>itself.</em></h1>
+        <p class="lede">
+          Accelerating reinforcement-learning-based subgrid-scale stress model
+          development with agentic AI.
+        </p>
+        <div class="hero-tags" aria-label="Project topics">
+          <span>Large-eddy simulation</span>
+          <span>Reinforcement learning</span>
+          <span>Agentic science</span>
+        </div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true"><span></span> explore</div>
+    </header>
+
+    <section class="intro section-grid">
+      <div>
+        <p class="section-number">01 / THE CHALLENGE</p>
+        <h2>We cannot afford to resolve every eddy.</h2>
+      </div>
+      <div class="body-copy">
+        <p>
+          Turbulent flows contain motion across an enormous range of scales. Resolving all
+          of them for an aircraft-scale engineering problem is often prohibitively expensive.
+          <strong>Large-eddy simulation (LES)</strong> makes the problem tractable: it computes
+          the energetic, large-scale structures and filters out the smallest motions.
+        </p>
+        <p>
+          That efficiency creates a closure problem. The influence of unresolved motion must
+          be supplied by a <strong>subgrid-scale (SGS) stress model</strong>. Conventional models
+          are robust, but many were derived from idealized flows and do not directly capture
+          the shear layers, shocks, heat transfer, and wall effects found in real designs.
+        </p>
+      </div>
     </section>
 
-    <section>
-      <h2 class="text-lg font-semibold text-amber-300 mb-1">Why it matters</h2>
-      <p><!-- TODO -->
-      Developing improved closures will allow engineers to make more effective use of LES in the design of aerospace vehicles. 
-      </p>
+    <section class="scales-panel" aria-labelledby="scales-title">
+      <div class="panel-heading">
+        <div>
+          <p class="section-number">FROM PHYSICS TO MODEL</p>
+          <h2 id="scales-title">Keep the structures that matter.<br />Learn the ones we filter.</h2>
+        </div>
+        <div class="legend">
+          <span><i class="resolved"></i> resolved</span>
+          <span><i class="modeled"></i> modeled</span>
+        </div>
+      </div>
+
+      <div class="eddy-visual" aria-label="Conceptual diagram of resolved and modeled turbulent scales">
+        <svg viewBox="0 0 760 285" role="img" aria-labelledby="eddy-title eddy-desc">
+          <title id="eddy-title">Turbulent scales in large-eddy simulation</title>
+          <desc id="eddy-desc">Large flowing eddies transition into small modeled subgrid scales across a filter boundary.</desc>
+          <defs>
+            <linearGradient id="flowStroke" x1="0" x2="1">
+              <stop offset="0" stop-color="#fbbf24" />
+              <stop offset=".62" stop-color="#22d3ee" />
+              <stop offset="1" stop-color="#22d3ee" stop-opacity=".15" />
+            </linearGradient>
+            <filter id="softGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <g class="streamlines" fill="none" stroke="url(#flowStroke)" stroke-linecap="round">
+            <path d="M18 72 C95 25, 156 32, 187 84 S169 176, 105 164 S48 93, 109 91 S218 113, 247 71 S328 27, 365 80 S355 172, 293 179 S239 118, 290 104 S385 133, 405 87 S469 45, 494 84" />
+            <path d="M11 154 C63 111, 120 118, 146 162 S137 243, 82 238 S38 185, 78 172 S170 192, 210 157 S279 115, 323 150 S346 230, 288 249" />
+            <path d="M34 35 C104 2, 196 14, 238 47 S322 80, 377 42 S465 19, 509 53" />
+          </g>
+          <line class="filter-line" x1="520" y1="18" x2="520" y2="267" />
+          <g class="small-eddies" fill="none" stroke="#22d3ee" stroke-width="2">
+            <path d="M555 47c22-22 45 15 20 25s-28-20-9-25"/><path d="M624 31c12-13 30 5 17 19s-27-2-18-13"/>
+            <path d="M690 66c18-15 38 13 17 25s-30-13-15-23"/><path d="M571 117c15-18 42 4 29 23s-37 6-32-13"/>
+            <path d="M651 111c9-12 27 1 20 14s-25 8-24-6"/><path d="M713 143c12-10 28 8 15 19s-24-8-14-16"/>
+            <path d="M544 190c20-17 42 15 19 28s-31-16-16-26"/><path d="M623 181c15-13 32 10 16 22s-28-9-17-19"/>
+            <path d="M688 222c17-20 43 7 25 26s-40 1-29-17"/><path d="M580 250c8-9 23 2 15 13s-20 3-17-7"/>
+          </g>
+          <text x="26" y="275">LARGE, RESOLVED MOTION</text>
+          <text x="545" y="275">SUBGRID SCALES</text>
+          <text class="filter-label" x="508" y="142" transform="rotate(-90 508 142)">LES FILTER</text>
+        </svg>
+      </div>
     </section>
 
-    <section>
-      <h2 class="text-lg font-semibold text-amber-300 mb-1">What I expect the agent to do</h2>
-      <p><!-- TODO: what it would read, write, run, or check -->
-      I am expecting the agent to help me develop code and perform other tasks such as generating meshes and running simulations.
-      </p>
+    <section class="approach">
+      <div class="approach-heading">
+        <p class="section-number">02 / THE APPROACH</p>
+        <h2>Close the loop.</h2>
+        <p>Instead of fitting a closure in isolation, train it inside the simulation where it will be used.</p>
+      </div>
+
+      <div class="loop-card" aria-label="Reinforcement learning interaction loop">
+        <svg class="loop-arrows" viewBox="0 0 800 315" aria-hidden="true">
+          <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9z" fill="#fbbf24"/></marker></defs>
+          <path d="M260 91 C350 31 452 31 540 91" marker-end="url(#arrow)" />
+          <path d="M540 224 C449 283 351 283 260 224" marker-end="url(#arrow)" />
+        </svg>
+        <div class="loop-node agent-node">
+          <span class="node-label">AGENT</span>
+          <div class="node-icon neural" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <h3>SGS policy</h3>
+          <p>Observes the resolved flow and proposes a closure action.</p>
+        </div>
+        <div class="loop-center">
+          <span class="pulse-ring"></span>
+          <strong>LEARN</strong>
+          <small>iterate · evaluate · improve</small>
+        </div>
+        <div class="loop-node environment-node">
+          <span class="node-label">ENVIRONMENT</span>
+          <div class="node-icon flow-icon" aria-hidden="true">≈</div>
+          <h3>LES solver</h3>
+          <p>Advances the flow with a pretrained ML wall model in the loop.</p>
+        </div>
+        <div class="signal signal-top"><b>action</b><span>SGS stress</span></div>
+        <div class="signal signal-bottom"><b>state + reward</b><span>flow fields · fidelity</span></div>
+      </div>
+
+      <div class="benefit-grid">
+        <div><span>01</span><h3>Train in context</h3><p>The policy experiences the numerical dynamics and consequences of its predictions.</p></div>
+        <div><span>02</span><h3>Couple the models</h3><p>Training alongside the wall model encourages a consistent SGS–wall treatment.</p></div>
+        <div><span>03</span><h3>Optimize outcomes</h3><p>Rewards can target simulation behavior—not only pointwise agreement with data.</p></div>
+      </div>
     </section>
 
-  </div>
+    <section class="agentic section-grid">
+      <div>
+        <p class="section-number">03 / AGENTIC WORKFLOW</p>
+        <h2>A research copilot for the outer loop.</h2>
+      </div>
+      <div class="body-copy">
+        <p>
+          A second kind of agent accelerates the research itself. Coding agents help connect the
+          LES solver to the RL library, verify infrastructure, configure experiments, and distill
+          simulation output—while the researcher remains the orchestrator.
+        </p>
+        <div class="workflow" aria-label="Agent-assisted research workflow">
+          <div><b>01</b><span>Design</span><small>propose configurations</small></div>
+          <i>→</i><div><b>02</b><span>Run</span><small>launch experiments</small></div>
+          <i>→</i><div><b>03</b><span>Verify</span><small>check implementation</small></div>
+          <i>→</i><div><b>04</b><span>Learn</span><small>distill results</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="impact">
+      <p class="section-number">THE NORTH STAR</p>
+      <blockquote>More faithful turbulent-flow predictions at a cost engineers can use.</blockquote>
+      <p>Better closures could make LES a more effective tool for designing aerospace vehicles in complex, high-Reynolds-number regimes.</p>
+    </section>
+  </article>
 </BaseLayout>
+
+<style>
+  .project-page { --amber:#fbbf24; --cyan:#22d3ee; --ink:#020617; color:#e2e8f0; }
+  .hero { min-height:650px; margin:-2.5rem 0 0; position:relative; display:flex; align-items:center; overflow:hidden; border-bottom:1px solid #1e293b; }
+  .hero::before { content:""; position:absolute; inset:7% -25% 0 32%; background:repeating-radial-gradient(ellipse at center, transparent 0 24px, rgba(34,211,238,.055) 25px 26px, transparent 27px 41px); transform:rotate(-12deg); mask-image:linear-gradient(to right,transparent,black); }
+  .hero-glow { position:absolute; width:380px;height:380px;right:-80px;top:80px;border-radius:50%;background:rgba(34,211,238,.10);filter:blur(90px); }
+  .hero-copy { position:relative;z-index:2;max-width:660px; }
+  .eyebrow,.section-number { color:var(--amber);font:600 .7rem/1.2 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase; }
+  .eyebrow { display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem; }.eyebrow span{width:34px;height:1px;background:var(--amber)}
+  h1 { color:#f8fafc;font-size:clamp(3rem,8vw,5.8rem);line-height:.91;letter-spacing:-.065em;font-weight:750; }
+  h1 em { color:var(--amber);font-style:normal; }
+  .lede { margin-top:2rem;max-width:570px;font-size:clamp(1.05rem,2.2vw,1.3rem);line-height:1.6;color:#94a3b8; }
+  .hero-tags { display:flex;flex-wrap:wrap;gap:.55rem;margin-top:2rem; }.hero-tags span{border:1px solid #334155;border-radius:999px;padding:.42rem .8rem;color:#cbd5e1;font-size:.73rem;background:#0f172acc; }
+  .bubble { position:absolute;z-index:1;border:1px solid rgba(34,211,238,.35);color:#67e8f9;background:rgba(8,47,73,.5);backdrop-filter:blur(5px);border-radius:999px;padding:.55rem .8rem;font:600 .72rem ui-monospace,monospace;box-shadow:0 0 28px rgba(34,211,238,.08);animation:float 6s ease-in-out infinite; }
+  .bubble-1{right:7%;top:18%;}.bubble-2{right:30%;top:11%;animation-delay:-2s}.bubble-3{right:17%;bottom:19%;animation-delay:-4s}.bubble-4{right:1%;bottom:35%;animation-delay:-1s}.bubble-5{right:37%;bottom:26%;animation-delay:-3s}.bubble-6{right:2%;top:38%;animation-delay:-5s}
+  @keyframes float { 0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(5px,-14px) rotate(2deg)} }
+  .scroll-cue {position:absolute;bottom:1.7rem;right:0;color:#64748b;font:500 .62rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.15em;display:flex;align-items:center;gap:.5rem}.scroll-cue span{display:block;width:30px;height:1px;background:#475569}
+  .section-grid { display:grid;grid-template-columns:5fr 7fr;gap:4.5rem;padding:7rem 0; }
+  h2 { color:#f8fafc;font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.08;letter-spacing:-.045em;font-weight:700;margin-top:1rem; }
+  .body-copy { color:#94a3b8;font-size:1rem;line-height:1.85; }.body-copy p+p{margin-top:1.25rem}.body-copy strong{color:#e2e8f0;font-weight:600}
+  .scales-panel { margin:0 calc(50% - 50vw);padding:5.5rem max(1rem,calc((100vw - 768px)/2));background:#07101f;border-block:1px solid #1e293b;overflow:hidden; }
+  .panel-heading {display:flex;justify-content:space-between;align-items:end;gap:2rem}.panel-heading h2{font-size:clamp(1.8rem,4vw,2.8rem)}
+  .legend {display:flex;gap:1.2rem;color:#94a3b8;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.35rem}.resolved{background:var(--amber)}.modeled{background:var(--cyan)}
+  .eddy-visual{margin-top:3rem}.eddy-visual svg{width:100%;overflow:visible}.streamlines{stroke-width:2.4;filter:url(#softGlow)}.streamlines path{stroke-dasharray:8 6;animation:flow 12s linear infinite}.streamlines path:nth-child(2){animation-duration:15s}.streamlines path:nth-child(3){animation-duration:9s}.small-eddies path{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}.small-eddies path:nth-child(even){animation-direction:reverse;animation-duration:7s}.filter-line{stroke:#64748b;stroke-width:1;stroke-dasharray:3 6}.eddy-visual text{fill:#64748b;font:600 10px ui-monospace,monospace;letter-spacing:1.5px}.filter-label{fill:#94a3b8!important}@keyframes flow{to{stroke-dashoffset:-140}}@keyframes spin{to{transform:rotate(360deg)}}
+  .approach{padding:7rem 0}.approach-heading{text-align:center;max-width:620px;margin:0 auto}.approach-heading>p:last-child{color:#94a3b8;line-height:1.7;margin-top:1rem}
+  .loop-card{height:390px;position:relative;margin-top:3.5rem;border:1px solid #1e293b;border-radius:1.5rem;background:linear-gradient(145deg,rgba(15,23,42,.8),rgba(2,6,23,.8));overflow:hidden;display:flex;align-items:center;justify-content:space-around;padding:0 3rem}.loop-card::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(51,65,85,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(51,65,85,.13) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(circle,black,transparent 75%)}
+  .loop-node{position:relative;z-index:2;width:190px;text-align:center}.node-label{font:600 .6rem ui-monospace,monospace;letter-spacing:.18em;color:var(--amber)}.node-icon{width:78px;height:78px;margin:1rem auto;border:1px solid #334155;border-radius:1rem;background:#0f172b;display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 40px rgba(34,211,238,.08)}.loop-node h3{font-size:1.05rem;font-weight:700;color:#f8fafc}.loop-node p{font-size:.72rem;color:#64748b;line-height:1.5;margin-top:.4rem}.flow-icon{font-size:3rem}.neural{position:relative}.neural i{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan)}.neural i:nth-child(1){left:17px;top:22px}.neural i:nth-child(2){left:17px;bottom:22px}.neural i:nth-child(3){right:17px;top:18px}.neural i:nth-child(4){right:17px;bottom:18px}.neural i:nth-child(5){left:35px;top:35px}.neural::after{content:"";position:absolute;width:45px;height:35px;background:linear-gradient(30deg,transparent 48%,#155e75 49% 51%,transparent 52%),linear-gradient(-30deg,transparent 48%,#155e75 49% 51%,transparent 52%)}
+  .loop-center{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;color:#f8fafc}.loop-center strong{font:700 .74rem ui-monospace,monospace;letter-spacing:.15em}.loop-center small{color:#475569;font-size:.6rem;margin-top:.35rem}.pulse-ring{position:absolute;width:100px;height:100px;border:1px solid rgba(251,191,36,.22);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 2.5s ease-out infinite}@keyframes pulse{0%{scale:.7;opacity:1}100%{scale:1.4;opacity:0}}
+  .loop-arrows{position:absolute;inset:37px 0 auto;width:100%;height:315px}.loop-arrows path{fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:5 7;animation:flow 8s linear infinite}.signal{position:absolute;left:50%;transform:translateX(-50%);z-index:3;text-align:center;font-size:.62rem;background:#0b1220;padding:.25rem .6rem;border-radius:99px}.signal b{color:#f8fafc;margin-right:.4rem}.signal span{color:#64748b}.signal-top{top:46px}.signal-bottom{bottom:44px}
+  .benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:1rem;border:1px solid #1e293b;border-radius:1rem;overflow:hidden}.benefit-grid>div{padding:1.5rem;border-right:1px solid #1e293b}.benefit-grid>div:last-child{border:0}.benefit-grid span{font:600 .65rem ui-monospace,monospace;color:var(--amber)}.benefit-grid h3{color:#f8fafc;font-weight:650;margin:.5rem 0}.benefit-grid p{font-size:.78rem;color:#64748b;line-height:1.6}
+  .agentic{border-top:1px solid #1e293b}.workflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;margin-top:2.5rem}.workflow div{display:flex;flex-direction:column}.workflow b{color:var(--cyan);font:600 .6rem ui-monospace,monospace}.workflow span{color:#e2e8f0;font-weight:650;margin:.25rem 0}.workflow small{font-size:.65rem;color:#64748b}.workflow i{font-style:normal;color:#334155;margin:0 .45rem}
+  .impact{text-align:center;margin:0 calc(50% - 50vw) -2.5rem;padding:7rem max(1rem,calc((100vw - 768px)/2));background:radial-gradient(circle at 50% 120%,rgba(251,191,36,.12),transparent 50%),#080e1a;border-top:1px solid #1e293b}.impact blockquote{font-size:clamp(2rem,5.5vw,3.8rem);font-weight:700;line-height:1.1;letter-spacing:-.05em;color:#f8fafc;max-width:850px;margin:1.2rem auto}.impact>p:last-child{color:#64748b;max-width:560px;margin:1.5rem auto 0;line-height:1.7}
+  @media(max-width:700px){.hero{min-height:600px}.bubble-field{opacity:.55}.bubble-2,.bubble-5{display:none}.section-grid{grid-template-columns:1fr;gap:2rem;padding:5rem 0}.panel-heading{align-items:start;flex-direction:column}.loop-card{height:auto;min-height:610px;flex-direction:column;padding:3rem 1rem}.loop-center{order:2}.environment-node{order:3}.loop-arrows,.signal{display:none}.benefit-grid{grid-template-columns:1fr}.benefit-grid>div{border-right:0;border-bottom:1px solid #1e293b}.workflow{grid-template-columns:1fr 1fr;gap:1.5rem}.workflow i{display:none}.eddy-visual svg{min-width:620px}.eddy-visual{overflow-x:auto}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important}}
+</style>
