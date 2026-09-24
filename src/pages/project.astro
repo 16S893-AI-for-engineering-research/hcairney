@@ -71,32 +71,46 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
       <div class="eddy-visual" aria-label="Conceptual diagram of resolved and modeled turbulent scales">
         <svg viewBox="0 0 760 285" role="img" aria-labelledby="eddy-title eddy-desc">
-          <title id="eddy-title">Turbulent scales in large-eddy simulation</title>
-          <desc id="eddy-desc">Large flowing eddies transition into small modeled subgrid scales across a filter boundary.</desc>
+          <title id="eddy-title">An LES filter removing small turbulent scales</title>
+          <desc id="eddy-desc">Large and small eddies begin overlaid. A vertical LES filter sweeps from left to right, removing the small eddies while leaving the large flow structures.</desc>
           <defs>
             <linearGradient id="flowStroke" x1="0" x2="1">
               <stop offset="0" stop-color="#fbbf24" />
-              <stop offset=".62" stop-color="#22d3ee" />
-              <stop offset="1" stop-color="#22d3ee" stop-opacity=".15" />
+              <stop offset="1" stop-color="#f59e0b" />
             </linearGradient>
             <filter id="softGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <clipPath id="unfiltered-region">
+              <rect x="20" y="8" width="720" height="250">
+                <animate attributeName="x" values="20;20;740;740;20" keyTimes="0;.12;.78;.999;1" dur="9s" repeatCount="indefinite" />
+                <animate attributeName="width" values="720;720;0;0;720" keyTimes="0;.12;.78;.999;1" dur="9s" repeatCount="indefinite" />
+              </rect>
+            </clipPath>
           </defs>
           <g class="streamlines" fill="none" stroke="url(#flowStroke)" stroke-linecap="round">
-            <path d="M18 72 C95 25, 156 32, 187 84 S169 176, 105 164 S48 93, 109 91 S218 113, 247 71 S328 27, 365 80 S355 172, 293 179 S239 118, 290 104 S385 133, 405 87 S469 45, 494 84" />
-            <path d="M11 154 C63 111, 120 118, 146 162 S137 243, 82 238 S38 185, 78 172 S170 192, 210 157 S279 115, 323 150 S346 230, 288 249" />
-            <path d="M34 35 C104 2, 196 14, 238 47 S322 80, 377 42 S465 19, 509 53" />
+            <path d="M18 72 C95 25,156 32,187 84 S169 176,105 164 S48 93,109 91 S218 113,247 71 S328 27,365 80 S355 172,293 179 S239 118,290 104 S385 133,425 87 S505 35,552 82 S561 177,499 181 S450 118,505 105 S615 129,652 80 S715 44,744 67" />
+            <path d="M11 154 C63 111,120 118,146 162 S137 243,82 238 S38 185,78 172 S170 192,210 157 S279 115,323 150 S346 230,288 249 S247 203,298 190 S407 211,454 172 S530 126,576 161 S600 238,547 245 S506 207,554 194 S664 209,742 164" />
+            <path d="M34 35 C104 2,196 14,238 47 S322 80,377 42 S465 19,509 53 S598 81,648 42 S714 22,744 38" />
           </g>
-          <line class="filter-line" x1="520" y1="18" x2="520" y2="267" />
-          <g class="small-eddies" fill="none" stroke="#22d3ee" stroke-width="2">
-            <path d="M555 47c22-22 45 15 20 25s-28-20-9-25"/><path d="M624 31c12-13 30 5 17 19s-27-2-18-13"/>
-            <path d="M690 66c18-15 38 13 17 25s-30-13-15-23"/><path d="M571 117c15-18 42 4 29 23s-37 6-32-13"/>
-            <path d="M651 111c9-12 27 1 20 14s-25 8-24-6"/><path d="M713 143c12-10 28 8 15 19s-24-8-14-16"/>
-            <path d="M544 190c20-17 42 15 19 28s-31-16-16-26"/><path d="M623 181c15-13 32 10 16 22s-28-9-17-19"/>
-            <path d="M688 222c17-20 43 7 25 26s-40 1-29-17"/><path d="M580 250c8-9 23 2 15 13s-20 3-17-7"/>
+          <g class="small-eddies" clip-path="url(#unfiltered-region)" fill="none" stroke="#22d3ee" stroke-width="2">
+            <path d="M42 49c18-17 39 12 18 24S31 56 45 47"/><path d="M110 27c12-13 30 5 17 19s-27-2-18-13"/>
+            <path d="M176 67c18-15 38 13 17 25s-30-13-15-23"/><path d="M248 38c15-18 42 4 29 23s-37 6-32-13"/>
+            <path d="M329 91c9-12 27 1 20 14s-25 8-24-6"/><path d="M405 47c12-10 28 8 15 19s-24-8-14-16"/>
+            <path d="M484 92c20-17 42 15 19 28s-31-16-16-26"/><path d="M567 45c15-13 32 10 16 22s-28-9-17-19"/>
+            <path d="M650 82c17-20 43 7 25 26s-40 1-29-17"/><path d="M713 32c8-9 23 2 15 13s-20 3-17-7"/>
+            <path d="M63 132c14-18 39 5 25 23s-34 3-27-13"/><path d="M139 191c10-14 31 3 21 18s-28 3-22-10"/>
+            <path d="M215 133c20-17 42 15 19 28s-31-16-16-26"/><path d="M298 212c13-15 35 6 21 21s-31-1-23-12"/>
+            <path d="M378 156c18-20 43 8 25 26s-40 0-29-17"/><path d="M452 224c9-12 27 1 20 14s-25 8-24-6"/>
+            <path d="M529 155c16-15 36 11 18 24s-30-12-17-21"/><path d="M607 206c19-17 40 14 19 27s-31-15-17-24"/>
+            <path d="M684 149c12-15 34 4 22 20s-31 2-24-12"/><path d="M721 225c8-10 24 2 16 14s-23 4-19-7"/>
           </g>
-          <text x="26" y="275">LARGE, RESOLVED MOTION</text>
-          <text x="545" y="275">SUBGRID SCALES</text>
-          <text class="filter-label" x="508" y="142" transform="rotate(-90 508 142)">LES FILTER</text>
+          <g class="moving-filter">
+            <line class="filter-line" x1="20" y1="8" x2="20" y2="258" />
+            <rect class="filter-tag" x="-23" y="124" width="86" height="20" rx="10" />
+            <text class="filter-label" x="20" y="137" text-anchor="middle">LES FILTER</text>
+            <animateTransform attributeName="transform" type="translate" values="0 0;0 0;720 0;720 0;0 0" keyTimes="0;.12;.78;.999;1" dur="9s" repeatCount="indefinite" />
+          </g>
+          <text x="26" y="277">RESOLVED LARGE-SCALE MOTION REMAINS</text>
+          <text class="small-label" x="734" y="277" text-anchor="end">SMALL SCALES FILTERED OUT</text>
         </svg>
       </div>
     </section>
@@ -192,7 +206,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .scales-panel { margin:0 calc(50% - 50vw);padding:5.5rem max(1rem,calc((100vw - 768px)/2));background:#07101f;border-block:1px solid #1e293b;overflow:hidden; }
   .panel-heading {display:flex;justify-content:space-between;align-items:end;gap:2rem}.panel-heading h2{font-size:clamp(1.8rem,4vw,2.8rem)}
   .legend {display:flex;gap:1.2rem;color:#94a3b8;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.35rem}.resolved{background:var(--amber)}.modeled{background:var(--cyan)}
-  .eddy-visual{margin-top:3rem}.eddy-visual svg{width:100%;overflow:visible}.streamlines{stroke-width:2.4;filter:url(#softGlow)}.streamlines path{stroke-dasharray:8 6;animation:flow 12s linear infinite}.streamlines path:nth-child(2){animation-duration:15s}.streamlines path:nth-child(3){animation-duration:9s}.small-eddies path{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}.small-eddies path:nth-child(even){animation-direction:reverse;animation-duration:7s}.filter-line{stroke:#64748b;stroke-width:1;stroke-dasharray:3 6}.eddy-visual text{fill:#64748b;font:600 10px ui-monospace,monospace;letter-spacing:1.5px}.filter-label{fill:#94a3b8!important}@keyframes flow{to{stroke-dashoffset:-140}}@keyframes spin{to{transform:rotate(360deg)}}
+  .eddy-visual{margin-top:3rem}.eddy-visual svg{width:100%;overflow:visible}.streamlines{stroke-width:2.4;filter:url(#softGlow)}.streamlines path{stroke-dasharray:8 6;animation:flow 12s linear infinite}.streamlines path:nth-child(2){animation-duration:15s}.streamlines path:nth-child(3){animation-duration:9s}.small-eddies path{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}.small-eddies path:nth-child(even){animation-direction:reverse;animation-duration:7s}.filter-line{stroke:#cbd5e1;stroke-width:1.5;stroke-dasharray:4 5;filter:drop-shadow(0 0 4px rgba(255,255,255,.25))}.filter-tag{fill:#0f172a;stroke:#475569;stroke-width:1}.eddy-visual text{fill:#64748b;font:600 10px ui-monospace,monospace;letter-spacing:1.5px}.filter-label{fill:#e2e8f0!important;font-size:8px!important;letter-spacing:1px!important}.small-label{fill:#0891b2!important}@keyframes flow{to{stroke-dashoffset:-140}}@keyframes spin{to{transform:rotate(360deg)}}
   .approach{padding:7rem 0}.approach-heading{text-align:center;max-width:620px;margin:0 auto}.approach-heading>p:last-child{color:#94a3b8;line-height:1.7;margin-top:1rem}
   .loop-card{height:390px;position:relative;margin-top:3.5rem;border:1px solid #1e293b;border-radius:1.5rem;background:linear-gradient(145deg,rgba(15,23,42,.8),rgba(2,6,23,.8));overflow:hidden;display:flex;align-items:center;justify-content:space-around;padding:0 3rem}.loop-card::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(51,65,85,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(51,65,85,.13) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(circle,black,transparent 75%)}
   .loop-node{position:relative;z-index:2;width:190px;text-align:center}.node-label{font:600 .6rem ui-monospace,monospace;letter-spacing:.18em;color:var(--amber)}.node-icon{width:78px;height:78px;margin:1rem auto;border:1px solid #334155;border-radius:1rem;background:#0f172b;display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 40px rgba(34,211,238,.08)}.loop-node h3{font-size:1.05rem;font-weight:700;color:#f8fafc}.loop-node p{font-size:.72rem;color:#64748b;line-height:1.5;margin-top:.4rem}.flow-icon{font-size:3rem}.neural{position:relative}.neural i{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan)}.neural i:nth-child(1){left:17px;top:22px}.neural i:nth-child(2){left:17px;bottom:22px}.neural i:nth-child(3){right:17px;top:18px}.neural i:nth-child(4){right:17px;bottom:18px}.neural i:nth-child(5){left:35px;top:35px}.neural::after{content:"";position:absolute;width:45px;height:35px;background:linear-gradient(30deg,transparent 48%,#155e75 49% 51%,transparent 52%),linear-gradient(-30deg,transparent 48%,#155e75 49% 51%,transparent 52%)}
