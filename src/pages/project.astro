@@ -130,18 +130,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </svg>
         <div class="loop-node agent-node">
           <span class="node-label">AGENT</span>
-          <div class="node-icon neural" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="node-icon mlp-icon" aria-hidden="true">
+            <svg viewBox="0 0 120 72">
+              <g class="mlp-links">
+                <path d="M17 15L59 12M17 15L59 36M17 36L59 12M17 36L59 36M17 36L59 60M17 57L59 36M17 57L59 60" />
+                <path d="M59 12L103 25M59 36L103 25M59 36L103 49M59 60L103 49" />
+              </g>
+              <g class="mlp-nodes">
+                <circle cx="17" cy="15" r="5"/><circle cx="17" cy="36" r="5"/><circle cx="17" cy="57" r="5"/>
+                <circle cx="59" cy="12" r="5"/><circle cx="59" cy="36" r="5"/><circle cx="59" cy="60" r="5"/>
+                <circle cx="103" cy="25" r="5"/><circle cx="103" cy="49" r="5"/>
+              </g>
+            </svg>
+          </div>
           <h3>SGS policy</h3>
           <p>Observes the resolved flow and proposes a closure action.</p>
         </div>
         <div class="loop-center">
-          <span class="pulse-ring"></span>
           <strong>LEARN</strong>
           <small>iterate · evaluate · improve</small>
         </div>
         <div class="loop-node environment-node">
           <span class="node-label">ENVIRONMENT</span>
-          <div class="node-icon flow-icon" aria-hidden="true">≈</div>
+          <div class="node-icon equations" aria-label="Incompressible Navier–Stokes equations">
+            <span>∂<b>u</b>/∂t + (<b>u</b>·∇)<b>u</b> = −∇p/ρ + ν∇²<b>u</b></span>
+            <span>∇·<b>u</b> = 0</span>
+          </div>
           <h3>LES solver</h3>
           <p>Advances the flow with a pretrained ML wall model in the loop.</p>
         </div>
@@ -209,8 +223,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .eddy-visual{margin-top:3rem}.eddy-visual svg{width:100%;overflow:visible}.streamlines{stroke-width:2.4;filter:url(#softGlow)}.streamlines path{stroke-dasharray:8 6;animation:flow 12s linear infinite}.streamlines path:nth-child(2){animation-duration:15s}.streamlines path:nth-child(3){animation-duration:9s}.small-eddies path{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}.small-eddies path:nth-child(even){animation-direction:reverse;animation-duration:7s}.filter-line{stroke:#cbd5e1;stroke-width:1.5;stroke-dasharray:4 5;filter:drop-shadow(0 0 4px rgba(255,255,255,.25))}.filter-tag{fill:#0f172a;stroke:#475569;stroke-width:1}.eddy-visual text{fill:#64748b;font:600 10px ui-monospace,monospace;letter-spacing:1.5px}.filter-label{fill:#e2e8f0!important;font-size:8px!important;letter-spacing:1px!important}.small-label{fill:#0891b2!important}@keyframes flow{to{stroke-dashoffset:-140}}@keyframes spin{to{transform:rotate(360deg)}}
   .approach{padding:7rem 0}.approach-heading{text-align:center;max-width:620px;margin:0 auto}.approach-heading>p:last-child{color:#94a3b8;line-height:1.7;margin-top:1rem}
   .loop-card{height:390px;position:relative;margin-top:3.5rem;border:1px solid #1e293b;border-radius:1.5rem;background:linear-gradient(145deg,rgba(15,23,42,.8),rgba(2,6,23,.8));overflow:hidden;display:flex;align-items:center;justify-content:space-around;padding:0 3rem}.loop-card::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(51,65,85,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(51,65,85,.13) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(circle,black,transparent 75%)}
-  .loop-node{position:relative;z-index:2;width:190px;text-align:center}.node-label{font:600 .6rem ui-monospace,monospace;letter-spacing:.18em;color:var(--amber)}.node-icon{width:78px;height:78px;margin:1rem auto;border:1px solid #334155;border-radius:1rem;background:#0f172b;display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 40px rgba(34,211,238,.08)}.loop-node h3{font-size:1.05rem;font-weight:700;color:#f8fafc}.loop-node p{font-size:.72rem;color:#64748b;line-height:1.5;margin-top:.4rem}.flow-icon{font-size:3rem}.neural{position:relative}.neural i{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan)}.neural i:nth-child(1){left:17px;top:22px}.neural i:nth-child(2){left:17px;bottom:22px}.neural i:nth-child(3){right:17px;top:18px}.neural i:nth-child(4){right:17px;bottom:18px}.neural i:nth-child(5){left:35px;top:35px}.neural::after{content:"";position:absolute;width:45px;height:35px;background:linear-gradient(30deg,transparent 48%,#155e75 49% 51%,transparent 52%),linear-gradient(-30deg,transparent 48%,#155e75 49% 51%,transparent 52%)}
-  .loop-center{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;color:#f8fafc}.loop-center strong{font:700 .74rem ui-monospace,monospace;letter-spacing:.15em}.loop-center small{color:#475569;font-size:.6rem;margin-top:.35rem}.pulse-ring{position:absolute;width:100px;height:100px;border:1px solid rgba(251,191,36,.22);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 2.5s ease-out infinite}@keyframes pulse{0%{scale:.7;opacity:1}100%{scale:1.4;opacity:0}}
+  .loop-node{position:relative;z-index:2;width:190px;text-align:center}.node-label{font:600 .6rem ui-monospace,monospace;letter-spacing:.18em;color:var(--amber)}.node-icon{width:78px;height:78px;margin:1rem auto;border:1px solid #334155;border-radius:1rem;background:#0f172b;display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 40px rgba(34,211,238,.08)}.loop-node h3{font-size:1.05rem;font-weight:700;color:#f8fafc}.loop-node p{font-size:.72rem;color:#64748b;line-height:1.5;margin-top:.4rem}.mlp-icon{width:118px}.mlp-icon svg{width:104px;height:62px}.mlp-links{fill:none;stroke:#155e75;stroke-width:1.2}.mlp-nodes{fill:#22d3ee;stroke:#a5f3fc;stroke-width:1;filter:drop-shadow(0 0 4px rgba(34,211,238,.6))}.equations{width:172px;display:flex;flex-direction:column;gap:.45rem;font-family:Georgia,"Times New Roman",serif;color:#a5f3fc;font-size:.65rem;line-height:1.2;white-space:nowrap}.equations span:last-child{font-size:.78rem}.equations b{font-weight:700;font-style:italic;color:#67e8f9}
+  .loop-center{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;color:#f8fafc}.loop-center strong{font:700 .74rem ui-monospace,monospace;letter-spacing:.15em}.loop-center small{color:#475569;font-size:.6rem;margin-top:.35rem}
   .loop-arrows{position:absolute;inset:37px 0 auto;width:100%;height:315px}.loop-arrows path{fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:5 7;animation:flow 8s linear infinite}.signal{position:absolute;left:50%;transform:translateX(-50%);z-index:3;text-align:center;font-size:.62rem;background:#0b1220;padding:.25rem .6rem;border-radius:99px}.signal b{color:#f8fafc;margin-right:.4rem}.signal span{color:#64748b}.signal-top{top:46px}.signal-bottom{bottom:44px}
   .benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:1rem;border:1px solid #1e293b;border-radius:1rem;overflow:hidden}.benefit-grid>div{padding:1.5rem;border-right:1px solid #1e293b}.benefit-grid>div:last-child{border:0}.benefit-grid span{font:600 .65rem ui-monospace,monospace;color:var(--amber)}.benefit-grid h3{color:#f8fafc;font-weight:650;margin:.5rem 0}.benefit-grid p{font-size:.78rem;color:#64748b;line-height:1.6}
   .agentic{border-top:1px solid #1e293b}.workflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;margin-top:2.5rem}.workflow div{display:flex;flex-direction:column}.workflow b{color:var(--cyan);font:600 .6rem ui-monospace,monospace}.workflow span{color:#e2e8f0;font-weight:650;margin:.25rem 0}.workflow small{font-size:.65rem;color:#64748b}.workflow i{font-style:normal;color:#334155;margin:0 .45rem}
