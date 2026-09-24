@@ -38,17 +38,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section class="intro section-grid">
       <div>
         <p class="section-number">01 / THE CHALLENGE</p>
-        <h2>We cannot afford to resolve every eddy.</h2>
+        <h2>Full-fiedlity simulation of turbulence is prohibitively expensive.</h2>
       </div>
       <div class="body-copy">
         <p>
-          Turbulent flows contain motion across an enormous range of scales. Resolving all
-          of them for an aircraft-scale engineering problem is often prohibitively expensive.
-          <strong>Large-eddy simulation (LES)</strong> makes the problem tractable: it computes
-          the energetic, large-scale structures and filters out the smallest motions.
+          The characteristic feature of a turbulent flow is the presence of a very wide range of scales. Resolving all
+          of these scales for an aircraft-scale engineering problem is simply prohibitively expensive. 
+          <strong>Large-eddy simulation (LES)</strong> is one approach that seeks to make the problem tractable: it directly solves 
+          for the energetic, large-scale structures while filtering out the smallest motions, thereby reducing the resolution 
+          requirements for a turbulence simulation.
         </p>
         <p>
-          That efficiency creates a closure problem. The influence of unresolved motion must
+          The filtering procedure leads to a closure problem. The influence of unresolved motion must
           be supplied by a <strong>subgrid-scale (SGS) stress model</strong>. Conventional models
           are robust, but many were derived from idealized flows and do not directly capture
           the shear layers, shocks, heat transfer, and wall effects found in real designs.
