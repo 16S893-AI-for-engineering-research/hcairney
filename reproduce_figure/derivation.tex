@@ -190,6 +190,61 @@ the physical Reynolds-stress closure assumptions used to obtain
  function of the strain invariant $\sigma$ and rotation invariant $\Omega$.}
 \end{figure}
 
+\section{Inconsistency in the published contour labels}
+A direct overlay of the contours computed from
+\eqref{eq:figure-cmu}--\eqref{eq:production} on the published figure shows
+that the contour \emph{geometry} agrees closely, but that several numerical
+labels in the published figure are attached to curves having larger computed
+values of $C_\mu$.  The approximate correspondence inferred from the overlay
+is summarized in table~\ref{tab:published-labels}.  The comparison is limited
+by the resolution and line thickness of the scanned figure, but the systematic
+agreement of the curve shapes makes the discrepancy unambiguous.
+
+\begin{table}[htbp]
+ \centering
+ \caption{Approximate correspondence between printed labels in Pope's
+ Figure~1 and values obtained from equations (4.2)--(4.4).}
+ \label{tab:published-labels}
+ \begin{tabular}{cc}
+  \toprule
+  Printed label & Computed contour value \\
+  \midrule
+  $0.03$ & $0.06$ \\
+  $0.06$ & $0.09$ \\
+  $0.09$ & $0.12$ \\
+  $0.12$ & $0.15$ \\
+  $0.18$ & $0.21$ \\
+  $0.24$ & approximately $0.30$ \\
+  $0.30$ near the origin & approximately $0.50$ \\
+  \bottomrule
+ \end{tabular}
+\end{table}
+
+The small contour near the origin provides the clearest quantitative check.
+At $\Omega=0$, the computed $C_\mu=0.30$ contour crosses at
+$\sigma\simeq0.575$, whereas the computed $C_\mu=0.50$ contour crosses at
+$\sigma\simeq0.130$.  At $\sigma=0$, their corresponding intercepts are
+$\Omega\simeq0.638$ and $\Omega\simeq0.187$.  The small published contour
+printed as $0.3$ has intercepts close to the latter pair and therefore has the
+geometry of the $C_\mu=0.50$ contour.  Meanwhile, the larger computed
+$C_\mu=0.30$ contour follows one of the published but differently labelled
+curves.
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.82\linewidth]{figure1_overlay.png}
+ \caption{Overlay of Pope's published Figure~1 (black) and contours computed
+ from the equations (red).  The dashed blue curve is the computed
+ $C_\mu=0.50$ contour and coincides with the small contour printed as $0.3$ in
+ the published figure.}
+ \label{fig:contour-overlay}
+\end{figure}
+
+This comparison indicates an annotation or drafting inconsistency in the
+published figure, rather than a discrepancy in the equation solver.  No
+correction or offset has therefore been applied to the computed values of
+$C_\mu$.
+
 \section*{Reproducibility}
 From this directory, run
 \begin{verbatim}
