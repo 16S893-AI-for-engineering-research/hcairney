@@ -11,12 +11,14 @@ python -m uv sync
 python -m uv run pytest
 python -m uv run python symbolic_derivation.py
 python -m uv run python plot_figure1.py
+python -m uv run python plot_figure1_overlay.py
 latexmk -pdf -interaction=nonstopmode -halt-on-error derivation.tex
 ```
 
 Outputs:
 
 - `figure1.png`: reproduced contour plot
+- `figure1_overlay.png`: computed contours over Pope's rasterized figure (requires Ghostscript)
 - `derivation.pdf`: compiled verified derivation
 - `derivation.tex`: LaTeX source
 
