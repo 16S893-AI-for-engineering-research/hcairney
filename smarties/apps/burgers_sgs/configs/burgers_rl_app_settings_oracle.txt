@@ -1,0 +1,4 @@
+--burgers-config burgers_rl.json
+--scripted-forcing-amplitude 0.1
+--scripted-forcing-wavenumber 1
+--scripted-forcing-phase 0.0

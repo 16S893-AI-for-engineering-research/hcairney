@@ -1,0 +1,3 @@
+make
+
+cp exec ${RUNDIR}/

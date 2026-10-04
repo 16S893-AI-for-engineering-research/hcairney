@@ -1,0 +1,65 @@
+# Burgers SMARTIES executable
+
+See [`SMARTIES_FLOWCHART.md`](SMARTIES_FLOWCHART.md) for the multi-environment
+runtime architecture and the per-decision state/action flow.
+
+The optional `burgers_smarties` target is configured from the repository root
+with `BURGERS_ENABLE_SMARTIES=ON`. Standalone builds of `apps/burgers_sgs`
+leave the option off and retain no SMARTIES, MPI, or OpenMP dependency.
+
+The application arguments must be supplied through SMARTIES `--appSettings`.
+The example argument file is
+[`configs/burgers_rl_app_settings.txt`](configs/burgers_rl_app_settings.txt),
+and the strict versioned environment document is
+[`configs/burgers_rl.json`](configs/burgers_rl.json).
+
+For an evaluation-only oracle rollout, use
+[`configs/burgers_rl_app_settings_oracle.txt`](configs/burgers_rl_app_settings_oracle.txt).
+It replaces the frozen policy's actions with the cell averages of the known
+deterministic Fourier forcing immediately before the normal action-projection
+and environment-step path. The available application options are
+`--scripted-forcing-amplitude`, `--scripted-forcing-wavenumber`, and
+`--scripted-forcing-phase`; supplying the amplitude enables the mode, while
+the wavenumber and phase default to `1` and `0`. Scripted forcing is rejected
+during training, so launch it with `--nEvalEpisodes` and an existing restart
+checkpoint. An amplitude of zero provides the matched no-action rollout.
+
+Before launching, assemble a flat setup directory containing:
+
+- `burgers_rl.json`;
+- the referenced solver configuration as `les_test.json`;
+- the example [SMARTIES learner configuration](configs/settings.json) as
+  `settings.json` (or a complete replacement); and
+- `dns_target_metadata.json`, `dns_target.csv`, and `dns_spectrum.csv` from
+  `runs/finalization`.
+
+Pass that directory to SMARTIES with `--setupFolder`. SMARTIES copies its files
+into each simulation directory before the callback starts, so all paths in the
+example RL configuration resolve locally. The callback requires the explicit
+`settings.json`, and users should specify every learner field rather than rely
+on implicit SMARTIES defaults.
+
+Each simulation directory receives `burgers_rl_resolved.json`,
+`burgers_solver_resolved.json`, the original `settings.json`, and
+`burgers_rl_episodes.csv`. Training episode seeds come from the reproducible
+SMARTIES communicator random stream. Evaluation consumes the configured seed
+list in order and initially requires one SMARTIES evaluation environment.
+
+Detailed evaluation output is opt-in through `output.write_evaluation_output`
+in `burgers_rl.json`; omitting it preserves the original rollout path and
+defaults to `false`. When enabled, each held-out episode is written beneath
+`output.evaluation_directory` in a directory named from its evaluation index
+and seed. Each directory contains the same scalar history, profile history,
+final profile, optional mean spectrum, and run metadata written by
+`run_solver`. The scalar and profile clocks come from the referenced solver
+configuration. Reaching those clocks may subdivide a policy decision, but the
+selected action remains fixed for the entire decision interval.
+
+Three additional CSV files retain policy-specific diagnostics:
+
+- `burgers_rl_history.csv` contains one scalar row per decision, including
+  reward, action-projection, stability, and advancement diagnostics;
+- `burgers_rl_fields.csv` contains cell-resolved actions, rewards, running-mean
+  estimates, and target values in long form; and
+- `burgers_rl_spectra.csv` contains the raw and applied action spectra when
+  `environment.record_action_spectra` is enabled.

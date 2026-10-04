@@ -1,0 +1,13 @@
+{
+  "learner": "DPG",
+  "returnsEstimator": "retrace",
+  "batchSize": 128,
+  "encoderLayerSizes": [128],
+  "epsAnneal": 5e-7,
+  "explNoise": 0.2,
+  "gamma": 0.995,
+  "learnrate": 0.00001,
+  "nnLayerSizes": [128],
+  "targetDelay": 0.001
+}
+
