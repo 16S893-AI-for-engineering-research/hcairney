@@ -6,7 +6,9 @@ summary: "Initial LES training runs using V-RACER failed, looking into the simpl
 
 ## What I added
 
-
+I added a custom 1D finite-volume RANS solver for the case of turbulent channel flow and a custom pytorch
+implementation of a deterministic policy gradient algorithm to learn the coefficient in a mixing-length RANS
+turbulence model (l_m = Cy). 
 
 ## Why I added it
 
