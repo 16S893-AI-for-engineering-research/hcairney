@@ -1,5 +1,5 @@
 ---
-title: "Week 5: "
+title: "Week 5: taking a step back to the simpler RANS case"
 date: 2026-10-16
 summary: ""
 ---
