@@ -1,0 +1,52 @@
+{
+  "note": "Proposed from 1944 runs in sweeps task-40_scaled_inputs_sweep, task-40_pretrained_actor_sweep. Measures that were zero in every run get limit 0; others use the 99th percentile rounded up to 2 significant figures. Edit the numbers freely; groups whose worst seed is above a limit are flagged unreliable.",
+  "limits": {
+    "rejected_steps": 0,
+    "failed_solves": 0,
+    "unavailable_solver_work": 0,
+    "failed_checks": 0,
+    "nonlinear_iterations_per_solve": 450
+  },
+  "distribution": {
+    "rejected_steps": {
+      "runs": 1944,
+      "p50": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "p100": 0.0
+    },
+    "failed_solves": {
+      "runs": 1944,
+      "p50": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "p100": 0.0
+    },
+    "unavailable_solver_work": {
+      "runs": 1944,
+      "p50": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "p100": 0.0
+    },
+    "failed_checks": {
+      "runs": 1944,
+      "p50": 0.0,
+      "p90": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "p100": 0.0
+    },
+    "nonlinear_iterations_per_solve": {
+      "runs": 1944,
+      "p50": 208.6991386991387,
+      "p90": 256.3573606573607,
+      "p95": 340.032269082269,
+      "p99": 444.41777645777614,
+      "p100": 537.6445896445897
+    }
+  }
+}
