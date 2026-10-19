@@ -2,7 +2,7 @@
 import sys; sys.path.insert(0, "/Users/hughcairney/GradSchool/16.S893/hcairney/.pi/skills/svg-figs")
 from svgfig import Figure
 
-f = Figure("deck")
+f = Figure("deck", palette="color")
 M, W = 80, 1760
 f.text(M, 100, "Intended workflow: review and propose loop", "title", "ink")
 f.text(M, 144, "Scripts do the numbers, the agent interprets them, and you launch every run.", "subtitle", "muted")

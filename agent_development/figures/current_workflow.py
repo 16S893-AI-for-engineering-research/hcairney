@@ -2,7 +2,7 @@
 import sys; sys.path.insert(0, "/Users/hughcairney/GradSchool/16.S893/hcairney/.pi/skills/svg-figs")
 from svgfig import Figure
 
-f = Figure("deck")
+f = Figure("deck", palette="color")
 M, W = 80, 1760
 f.text(M, 100, "Current workflow: review_sweep.sh", "title", "ink")
 f.text(M, 144, "One sweep in, one review out. The agent only reads and proposes. You launch every run.", "subtitle", "muted")

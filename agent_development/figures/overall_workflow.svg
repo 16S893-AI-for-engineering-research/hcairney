@@ -1,80 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080" data-svgfig='{"target": "deck", "mode": "light", "palette": "mono-light", "fonts": "BA"}'>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080" data-svgfig='{"target": "deck", "mode": "light", "palette": "okabe-light", "fonts": "BA"}'>
 <defs></defs>
 <rect width="1920" height="1080" fill="#ffffff"/>
-<text x="80.00" y="100.00" font-family="STIX Two Text" font-size="54" font-weight="600" fill="#000000" xml:space="preserve">Intended workflow: review and propose loop</text>
-<text x="80.00" y="144.00" font-family="STIX Two Text" font-size="26" font-weight="normal" fill="#595959" xml:space="preserve">Scripts do the numbers, the agent interprets them, and you launch every run.</text>
-<rect x="80.00" y="330.00" width="221.80" height="190.00" rx="3" fill="#ffffff" stroke="#000000" stroke-width="1.0"/>
-<text x="94.00" y="402.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Summarize</text>
-<text x="94.00" y="436.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 1: built</text>
-<text x="94.00" y="462.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">summarize_runs.py</text>
-<rect x="337.14" y="330.00" width="217.14" height="190.00" rx="3" fill="#eeeeee" stroke="#000000" stroke-width="1.0"/>
-<text x="351.14" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Review</text>
-<text x="351.14" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 2: built</text>
-<text x="351.14" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Opus 5.5, high</text>
-<rect x="594.29" y="330.00" width="217.14" height="190.00" rx="3" fill="#eeeeee" stroke="#000000" stroke-width="1.0"/>
-<text x="608.29" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Second look</text>
-<text x="608.29" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 6: optional</text>
-<text x="608.29" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Other provider</text>
-<rect x="851.43" y="330.00" width="229.19" height="190.00" rx="3" fill="#ffffff" stroke="#000000" stroke-width="1.0"/>
-<text x="865.43" y="402.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Check</text>
-<text x="865.43" y="436.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 3: partly built</text>
-<text x="865.43" y="462.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">check_review.py</text>
-<rect x="1108.57" y="330.00" width="217.14" height="190.00" rx="3" fill="#ffffff" stroke="#000000" stroke-width="1.0"/>
-<text x="1122.57" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Make configs</text>
-<text x="1122.57" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 3: planned</text>
-<text x="1122.57" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">3 TOML per setup</text>
-<rect x="1365.71" y="330.00" width="217.14" height="190.00" rx="3" fill="#d9d9d9" stroke="#000000" stroke-width="1.0"/>
-<text x="1379.71" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Approve</text>
-<text x="1379.71" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 4: planned</text>
-<text x="1379.71" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">You choose</text>
-<rect x="1622.86" y="330.00" width="217.14" height="190.00" rx="3" fill="#d9d9d9" stroke="#000000" stroke-width="1.0"/>
-<text x="1636.86" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">Launch</text>
-<text x="1636.86" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Phase 5: planned</text>
-<text x="1636.86" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">You run jobs</text>
-<path d="M305.30,425.00 L327.04,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M333.64,425.00 L322.64,428.96 L322.64,421.04 Z" fill="#262626"/>
-<path d="M557.79,425.00 L584.19,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M590.79,425.00 L579.79,428.96 L579.79,421.04 Z" fill="#262626"/>
-<path d="M814.93,425.00 L841.33,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M847.93,425.00 L836.93,428.96 L836.93,421.04 Z" fill="#262626"/>
-<path d="M1084.12,425.00 L1098.47,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1105.07,425.00 L1094.07,428.96 L1094.07,421.04 Z" fill="#262626"/>
-<path d="M1329.21,425.00 L1355.61,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1362.21,425.00 L1351.21,428.96 L1351.21,421.04 Z" fill="#262626"/>
-<path d="M1586.36,425.00 L1612.76,425.00" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1619.36,425.00 L1608.36,428.96 L1608.36,421.04 Z" fill="#262626"/>
-<path d="M1731.43,326.50 L1731.43,253.00 A3.00,3.00 0 0 0 1728.43,250.00 L193.90,250.00 A3.00,3.00 0 0 0 190.90,253.00 L190.90,319.90" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M190.90,326.50 L186.94,315.50 L194.86,315.50 Z" fill="#262626"/>
-<text x="734.89" y="234.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Next round: new runs go into the next sweep</text>
-<text x="621.41" y="560.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">Critiques proposals</text>
-<text x="618.47" y="586.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">before you see them</text>
-<rect x="80.00" y="640.00" width="1760.00" height="300.00" rx="3" fill="#f5f5f5" stroke="#bfbfbf" stroke-width="1.0"/>
-<text x="104.00" y="684.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#000000" xml:space="preserve">History folder</text>
-<text x="308.82" y="684.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#595959" xml:space="preserve">Phase 4: planned</text>
-<text x="104.00" y="736.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">campaigns/&lt;name&gt;/campaign.json</text>
-<text x="780.00" y="736.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">goal, start group, allowed settings, stop rule</text>
-<text x="104.00" y="780.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">round-001/summary.json</text>
-<text x="780.00" y="780.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">summary script output</text>
-<text x="104.00" y="824.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">round-001/review.md, proposals.json</text>
-<text x="780.00" y="824.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">agent report and fixed-form proposals</text>
-<text x="104.00" y="868.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">round-001/decision.json, configs/</text>
-<text x="780.00" y="868.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">what you approved, and the TOML files</text>
-<text x="104.00" y="912.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#595959" xml:space="preserve">history.md</text>
-<text x="780.00" y="912.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">one line per round, read by the next review</text>
-<path d="M445.71,530.10 L445.71,629.90" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M445.71,636.50 L441.75,625.50 L449.67,625.50 Z" fill="#262626"/>
-<path d="M445.71,523.50 L449.67,534.50 L441.75,534.50 Z" fill="#262626"/>
-<path d="M1474.29,523.50 L1474.29,629.90" fill="none" stroke="#262626" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1474.29,636.50 L1470.33,625.50 L1478.25,625.50 Z" fill="#262626"/>
-<text x="465.71" y="582.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">Reads history,</text>
-<text x="465.71" y="606.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">saves report</text>
-<text x="1494.29" y="582.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">Saves decision</text>
-<text x="1494.29" y="606.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#595959" xml:space="preserve">and configs</text>
-<rect x="80.00" y="986.00" width="32.00" height="32.00" rx="3" fill="#ffffff" stroke="#000000" stroke-width="1.0"/>
-<text x="124.00" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Script</text>
-<rect x="239.21" y="986.00" width="32.00" height="32.00" rx="3" fill="#eeeeee" stroke="#000000" stroke-width="1.0"/>
-<text x="283.21" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">Agent</text>
-<rect x="400.70" y="986.00" width="32.00" height="32.00" rx="3" fill="#d9d9d9" stroke="#000000" stroke-width="1.0"/>
-<text x="444.70" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#262626" xml:space="preserve">You</text>
-<text x="540.32" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#595959" xml:space="preserve">Run data stays in runs/. The history folder only points to it.</text>
+<text x="80.00" y="100.00" font-family="STIX Two Text" font-size="54" font-weight="600" fill="#14171c" xml:space="preserve">Intended workflow: review and propose loop</text>
+<text x="80.00" y="144.00" font-family="STIX Two Text" font-size="26" font-weight="normal" fill="#676c75" xml:space="preserve">Scripts do the numbers, the agent interprets them, and you launch every run.</text>
+<rect x="80.00" y="330.00" width="221.80" height="190.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
+<text x="94.00" y="402.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Summarize</text>
+<text x="94.00" y="436.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 1: built</text>
+<text x="94.00" y="462.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summarize_runs.py</text>
+<rect x="337.14" y="330.00" width="217.14" height="190.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<text x="351.14" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Review</text>
+<text x="351.14" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 2: built</text>
+<text x="351.14" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Opus 5.5, high</text>
+<rect x="594.29" y="330.00" width="217.14" height="190.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<text x="608.29" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Second look</text>
+<text x="608.29" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 6: optional</text>
+<text x="608.29" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Other provider</text>
+<rect x="851.43" y="330.00" width="229.19" height="190.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
+<text x="865.43" y="402.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Check</text>
+<text x="865.43" y="436.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 3: partly built</text>
+<text x="865.43" y="462.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">check_review.py</text>
+<rect x="1108.57" y="330.00" width="217.14" height="190.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
+<text x="1122.57" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Make configs</text>
+<text x="1122.57" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 3: planned</text>
+<text x="1122.57" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">3 TOML per setup</text>
+<rect x="1365.71" y="330.00" width="217.14" height="190.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<text x="1379.71" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">Approve</text>
+<text x="1379.71" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 4: planned</text>
+<text x="1379.71" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">You choose</text>
+<rect x="1622.86" y="330.00" width="217.14" height="190.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<text x="1636.86" y="398.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">Launch</text>
+<text x="1636.86" y="432.03" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Phase 5: planned</text>
+<text x="1636.86" y="465.63" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">You run jobs</text>
+<path d="M305.30,425.00 L327.04,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M333.64,425.00 L322.64,428.96 L322.64,421.04 Z" fill="#3a3f47"/>
+<path d="M557.79,425.00 L584.19,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M590.79,425.00 L579.79,428.96 L579.79,421.04 Z" fill="#3a3f47"/>
+<path d="M814.93,425.00 L841.33,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M847.93,425.00 L836.93,428.96 L836.93,421.04 Z" fill="#3a3f47"/>
+<path d="M1084.12,425.00 L1098.47,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1105.07,425.00 L1094.07,428.96 L1094.07,421.04 Z" fill="#3a3f47"/>
+<path d="M1329.21,425.00 L1355.61,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1362.21,425.00 L1351.21,428.96 L1351.21,421.04 Z" fill="#3a3f47"/>
+<path d="M1586.36,425.00 L1612.76,425.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1619.36,425.00 L1608.36,428.96 L1608.36,421.04 Z" fill="#3a3f47"/>
+<path d="M1731.43,326.50 L1731.43,253.00 A3.00,3.00 0 0 0 1728.43,250.00 L193.90,250.00 A3.00,3.00 0 0 0 190.90,253.00 L190.90,319.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M190.90,326.50 L186.94,315.50 L194.86,315.50 Z" fill="#3a3f47"/>
+<text x="734.89" y="234.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Next round: new runs go into the next sweep</text>
+<text x="621.41" y="560.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Critiques proposals</text>
+<text x="618.47" y="586.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">before you see them</text>
+<rect x="80.00" y="640.00" width="1760.00" height="300.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="1.0"/>
+<text x="104.00" y="684.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">History folder</text>
+<text x="308.82" y="684.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#676c75" xml:space="preserve">Phase 4: planned</text>
+<text x="104.00" y="736.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">campaigns/&lt;name&gt;/campaign.json</text>
+<text x="780.00" y="736.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">goal, start group, allowed settings, stop rule</text>
+<text x="104.00" y="780.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">round-001/summary.json</text>
+<text x="780.00" y="780.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">summary script output</text>
+<text x="104.00" y="824.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">round-001/review.md, proposals.json</text>
+<text x="780.00" y="824.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">agent report and fixed-form proposals</text>
+<text x="104.00" y="868.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">round-001/decision.json, configs/</text>
+<text x="780.00" y="868.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">what you approved, and the TOML files</text>
+<text x="104.00" y="912.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">history.md</text>
+<text x="780.00" y="912.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">one line per round, read by the next review</text>
+<path d="M445.71,530.10 L445.71,629.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M445.71,636.50 L441.75,625.50 L449.67,625.50 Z" fill="#3a3f47"/>
+<path d="M445.71,523.50 L449.67,534.50 L441.75,534.50 Z" fill="#3a3f47"/>
+<path d="M1474.29,523.50 L1474.29,629.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1474.29,636.50 L1470.33,625.50 L1478.25,625.50 Z" fill="#3a3f47"/>
+<text x="465.71" y="582.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Reads history,</text>
+<text x="465.71" y="606.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">saves report</text>
+<text x="1494.29" y="582.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Saves decision</text>
+<text x="1494.29" y="606.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">and configs</text>
+<rect x="80.00" y="986.00" width="32.00" height="32.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
+<text x="124.00" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Script</text>
+<rect x="239.21" y="986.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<text x="283.21" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Agent</text>
+<rect x="400.70" y="986.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<text x="444.70" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">You</text>
+<text x="540.32" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#676c75" xml:space="preserve">Run data stays in runs/. The history folder only points to it.</text>
 </svg>
