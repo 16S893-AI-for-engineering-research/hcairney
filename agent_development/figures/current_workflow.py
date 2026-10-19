@@ -3,6 +3,8 @@ import sys; sys.path.insert(0, "/Users/hughcairney/GradSchool/16.S893/hcairney/.
 from svgfig import Figure
 
 f = Figure("deck", palette="color")
+f.t["line"]["border"] = 3.0  # thicker box outlines (token default is 1.0)
+f.t["space"]["pad"] = 16  # text inset: clears the thicker outline (lint measures from the stroke edge)
 M, W = 80, 1760
 f.text(M, 100, "Current workflow: review_sweep.sh", "title", "ink")
 f.text(M, 144, "One sweep in, one review out. The agent only reads and proposes. You launch every run.", "subtitle", "muted")
@@ -72,4 +74,5 @@ for cat, name in [(0, "Script step"), (1, "Agent step"), (2, "You"), (3, "File")
     wd = f.text(x + 44, ly, name, "heading", f"cat{cat}")
     x += 44 + wd + 56
 
+f.t["space"]["pad"] = 14  # lint minimum is the token default
 f.save("current_workflow.svg")

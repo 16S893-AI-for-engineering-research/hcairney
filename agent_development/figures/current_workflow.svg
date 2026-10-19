@@ -3,95 +3,95 @@
 <rect width="1920" height="1080" fill="#ffffff"/>
 <text x="80.00" y="100.00" font-family="STIX Two Text" font-size="54" font-weight="600" fill="#14171c" xml:space="preserve">Current workflow: review_sweep.sh</text>
 <text x="80.00" y="144.00" font-family="STIX Two Text" font-size="26" font-weight="normal" fill="#676c75" xml:space="preserve">One sweep in, one review out. The agent only reads and proposes. You launch every run.</text>
-<rect x="80.00" y="175.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="1.0"/>
+<rect x="80.00" y="175.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="3.0"/>
 <text x="100.00" y="215.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">1. Prepare</text>
 <text x="1649.00" y="215.00" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">review_sweep.sh</text>
-<rect x="100.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
-<text x="114.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Sweep folder</text>
-<text x="114.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">runs/&lt;sweep&gt;</text>
-<rect x="544.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="558.00" y="295.23" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Check folder</text>
-<text x="558.00" y="328.83" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Stop if it is missing</text>
-<rect x="988.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="1002.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Archive old review</text>
-<text x="1002.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">review-&lt;timestamp&gt;.md</text>
-<rect x="1432.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="1446.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Start the agent</text>
-<text x="1446.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">pi -p --no-session</text>
-<path d="M491.50,305.00 L533.90,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M540.50,305.00 L529.50,308.96 L529.50,301.04 Z" fill="#3a3f47"/>
-<path d="M935.50,305.00 L977.90,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M984.50,305.00 L973.50,308.96 L973.50,301.04 Z" fill="#3a3f47"/>
-<path d="M1379.50,305.00 L1421.90,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1428.50,305.00 L1417.50,308.96 L1417.50,301.04 Z" fill="#3a3f47"/>
-<rect x="80.00" y="445.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="1.0"/>
+<rect x="100.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.0"/>
+<text x="116.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Sweep folder</text>
+<text x="116.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">runs/&lt;sweep&gt;</text>
+<rect x="544.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
+<text x="560.00" y="295.23" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Check folder</text>
+<text x="560.00" y="328.83" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Stop if it is missing</text>
+<rect x="988.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
+<text x="1004.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Archive old review</text>
+<text x="1004.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">review-&lt;timestamp&gt;.md</text>
+<rect x="1432.00" y="237.00" width="388.00" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
+<text x="1448.00" y="299.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Start the agent</text>
+<text x="1448.00" y="326.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">pi -p --no-session</text>
+<path d="M492.00,305.00 L533.40,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M540.00,305.00 L529.00,308.96 L529.00,301.04 Z" fill="#3a3f47"/>
+<path d="M936.00,305.00 L977.40,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M984.00,305.00 L973.00,308.96 L973.00,301.04 Z" fill="#3a3f47"/>
+<path d="M1380.00,305.00 L1421.40,305.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1428.00,305.00 L1417.00,308.96 L1417.00,301.04 Z" fill="#3a3f47"/>
+<rect x="80.00" y="445.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="3.0"/>
 <text x="100.00" y="485.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">2. Agent</text>
 <text x="1451.00" y="485.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Opus 5.5, high thinking, read and bash only</text>
-<rect x="100.00" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="114.00" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Get summary</text>
-<text x="114.00" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Build it if missing</text>
-<text x="114.00" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summarize_runs.py</text>
-<rect x="455.20" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="469.20" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Read summary</text>
-<text x="469.20" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Tables and plots</text>
-<text x="469.20" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summary.md</text>
-<rect x="810.40" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="824.40" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Check numbers</text>
-<text x="824.40" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Per-seed values</text>
-<text x="824.40" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summary.json</text>
-<rect x="1165.60" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="1179.60" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Read base config</text>
-<text x="1179.60" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Real setting names</text>
-<text x="1179.60" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">submitted.toml</text>
-<rect x="1520.80" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="1534.80" y="548.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Write report</text>
-<text x="1534.80" y="582.04" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Five sections</text>
-<text x="1534.80" y="615.64" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">JSON proposals</text>
-<path d="M402.70,575.00 L445.10,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M451.70,575.00 L440.70,578.96 L440.70,571.04 Z" fill="#3a3f47"/>
-<path d="M757.90,575.00 L800.30,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M806.90,575.00 L795.90,578.96 L795.90,571.04 Z" fill="#3a3f47"/>
-<path d="M1113.10,575.00 L1155.50,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1162.10,575.00 L1151.10,578.96 L1151.10,571.04 Z" fill="#3a3f47"/>
-<path d="M1468.30,575.00 L1510.70,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1517.30,575.00 L1506.30,578.96 L1506.30,571.04 Z" fill="#3a3f47"/>
-<rect x="80.00" y="715.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="1.0"/>
+<rect x="100.00" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
+<text x="116.00" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Get summary</text>
+<text x="116.00" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Build it if missing</text>
+<text x="116.00" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summarize_runs.py</text>
+<rect x="455.20" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
+<text x="471.20" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Read summary</text>
+<text x="471.20" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Tables and plots</text>
+<text x="471.20" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summary.md</text>
+<rect x="810.40" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
+<text x="826.40" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Check numbers</text>
+<text x="826.40" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Per-seed values</text>
+<text x="826.40" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">summary.json</text>
+<rect x="1165.60" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
+<text x="1181.60" y="552.74" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Read base config</text>
+<text x="1181.60" y="586.34" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Real setting names</text>
+<text x="1181.60" y="612.94" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">submitted.toml</text>
+<rect x="1520.80" y="507.00" width="299.20" height="136.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
+<text x="1536.80" y="548.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Write report</text>
+<text x="1536.80" y="582.04" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Five sections</text>
+<text x="1536.80" y="615.64" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">JSON proposals</text>
+<path d="M403.20,575.00 L444.60,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M451.20,575.00 L440.20,578.96 L440.20,571.04 Z" fill="#3a3f47"/>
+<path d="M758.40,575.00 L799.80,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M806.40,575.00 L795.40,578.96 L795.40,571.04 Z" fill="#3a3f47"/>
+<path d="M1113.60,575.00 L1155.00,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1161.60,575.00 L1150.60,578.96 L1150.60,571.04 Z" fill="#3a3f47"/>
+<path d="M1468.80,575.00 L1510.20,575.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1516.80,575.00 L1505.80,578.96 L1505.80,571.04 Z" fill="#3a3f47"/>
+<rect x="80.00" y="715.00" width="1760.00" height="218.00" rx="3" fill="#f5f6f7" stroke="#d6d9de" stroke-width="3.0"/>
 <text x="100.00" y="755.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">3. Finish</text>
 <text x="1593.30" y="755.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">review_sweep.sh, then you</text>
-<rect x="100.00" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="114.00" y="835.24" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Add header</text>
-<text x="114.00" y="868.84" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Model, date, sweep</text>
-<rect x="455.20" y="777.00" width="299.20" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
-<text x="469.20" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Review</text>
-<text x="469.20" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">review.md</text>
-<rect x="810.40" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="824.40" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Check report</text>
-<text x="824.40" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">check_review.py</text>
-<rect x="1165.60" y="777.00" width="299.20" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
-<text x="1179.60" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Check result</text>
-<text x="1179.60" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">check.txt</text>
-<rect x="1520.80" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
-<text x="1534.80" y="818.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">You decide</text>
-<text x="1534.80" y="852.04" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Read the review,</text>
-<text x="1534.80" y="885.64" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">launch runs</text>
-<path d="M402.70,845.00 L445.10,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M451.70,845.00 L440.70,848.96 L440.70,841.04 Z" fill="#3a3f47"/>
-<path d="M757.90,845.00 L800.30,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M806.90,845.00 L795.90,848.96 L795.90,841.04 Z" fill="#3a3f47"/>
-<path d="M1113.10,845.00 L1155.50,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1162.10,845.00 L1151.10,848.96 L1151.10,841.04 Z" fill="#3a3f47"/>
-<path d="M1468.30,845.00 L1510.70,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M1517.30,845.00 L1506.30,848.96 L1506.30,841.04 Z" fill="#3a3f47"/>
-<path d="M1548.40,376.50 L1548.40,416.00 A3.00,3.00 0 0 1 1545.40,419.00 L357.32,419.00 A3.00,3.00 0 0 0 354.32,422.00 L354.32,496.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M354.32,503.50 L350.36,492.50 L358.28,492.50 Z" fill="#3a3f47"/>
-<path d="M1610.56,646.50 L1610.56,686.00 A3.00,3.00 0 0 1 1607.56,689.00 L357.32,689.00 A3.00,3.00 0 0 0 354.32,692.00 L354.32,766.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
-<path d="M354.32,773.50 L350.36,762.50 L358.28,762.50 Z" fill="#3a3f47"/>
-<rect x="80.00" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
+<rect x="100.00" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
+<text x="116.00" y="835.24" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Add header</text>
+<text x="116.00" y="868.84" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Model, date, sweep</text>
+<rect x="455.20" y="777.00" width="299.20" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.0"/>
+<text x="471.20" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Review</text>
+<text x="471.20" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">review.md</text>
+<rect x="810.40" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
+<text x="826.40" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Check report</text>
+<text x="826.40" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">check_review.py</text>
+<rect x="1165.60" y="777.00" width="299.20" height="136.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.0"/>
+<text x="1181.60" y="839.54" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Check result</text>
+<text x="1181.60" y="866.14" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">check.txt</text>
+<rect x="1520.80" y="777.00" width="299.20" height="136.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.0"/>
+<text x="1536.80" y="818.44" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">You decide</text>
+<text x="1536.80" y="852.04" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Read the review,</text>
+<text x="1536.80" y="885.64" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">launch runs</text>
+<path d="M403.20,845.00 L444.60,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M451.20,845.00 L440.20,848.96 L440.20,841.04 Z" fill="#3a3f47"/>
+<path d="M758.40,845.00 L799.80,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M806.40,845.00 L795.40,848.96 L795.40,841.04 Z" fill="#3a3f47"/>
+<path d="M1113.60,845.00 L1155.00,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1161.60,845.00 L1150.60,848.96 L1150.60,841.04 Z" fill="#3a3f47"/>
+<path d="M1468.80,845.00 L1510.20,845.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1516.80,845.00 L1505.80,848.96 L1505.80,841.04 Z" fill="#3a3f47"/>
+<path d="M1548.40,377.00 L1548.40,416.00 A3.00,3.00 0 0 1 1545.40,419.00 L357.32,419.00 A3.00,3.00 0 0 0 354.32,422.00 L354.32,496.40" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M354.32,503.00 L350.36,492.00 L358.28,492.00 Z" fill="#3a3f47"/>
+<path d="M1610.56,647.00 L1610.56,686.00 A3.00,3.00 0 0 1 1607.56,689.00 L357.32,689.00 A3.00,3.00 0 0 0 354.32,692.00 L354.32,766.40" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M354.32,773.00 L350.36,762.00 L358.28,762.00 Z" fill="#3a3f47"/>
+<rect x="80.00" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.0"/>
 <text x="124.00" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Script step</text>
-<rect x="321.99" y="948.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<rect x="321.99" y="948.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.0"/>
 <text x="365.99" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Agent step</text>
-<rect x="566.08" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<rect x="566.08" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.0"/>
 <text x="610.08" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">You</text>
-<rect x="717.95" y="948.00" width="32.00" height="32.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
+<rect x="717.95" y="948.00" width="32.00" height="32.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.0"/>
 <text x="761.95" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">File</text>
 </svg>

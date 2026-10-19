@@ -3,6 +3,8 @@ import sys; sys.path.insert(0, "/Users/hughcairney/GradSchool/16.S893/hcairney/.
 from svgfig import Figure
 
 f = Figure("deck", palette="color")
+f.t["line"]["border"] = 3.0  # thicker box outlines (token default is 1.0)
+f.t["space"]["pad"] = 16  # text inset: clears the thicker outline (lint measures from the stroke edge)
 M, W = 80, 1760
 f.text(M, 100, "Intended workflow: review and propose loop", "title", "ink")
 f.text(M, 144, "Scripts do the numbers, the agent interprets them, and you launch every run.", "subtitle", "muted")
@@ -75,4 +77,5 @@ for cat, name in [(0, "Script"), (1, "Agent"), (2, "You")]:
     x += 44 + wd + 56
 f.text(x, ly, "Run data stays in runs/. The history folder only points to it.", "label", "muted")
 
+f.t["space"]["pad"] = 14  # lint minimum is the token default
 f.save("overall_workflow.svg")
