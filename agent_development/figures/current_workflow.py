@@ -69,7 +69,7 @@ ly = 972
 x = M
 for cat, name in [(0, "Script step"), (1, "Agent step"), (2, "You"), (3, "File")]:
     f.box(x, ly - 24, 32, 32, cat)
-    wd = f.text(x + 44, ly, name, "label", "ink2")
+    wd = f.text(x + 44, ly, name, "heading", f"cat{cat}")
     x += 44 + wd + 56
 
 f.save("current_workflow.svg")

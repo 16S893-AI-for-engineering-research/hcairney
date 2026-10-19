@@ -71,7 +71,7 @@ ly = 1010
 x = M
 for cat, name in [(0, "Script"), (1, "Agent"), (2, "You")]:
     f.box(x, ly - 24, 32, 32, cat)
-    wd = f.text(x + 44, ly, name, "label", "ink2")
+    wd = f.text(x + 44, ly, name, "heading", f"cat{cat}")
     x += 44 + wd + 56
 f.text(x, ly, "Run data stays in runs/. The history folder only points to it.", "label", "muted")
 

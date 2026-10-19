@@ -87,11 +87,11 @@
 <path d="M1610.56,646.50 L1610.56,686.00 A3.00,3.00 0 0 1 1607.56,689.00 L357.32,689.00 A3.00,3.00 0 0 0 354.32,692.00 L354.32,766.90" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
 <path d="M354.32,773.50 L350.36,762.50 L358.28,762.50 Z" fill="#3a3f47"/>
 <rect x="80.00" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="124.00" y="972.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Script step</text>
-<rect x="285.79" y="948.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="329.79" y="972.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Agent step</text>
-<rect x="493.86" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
-<text x="537.86" y="972.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">You</text>
-<rect x="633.49" y="948.00" width="32.00" height="32.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
-<text x="677.49" y="972.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">File</text>
+<text x="124.00" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Script step</text>
+<rect x="321.99" y="948.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<text x="365.99" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Agent step</text>
+<rect x="566.08" y="948.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<text x="610.08" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">You</text>
+<rect x="717.95" y="948.00" width="32.00" height="32.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="1.0"/>
+<text x="761.95" y="972.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">File</text>
 </svg>

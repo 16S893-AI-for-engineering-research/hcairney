@@ -71,10 +71,10 @@
 <text x="1494.29" y="582.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Saves decision</text>
 <text x="1494.29" y="606.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">and configs</text>
 <rect x="80.00" y="986.00" width="32.00" height="32.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="1.0"/>
-<text x="124.00" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Script</text>
-<rect x="239.21" y="986.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
-<text x="283.21" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Agent</text>
-<rect x="400.70" y="986.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
-<text x="444.70" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">You</text>
-<text x="540.32" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#676c75" xml:space="preserve">Run data stays in runs/. The history folder only points to it.</text>
+<text x="124.00" y="1010.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Script</text>
+<rect x="259.77" y="986.00" width="32.00" height="32.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="1.0"/>
+<text x="303.77" y="1010.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">Agent</text>
+<rect x="441.64" y="986.00" width="32.00" height="32.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="1.0"/>
+<text x="485.64" y="1010.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">You</text>
+<text x="593.51" y="1010.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#676c75" xml:space="preserve">Run data stays in runs/. The history folder only points to it.</text>
 </svg>
