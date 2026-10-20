@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080" data-svgfig='{"target": "deck", "mode": "light", "palette": "okabe-light", "fonts": "BA"}'>
+<defs><path id='mc5db376f303f-g0-4226' d='M5.25-4.31H3C2.52-4.31 2.07-4.16 1.66-3.85C1.02-3.36 .38-2.5 .38-1.48C.38-.58 1 .11 1.9 .11C2.57 .11 3.17-.18 3.68-.76C4.17-1.32 4.41-1.94 4.41-2.63C4.41-3.04 4.32-3.38 4.14-3.66H5.15C5.5-3.66 5.67-3.78 5.67-4.03C5.67-4.26 5.5-4.31 5.25-4.31ZM1.07-1.21C1.07-1.8 1.21-2.34 1.5-2.82C1.84-3.38 2.28-3.66 2.83-3.66C3.41-3.66 3.7-3.36 3.7-2.75C3.7-2.5 3.65-2.21 3.55-1.87C3.35-1.16 3.02-.66 2.56-.39C2.33-.25 2.11-.18 1.91-.18C1.36-.18 1.07-.63 1.07-1.21Z'/><path id='me274109b97a2-g0-3524' d='M1.48-2.18C1.48-3.46 2.04-4.76 2.67-5.48C3.18-6.07 4.06-6.66 5.05-6.66C6.09-6.66 6.6-5.87 6.6-4.79C6.6-4.7 6.57-4.38 6.57-4.29S6.63-4.15 6.76-4.15C6.81-4.15 6.85-4.16 6.88-4.17C6.93-4.24 6.96-4.31 6.98-4.38L7.6-6.91C7.6-7 7.55-7.05 7.45-7.05C7.41-7.05 7.35-7.01 7.27-6.92L6.62-6.19C6.23-6.76 5.68-7.05 4.97-7.05C4.42-7.05 3.88-6.92 3.33-6.67C2.22-6.15 1.41-5.33 .89-4.21C.63-3.66 .5-3.1 .5-2.53C.5-1.73 .75-1.08 1.26-.56S2.42 .22 3.22 .22C4.01 .22 4.73-.07 5.38-.64C5.65-.87 5.88-1.15 6.07-1.46C6.34-1.91 6.48-2.22 6.48-2.41C6.48-2.5 6.43-2.55 6.32-2.55C6.23-2.55 6.18-2.51 6.16-2.42C5.95-1.77 5.62-1.25 5.17-.88C4.6-.41 4-.17 3.38-.17C2.18-.17 1.48-.98 1.48-2.18Z'/><path id='m8e0b7e4cd4bc-g0-3535' d='M8.64-6.83C8.45-6.83 7.83-6.8 7.64-6.8S6.82-6.83 6.63-6.83C6.48-6.83 6.41-6.75 6.41-6.59C6.41-6.5 6.48-6.45 6.63-6.44C7.05-6.44 7.26-6.31 7.26-6.05C7.26-5.99 7.25-5.92 7.24-5.85L6.16-1.57L4.01-6.62C3.93-6.81 3.91-6.83 3.66-6.83H2.33C2.09-6.83 2-6.81 2-6.59C2-6.49 2.11-6.44 2.32-6.44C2.74-6.44 2.95-6.43 2.96-6.4L1.63-1.1C1.54-.71 1.31-.49 .95-.42C.69-.39 .39-.43 .39-.15C.39-.05 .45 0 .56 0C.74 0 1.36-.03 1.55-.03S2.38 0 2.57 0C2.72 0 2.79-.08 2.79-.24C2.79-.33 2.71-.38 2.55-.39C2.14-.4 1.94-.53 1.94-.78C1.94-.83 1.95-.9 1.97-1L3.26-6.11L5.76-.21C5.82-.07 5.9 0 5.99 0S6.14-.08 6.18-.24L7.57-5.74C7.7-6.25 7.98-6.43 8.6-6.44C8.74-6.45 8.81-6.53 8.81-6.69C8.78-6.78 8.77-6.83 8.64-6.83Z'/><path id='me95fc99ebad2-g0-3534' d='M5.94-.16C5.94-.05 6 0 6.13 0L7.36-.03C7.59-.04 8.4 0 8.59 0C8.74 0 8.82-.08 8.82-.24C8.82-.34 8.72-.39 8.51-.39C8.1-.39 7.9-.43 7.9-.52C7.9-.55 7.92-.62 7.95-.75L9.27-6.02C9.32-6.23 9.42-6.36 9.55-6.41C9.61-6.43 9.79-6.44 10.08-6.44C10.33-6.44 10.44-6.45 10.44-6.68C10.44-6.78 10.34-6.83 10.13-6.83H8.82C8.53-6.83 8.53-6.81 8.4-6.62L4.84-1.08L4.08-6.57C4.04-6.82 4.02-6.83 3.73-6.83H2.37C2.15-6.83 2.04-6.82 2.04-6.6C2.04-6.49 2.15-6.44 2.36-6.44C2.56-6.44 2.97-6.47 2.97-6.31C2.97-6.29 2.96-6.23 2.93-6.13L1.67-1.1C1.58-.72 1.35-.49 1-.42C.75-.39 .42-.43 .42-.16C.42-.05 .48 0 .6 0C.78 0 1.41-.03 1.59-.03C1.78-.03 2.42 0 2.61 0C2.76 0 2.83-.08 2.83-.24C2.83-.33 2.76-.38 2.61-.39C2.19-.39 1.98-.52 1.98-.78C1.98-.82 1.99-.89 2.02-1L3.32-6.21L4.15-.26C4.18-.09 4.24 0 4.34 0C4.42 0 4.5-.07 4.59-.2L8.48-6.27L7.12-.82C7.06-.6 6.96-.47 6.81-.42C6.75-.4 6.56-.39 6.25-.39C6.04-.39 5.94-.37 5.94-.16Z'/></defs>
+<rect width="1920" height="1080" fill="#ffffff"/>
+<text x="80.00" y="95.00" font-family="STIX Two Text" font-size="54" font-weight="600" fill="#14171c" xml:space="preserve">RL Training Loop</text>
+<rect x="120.00" y="130.00" width="370.00" height="156.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="137.00" y="168.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Set Up</text>
+<text x="137.00" y="202.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Build actor, critic, replay</text>
+<text x="137.00" y="236.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Check the starting actor</text>
+<text x="137.00" y="262.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">train.py: execute</text>
+<text x="1000.00" y="168.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">Legend</text>
+<rect x="1000.00" y="200.00" width="28.00" height="28.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="1042.00" y="222.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Collect data: actor and flow solver</text>
+<rect x="1450.00" y="200.00" width="28.00" height="28.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1492.00" y="222.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Learn from replay</text>
+<rect x="1000.00" y="244.00" width="28.00" height="28.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="1042.00" y="266.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Check and save</text>
+<rect x="1450.00" y="244.00" width="28.00" height="28.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="1492.00" y="266.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Start and finish</text>
+<rect x="80.00" y="325.00" width="1760.00" height="490.00" rx="3" fill="#f5f6f7" stroke="#676c75" stroke-width="2.5"/>
+<text x="560.00" y="361.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">Repeat Until the Solve Limit</text>
+<rect x="120.00" y="385.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="137.00" y="423.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">1  Copy the Actor</text>
+<text x="137.00" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Add noise </text>
+<g data-latex="\sigma" data-ink="244.76 447.20 259.04 457.80" fill="#3a3f47" transform="translate(244.76 457.54) scale(2.4000)"><g transform='translate(72 67.6900)'><use x='-72' y='-67.69' xlink:href='#mc5db376f303f-g0-4226'/></g></g>
+<text x="259.04" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> to weights</text>
+<text x="137.00" y="491.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Gives the behaviour actor</text>
+<text x="137.00" y="517.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">exploration.snapshot</text>
+<rect x="560.00" y="385.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="577.00" y="423.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">2  Choose </text>
+<g data-latex="C" data-ink="711.55 402.79 735.19 424.60" fill="#0a5f99" transform="translate(711.55 423.94) scale(3.0000)"><g transform='translate(72 64.9500)'><use x='-72' y='-64.95' xlink:href='#me274109b97a2-g0-3524'/></g></g>
+<text x="577.00" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Actor reads the start profile</text>
+<text x="577.00" y="491.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Sets </text>
+<g data-latex="C" data-ink="622.91 474.22 641.82 491.67" fill="#3a3f47" transform="translate(622.91 491.14) scale(2.4000)"><g transform='translate(72 64.9500)'><use x='-72' y='-64.95' xlink:href='#me274109b97a2-g0-3524'/></g></g>
+<text x="641.82" y="491.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> in each cell</text>
+<text x="577.00" y="517.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">scripted evaluate</text>
+<rect x="1000.00" y="385.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="1017.00" y="423.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">3  Solve to Steady State</text>
+<text x="1017.00" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Flow solver uses the </text>
+<g data-latex="C" data-ink="1227.38 440.62 1246.30 458.07" fill="#3a3f47" transform="translate(1227.38 457.54) scale(2.4000)"><g transform='translate(72 64.9500)'><use x='-72' y='-64.95' xlink:href='#me274109b97a2-g0-3524'/></g></g>
+<text x="1246.30" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> field</text>
+<text x="1017.00" y="491.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#c23b0a" xml:space="preserve">Not converged: run pauses</text>
+<text x="1017.00" y="517.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">solve_to_steady</text>
+<rect x="1440.00" y="385.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="1457.00" y="423.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">4  Score</text>
+<text x="1457.00" y="457.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Compare with target profile</text>
+<text x="1457.00" y="491.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Return from profile error</text>
+<text x="1457.00" y="517.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">rewards.py</text>
+<rect x="1440.00" y="620.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1457.00" y="658.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">5  Add to Replay</text>
+<text x="1457.00" y="692.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Whole evaluation at once</text>
+<text x="1457.00" y="726.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Oldest one leaves when full</text>
+<text x="1457.00" y="752.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">ReplayBuffer.admit</text>
+<rect x="1000.00" y="620.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1017.00" y="658.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">6  Sample a Batch</text>
+<text x="1017.00" y="692.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Random evaluation, then cell</text>
+<text x="1017.00" y="726.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Skipped until warm-up ends</text>
+<text x="1017.00" y="752.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">ReplayBuffer.sample</text>
+<rect x="560.00" y="620.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="577.00" y="658.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">7  Update Critic</text>
+<text x="577.00" y="692.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Fit predicted return to return</text>
+<text x="577.00" y="726.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Mean squared error</text>
+<text x="577.00" y="752.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">TerminalLearner</text>
+<rect x="120.00" y="620.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="137.00" y="658.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">8  Update Actor</text>
+<text x="137.00" y="692.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Change </text>
+<g data-latex="C" data-ink="220.78 675.62 239.70 693.07" fill="#3a3f47" transform="translate(220.78 692.54) scale(2.4000)"><g transform='translate(72 64.9500)'><use x='-72' y='-64.95' xlink:href='#me274109b97a2-g0-3524'/></g></g>
+<text x="239.70" y="692.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> to raise return</text>
+<text x="137.00" y="726.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Same batch, after critic</text>
+<text x="137.00" y="752.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">TerminalLearner</text>
+<rect x="120.00" y="870.00" width="370.00" height="156.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="137.00" y="908.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">Performance Check</text>
+<text x="137.00" y="942.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Unperturbed actor, new solve</text>
+<text x="137.00" y="976.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Keep the lowest volume error</text>
+<text x="137.00" y="1002.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">selection.py</text>
+<rect x="560.00" y="870.00" width="370.00" height="156.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="577.00" y="908.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">Save Checkpoint</text>
+<text x="577.00" y="942.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Models, replay, random states</text>
+<text x="577.00" y="976.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Resume gives the same run</text>
+<text x="577.00" y="1002.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">checkpoint.py</text>
+<rect x="1440.00" y="870.00" width="370.00" height="156.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="1457.00" y="908.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Finish</text>
+<text x="1457.00" y="942.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Final check and checkpoint</text>
+<text x="1457.00" y="976.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Write the run report</text>
+<text x="1457.00" y="1002.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">run_stop</text>
+<path d="M305.00,290.25 L305.00,374.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M305.00,380.75 L301.04,369.75 L308.96,369.75 Z" fill="#3a3f47"/>
+<path d="M494.25,463.00 L549.15,463.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M555.75,463.00 L544.75,466.96 L544.75,459.04 Z" fill="#3a3f47"/>
+<path d="M934.25,463.00 L989.15,463.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M995.75,463.00 L984.75,466.96 L984.75,459.04 Z" fill="#3a3f47"/>
+<path d="M1374.25,463.00 L1429.15,463.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1435.75,463.00 L1424.75,466.96 L1424.75,459.04 Z" fill="#3a3f47"/>
+<path d="M1625.00,545.25 L1625.00,609.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1625.00,615.75 L1621.04,604.75 L1628.96,604.75 Z" fill="#3a3f47"/>
+<path d="M1435.75,698.00 L1380.85,698.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1374.25,698.00 L1385.25,694.04 L1385.25,701.96 Z" fill="#3a3f47"/>
+<path d="M995.75,698.00 L940.85,698.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M934.25,698.00 L945.25,694.04 L945.25,701.96 Z" fill="#3a3f47"/>
+<path d="M555.75,698.00 L500.85,698.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M494.25,698.00 L505.25,694.04 L505.25,701.96 Z" fill="#3a3f47"/>
+<path d="M305.00,615.75 L305.00,551.85" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M305.00,545.25 L308.96,556.25 L301.04,556.25 Z" fill="#3a3f47"/>
+<path d="M212.50,780.25 L212.50,859.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M212.50,865.75 L208.54,854.75 L216.46,854.75 Z" fill="#3a3f47"/>
+<text x="226.50" y="853.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">every </text>
+<g data-latex="N" data-ink="276.54 839.34 294.72 853.00" fill="#676c75" transform="translate(276.54 853.00) scale(2.0000)"><g transform='translate(72 65.1700)'><use x='-72' y='-65.17' xlink:href='#m8e0b7e4cd4bc-g0-3535'/></g></g>
+<text x="294.72" y="853.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve"> rounds</text>
+<text x="759.00" y="860.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">every </text>
+<g data-latex="M" data-ink="809.04 846.34 830.48 860.00" fill="#676c75" transform="translate(809.04 860.00) scale(2.0000)"><g transform='translate(72 65.1700)'><use x='-72' y='-65.17' xlink:href='#me95fc99ebad2-g0-3534'/></g></g>
+<text x="830.48" y="860.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve"> rounds</text>
+<path d="M397.50,780.25 L397.50,832.00 A3.00,3.00 0 0 0 400.50,835.00 L742.00,835.00 A3.00,3.00 0 0 1 745.00,838.00 L745.00,859.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M745.00,865.75 L741.04,854.75 L748.96,854.75 Z" fill="#3a3f47"/>
+<path d="M1625.00,819.25 L1625.00,859.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1625.00,865.75 L1621.04,854.75 L1628.96,854.75 Z" fill="#3a3f47"/>
+<text x="1639.00" y="852.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">solve limit reached</text>
+</svg>
