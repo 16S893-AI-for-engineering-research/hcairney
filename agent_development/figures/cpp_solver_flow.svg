@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080" data-svgfig='{"target": "deck", "mode": "light", "palette": "okabe-light", "fonts": "BA"}'>
+<defs><path id='me274109b97a2-g0-3524' d='M1.48-2.18C1.48-3.46 2.04-4.76 2.67-5.48C3.18-6.07 4.06-6.66 5.05-6.66C6.09-6.66 6.6-5.87 6.6-4.79C6.6-4.7 6.57-4.38 6.57-4.29S6.63-4.15 6.76-4.15C6.81-4.15 6.85-4.16 6.88-4.17C6.93-4.24 6.96-4.31 6.98-4.38L7.6-6.91C7.6-7 7.55-7.05 7.45-7.05C7.41-7.05 7.35-7.01 7.27-6.92L6.62-6.19C6.23-6.76 5.68-7.05 4.97-7.05C4.42-7.05 3.88-6.92 3.33-6.67C2.22-6.15 1.41-5.33 .89-4.21C.63-3.66 .5-3.1 .5-2.53C.5-1.73 .75-1.08 1.26-.56S2.42 .22 3.22 .22C4.01 .22 4.73-.07 5.38-.64C5.65-.87 5.88-1.15 6.07-1.46C6.34-1.91 6.48-2.22 6.48-2.41C6.48-2.5 6.43-2.55 6.32-2.55C6.23-2.55 6.18-2.51 6.16-2.42C5.95-1.77 5.62-1.25 5.17-.88C4.6-.41 4-.17 3.38-.17C2.18-.17 1.48-.98 1.48-2.18Z'/><path id='m3f0e51eed520-g0-375' d='M7.59 0C7.76 0 7.85-.04 7.85-.13L4.45-6.96C4.38-7.09 4.29-7.16 4.16-7.16S3.94-7.09 3.87-6.96L.52-.25C.49-.18 .47-.14 .47-.12C.47-.04 .56 0 .73 0H7.59ZM3.84-6.04L6.44-.83H1.24L3.84-6.04Z'/>
+<path id='m3f0e51eed520-g0-3566' d='M3.3-4.19C3.3-4.28 3.2-4.33 2.99-4.33H2.18C2.44-5.37 2.57-5.91 2.57-5.95C2.57-6.16 2.46-6.26 2.25-6.26C2.02-6.26 1.88-6.13 1.82-5.87L1.45-4.33H.56C.34-4.33 .23-4.32 .23-4.11C.23-4 .33-3.95 .54-3.95H1.35C.86-2 .62-.97 .62-.84C.62-.28 1 .11 1.56 .11C1.94 .11 2.27-.06 2.56-.41C2.8-.7 2.97-.98 3.08-1.25C3.12-1.36 3.14-1.42 3.14-1.45C3.14-1.54 3.09-1.59 2.99-1.59C2.91-1.59 2.85-1.54 2.81-1.43C2.47-.6 2.06-.19 1.57-.19C1.4-.19 1.31-.33 1.31-.6C1.31-.75 1.33-.91 1.37-1.07L2.08-3.95H2.97C3.23-3.95 3.3-3.97 3.3-4.19Z'/><use id='m53661d1eb218-g1-4220' xlink:href='#m53661d1eb218-g0-4220' transform='scale(1.4286)'/>
+<path id='m53661d1eb218-g0-4220' d='M.994-2.66C.994-2.646 .987-2.59 .966-2.499C.77-1.701 .567-.91 .371-.112C.371-.035 .42 0 .511 0H.609C1.316-.119 1.967-.462 2.562-1.015C2.835-1.274 3.066-1.554 3.248-1.862C3.528-2.331 3.668-2.674 3.668-2.884C3.668-3.024 3.591-3.094 3.444-3.094C3.29-3.094 3.192-3.01 3.143-2.849C2.94-2.1 2.604-1.512 2.142-1.071C1.75-.7 1.351-.441 .938-.294L1.603-2.989V-3.017C1.582-3.066 1.54-3.094 1.484-3.094C1.253-3.094 .742-3.031 .651-3.024C.546-3.01 .49-2.961 .49-2.863C.49-2.786 .553-2.751 .679-2.751C.812-2.751 .994-2.758 .994-2.66Z'/>
+<path id='m53661d1eb218-g0-5832' d='M2.66-2.912C2.66-2.989 2.583-3.031 2.429-3.031H1.813L2.058-4.025C2.058-4.039 2.079-4.109 2.079-4.123C2.079-4.291 1.995-4.375 1.82-4.375C1.61-4.375 1.491-4.2 1.442-3.962L1.218-3.031H.539C.378-3.031 .294-3.01 .294-2.856C.294-2.772 .371-2.73 .525-2.73H1.141L.749-1.134C.679-.854 .644-.679 .644-.616C.644-.203 .987 .07 1.4 .07C1.757 .07 2.065-.098 2.31-.441C2.513-.728 2.618-.917 2.618-1.015C2.618-1.092 2.576-1.134 2.485-1.134C2.45-1.134 2.422-1.127 2.401-1.12C2.359-1.071 2.331-1.022 2.317-.987C2.163-.644 1.841-.182 1.421-.182C1.281-.182 1.211-.287 1.211-.49C1.211-.567 1.225-.658 1.253-.77L1.736-2.73H2.415C2.576-2.73 2.66-2.765 2.66-2.912Z'/><path id='m6d4449c0f908-g0-3532' d='M8.04-6.8C7.83-6.8 7.15-6.83 6.94-6.83C6.79-6.83 6.71-6.75 6.71-6.59C6.71-6.51 6.78-6.46 6.92-6.43S7.14-6.35 7.14-6.28C7.14-6.17 7.03-6.02 6.8-5.85L3.02-2.96L3.79-6.02C3.84-6.23 3.93-6.36 4.06-6.41C4.12-6.43 4.29-6.44 4.58-6.44C4.84-6.44 4.96-6.44 4.96-6.68C4.96-6.78 4.9-6.83 4.78-6.83L3.51-6.8L2.23-6.83C2.07-6.84 1.99-6.76 1.99-6.6C1.99-6.49 2.1-6.44 2.32-6.44C2.52-6.44 2.93-6.47 2.93-6.31C2.93-6.29 2.92-6.23 2.89-6.13L1.56-.82C1.51-.6 1.41-.47 1.26-.42C1.19-.4 1.01-.39 .7-.39C.48-.39 .38-.37 .38-.16C.38-.05 .44 0 .57 0L1.83-.03L2.46-.02C2.57-.02 2.99 0 3.1 0C3.26 0 3.34-.08 3.34-.24C3.34-.34 3.24-.39 3.03-.39C2.62-.39 2.42-.43 2.42-.52C2.42-.57 2.45-.72 2.51-.95L2.9-2.49L4.33-3.59L5.46-.98C5.53-.81 5.57-.7 5.57-.65C5.57-.48 5.41-.39 5.1-.39C4.92-.39 4.84-.35 4.84-.15C4.84-.05 4.9 0 5.02 0C5.24 0 6-.03 6.22-.03C6.41-.03 7.01 0 7.2 0C7.34 0 7.41-.08 7.41-.24C7.41-.33 7.33-.38 7.18-.39C6.77-.39 6.67-.5 6.53-.81L5.12-4.04C5.11-4.09 5.09-4.13 5.08-4.16L7.08-5.7C7.57-6.08 7.99-6.31 8.33-6.39C8.57-6.43 8.89-6.42 8.89-6.68C8.89-6.78 8.84-6.83 8.74-6.83C8.6-6.83 8.18-6.8 8.04-6.8Z'/></defs>
+<rect width="1920" height="1080" fill="#ffffff"/>
+<text x="80.00" y="95.00" font-family="STIX Two Text" font-size="54" font-weight="600" fill="#14171c" xml:space="preserve">C++ RANS Solver Flow</text>
+<rect x="120.00" y="125.00" width="370.00" height="156.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="137.00" y="163.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Read Config</text>
+<text x="137.00" y="197.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Check every field</text>
+<text x="137.00" y="231.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Any error stops the run</text>
+<text x="137.00" y="257.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">load_configuration</text>
+<rect x="560.00" y="125.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="577.00" y="163.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Build Mesh</text>
+<text x="577.00" y="197.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Uniform or stretched cells</text>
+<text x="577.00" y="231.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Wall to centreline</text>
+<text x="577.00" y="257.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">geometry_for</text>
+<rect x="1000.00" y="125.00" width="370.00" height="156.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="1017.00" y="163.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#0a5f99" xml:space="preserve">Set Start State</text>
+<text x="1017.00" y="197.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Velocity: zero or laminar</text>
+<text x="1017.00" y="231.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Fixed </text>
+<g data-latex="C" data-ink="1078.92 214.22 1097.83 231.67" fill="#3a3f47" transform="translate(1078.92 231.14) scale(2.4000)"><g transform='translate(72 64.9500)'><use x='-72' y='-64.95' xlink:href='#me274109b97a2-g0-3524'/></g></g>
+<text x="1097.83" y="231.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> field from config</text>
+<text x="1017.00" y="257.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">state_for</text>
+<text x="1480.00" y="150.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">Legend</text>
+<rect x="1480.00" y="168.00" width="26.00" height="26.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="1520.00" y="189.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Start and finish</text>
+<rect x="1480.00" y="202.00" width="26.00" height="26.00" rx="3" fill="#ebf2f7" stroke="#91b7d1" stroke-width="3.5"/>
+<text x="1520.00" y="223.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Set up</text>
+<rect x="1480.00" y="236.00" width="26.00" height="26.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1520.00" y="257.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Advance one step</text>
+<rect x="1480.00" y="270.00" width="26.00" height="26.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="1520.00" y="291.00" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Check and decide</text>
+<rect x="80.00" y="350.00" width="1760.00" height="490.00" rx="3" fill="#f5f6f7" stroke="#676c75" stroke-width="2.5"/>
+<text x="340.00" y="392.00" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#14171c" xml:space="preserve">Backward Euler Loop</text>
+<rect x="120.00" y="440.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="137.00" y="478.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">1  Choose Step </text>
+<g data-latex="\Delta t" data-ink="336.68 457.46 372.50 479.27" fill="#a35d00" transform="translate(336.68 478.94) scale(3.0000)"><g transform='translate(72 64.8400)'><use x='-72' y='-64.84' xlink:href='#m3f0e51eed520-g0-375'/>
+<use x='-63.67' y='-64.84' xlink:href='#m3f0e51eed520-g0-3566'/></g></g>
+<text x="137.00" y="512.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Fit to next observation time</text>
+<text x="137.00" y="546.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">No tiny last step</text>
+<text x="137.00" y="572.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">Implicit.cpp: solve</text>
+<rect x="560.00" y="440.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="577.00" y="478.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">2  Solve and Relax</text>
+<text x="577.00" y="512.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Tridiagonal solve, last </text>
+<g data-latex="\nu_t" data-ink="803.54 501.93 823.85 518.64" fill="#3a3f47" transform="translate(803.54 512.54) scale(2.4000)"><g transform='translate(72 67.5800)'><use x='-72' y='-67.58' xlink:href='#m53661d1eb218-g1-4220'/>
+<use x='-67.06' y='-65.1097' xlink:href='#m53661d1eb218-g0-5832'/></g></g>
+<text x="577.00" y="546.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Blend with previous velocity</text>
+<text x="577.00" y="572.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">lagged_solve</text>
+<rect x="1000.00" y="440.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1017.00" y="478.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">3  Evaluate Flux</text>
+<text x="1017.00" y="512.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Shear, eddy viscosity, stress</text>
+<text x="1017.00" y="546.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Residual of full equation</text>
+<text x="1017.00" y="572.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">evaluate_transport_operator</text>
+<rect x="1440.00" y="440.00" width="370.00" height="156.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="1457.00" y="478.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">4  Picard Check</text>
+<text x="1457.00" y="512.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Residual below tolerance?</text>
+<text x="1457.00" y="546.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Count iterations against a limit</text>
+<text x="1457.00" y="572.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">picard</text>
+<rect x="1440.00" y="668.00" width="370.00" height="156.00" rx="3" fill="#f8f2eb" stroke="#d6b68c" stroke-width="3.5"/>
+<text x="1457.00" y="706.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#a35d00" xml:space="preserve">5  Accept Step</text>
+<text x="1457.00" y="740.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Commit velocity and time</text>
+<text x="1457.00" y="774.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Grow </text>
+<g data-latex="\Delta t" data-ink="1519.11 756.96 1547.77 774.40" fill="#3a3f47" transform="translate(1519.11 774.14) scale(2.4000)"><g transform='translate(72 64.8400)'><use x='-72' y='-64.84' xlink:href='#m3f0e51eed520-g0-375'/>
+<use x='-63.67' y='-64.84' xlink:href='#m3f0e51eed520-g0-3566'/></g></g>
+<text x="1547.77" y="774.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> if it was easy</text>
+<text x="1457.00" y="800.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">replace_velocity</text>
+<rect x="1000.00" y="668.00" width="370.00" height="156.00" rx="3" fill="#ebf4f2" stroke="#8cc2b5" stroke-width="3.5"/>
+<text x="1017.00" y="706.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#00785a" xml:space="preserve">6  Steady Check</text>
+<text x="1017.00" y="740.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Residual and profile change</text>
+<text x="1017.00" y="774.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Small for </text>
+<g data-latex="K" data-ink="1114.75 757.73 1136.76 774.14" fill="#3a3f47" transform="translate(1114.75 774.14) scale(2.4000)"><g transform='translate(72 65.1600)'><use x='-72' y='-65.16' xlink:href='#m6d4449c0f908-g0-3532'/></g></g>
+<text x="1136.76" y="774.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve"> intervals in a row</text>
+<text x="1017.00" y="800.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">SustainedSteadyMonitor</text>
+<rect x="1000.00" y="895.00" width="370.00" height="156.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="1017.00" y="933.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Write Results</text>
+<text x="1017.00" y="967.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">History, profiles, faces</text>
+<text x="1017.00" y="1001.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Final profile, metadata</text>
+<text x="1017.00" y="1027.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">Recorder.finish</text>
+<rect x="1440.00" y="895.00" width="370.00" height="156.00" rx="3" fill="#f7f1f5" stroke="#d2b0c6" stroke-width="3.5"/>
+<text x="1457.00" y="933.94" font-family="STIX Two Text" font-size="30" font-weight="600" fill="#9b4f80" xml:space="preserve">Stop Early</text>
+<text x="1457.00" y="967.54" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#3a3f47" xml:space="preserve">Retries or attempts run out</text>
+<text x="1457.00" y="1001.14" font-family="STIX Two Text" font-size="24" font-weight="normal" fill="#c23b0a" xml:space="preserve">Exit code 4</text>
+<text x="1457.00" y="1027.74" font-family="IBM Plex Mono" font-size="19" font-weight="normal" fill="#676c75" xml:space="preserve">ImplicitStatus</text>
+<path d="M494.25,203.00 L549.15,203.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M555.75,203.00 L544.75,206.96 L544.75,199.04 Z" fill="#3a3f47"/>
+<path d="M934.25,203.00 L989.15,203.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M995.75,203.00 L984.75,206.96 L984.75,199.04 Z" fill="#3a3f47"/>
+<path d="M1185.00,285.25 L1185.00,315.00 A3.00,3.00 0 0 1 1182.00,318.00 L308.00,318.00 A3.00,3.00 0 0 0 305.00,321.00 L305.00,429.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M305.00,435.75 L301.04,424.75 L308.96,424.75 Z" fill="#3a3f47"/>
+<path d="M494.25,518.00 L549.15,518.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M555.75,518.00 L544.75,521.96 L544.75,514.04 Z" fill="#3a3f47"/>
+<path d="M934.25,518.00 L989.15,518.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M995.75,518.00 L984.75,521.96 L984.75,514.04 Z" fill="#3a3f47"/>
+<path d="M1374.25,518.00 L1429.15,518.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1435.75,518.00 L1424.75,521.96 L1424.75,514.04 Z" fill="#3a3f47"/>
+<path d="M1625.00,435.75 L1625.00,413.00 A3.00,3.00 0 0 0 1622.00,410.00 L748.00,410.00 A3.00,3.00 0 0 0 745.00,413.00 L745.00,429.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M745.00,435.75 L741.04,424.75 L748.96,424.75 Z" fill="#3a3f47"/>
+<text x="785.00" y="402.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">no: repeat the solve</text>
+<path d="M1717.50,600.25 L1717.50,657.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1717.50,663.75 L1713.54,652.75 L1721.46,652.75 Z" fill="#3a3f47"/>
+<text x="1731.50" y="628.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">yes</text>
+<path d="M1514.00,600.25 L1514.00,622.00 A3.00,3.00 0 0 1 1511.00,625.00 L400.50,625.00 A3.00,3.00 0 0 1 397.50,622.00 L397.50,606.85" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M397.50,600.25 L401.46,611.25 L393.54,611.25 Z" fill="#3a3f47"/>
+<text x="700.00" y="617.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">iteration limit: smaller step</text>
+<path d="M1435.75,746.00 L1380.85,746.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1374.25,746.00 L1385.25,742.04 L1385.25,749.96 Z" fill="#3a3f47"/>
+<path d="M995.75,746.00 L215.50,746.00 A3.00,3.00 0 0 1 212.50,743.00 L212.50,606.85" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M212.50,600.25 L216.46,611.25 L208.54,611.25 Z" fill="#3a3f47"/>
+<text x="500.00" y="734.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">not yet steady: next step</text>
+<path d="M1185.00,828.25 L1185.00,884.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1185.00,890.75 L1181.04,879.75 L1188.96,879.75 Z" fill="#3a3f47"/>
+<text x="1199.00" y="868.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">steady</text>
+<path d="M1625.00,844.25 L1625.00,884.15" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1625.00,890.75 L1621.04,879.75 L1628.96,879.75 Z" fill="#3a3f47"/>
+<text x="1639.00" y="868.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">limit or failure</text>
+<path d="M1435.75,973.00 L1380.85,973.00" fill="none" stroke="#3a3f47" stroke-width="2.0" stroke-linejoin="round"/>
+<path d="M1374.25,973.00 L1385.25,969.04 L1385.25,976.96 Z" fill="#3a3f47"/>
+<text x="120.00" y="990.00" font-family="STIX Two Text" font-size="20" font-weight="normal" fill="#676c75" xml:space="preserve">Forward Euler: same flux step, no inner loop.</text>
+</svg>
