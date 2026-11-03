@@ -20,4 +20,6 @@ the results, propose new experiments and repeat the process.
 
 I used the agent to help plan the workflow. The design actually uses a [script](/agent_development/scripts/review_sweep.sh)
 to make sure the information is in place and then launches a pi session with an actual
-agent to do the review.
+agent to do the review. That agent is given only the rl-run-review [skill](/.pi/skills/rl-run-review/) 
+as well as read and bash commands. The skill essentially outlines the format that the agent
+should follow in its review.
